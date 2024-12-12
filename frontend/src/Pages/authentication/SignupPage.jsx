@@ -1,6 +1,7 @@
+// SignupPage.js
 import React, { useState } from "react";
 import "../../index.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -8,8 +9,44 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [pincode, setPincode] = useState("");
 
+  const [errors, setErrors] = useState({}); // Object to track field errors
+
+  const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name: Only alphabets and spaces, max 32 characters
+    if (!name || !/^[A-Za-z ]{1,32}$/.test(name)) {
+      newErrors.name = "Name must be alphabets only and up to 32 characters.";
+    }
+
+    // Phone number: Exactly 10 digits
+    if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be exactly 10 digits.";
+    }
+
+    // Email: Valid email format
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Invalid email format.";
+    }
+
+    // Pincode: Exactly 6 digits
+    if (!pincode || !/^\d{6}$/.test(pincode)) {
+      newErrors.pincode = "Pincode must be exactly 6 digits.";
+    }
+
+    setErrors(newErrors);
+
+    // Return true if no errors
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return; // Prevent submission if form is invalid
+
     const scriptURL = "https://script.google.com/macros/s/AKfycbzHp76v83ebTY-dn4HJSj6QCCkoZWo2pHqjY-_tWcyPnGP8g_-1R_EjG4nFpchPAO8xLA/exec";
 
     const formData = new FormData();
@@ -29,6 +66,10 @@ export default function SignupPage() {
         setPhoneNumber("");
         setEmail("");
         setPincode("");
+        setErrors({}); // Clear errors
+
+        // Redirect to the Verify page
+        navigate("/signup-verify", { state: { phoneNumber } });
       } else {
         console.error("Form submission failed");
       }
@@ -75,37 +116,60 @@ export default function SignupPage() {
             <input
               type="text"
               placeholder="Name"
-              className="w-full p-3 text-lg mb-4 border border-gray-300 rounded-lg bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-3 text-lg mb-4 border ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              } rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value.replace(/[^A-Za-z ]/g, ""))} // Allow only alphabets and spaces
             />
+            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+
             <input
               type="tel"
               placeholder="Phone Number"
-              className="w-full p-3 text-lg mb-4 border border-gray-300 rounded-lg bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-3 text-lg mb-4 border ${
+                errors.phoneNumber ? "border-red-500" : "border-gray-300"
+              } rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) =>
+                setPhoneNumber(e.target.value.replace(/[^0-9]/g, "")) // Allow only digits
+              }
             />
+            {errors.phoneNumber && (
+              <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+            )}
+
             <input
               type="email"
               placeholder="Email ID"
-              className="w-full p-3 text-lg mb-4 border border-gray-300 rounded-lg bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-3 text-lg mb-4 border ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
             <input
               type="text"
               placeholder="Pincode"
-              className="w-full p-3 text-lg mb-4 border border-gray-300 rounded-lg bg-transparent placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-3 text-lg mb-4 border ${
+                errors.pincode ? "border-red-500" : "border-gray-300"
+              } rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={pincode}
-              onChange={(e) => setPincode(e.target.value)}
+              onChange={(e) =>
+                setPincode(e.target.value.replace(/[^0-9]/g, "")) // Allow only digits
+              }
             />
+            {errors.pincode && <p className="text-red-500 text-sm">{errors.pincode}</p>}
+
             <button
               type="submit"
               className="w-full py-3 bg-blue-600 text-white text-lg font-bold rounded-lg hover:bg-blue-700 transition"
             >
-              Signup
+              Verify
             </button>
+
             <div className="flex items-center justify-center my-7">
               <div className="w-1/3 border-t border-gray-500"></div>
               <span className="mx-4 text-gray-500 text-lg sm:text-xl font-bold">
@@ -122,8 +186,7 @@ export default function SignupPage() {
                 Login
               </Link>
             </p>
-             {/* Footer Links */}
-             <div className="flex justify-center gap-4 text-gray-500 text-sm sm:text-base mt-7">
+            <div className="flex justify-center gap-4 text-gray-500 text-sm sm:text-base mt-7">
               <Link to="#">Terms & Conditions</Link>
               <Link to="#">Support</Link>
               <Link to="#">Customer Care</Link>
