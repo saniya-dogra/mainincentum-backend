@@ -1,42 +1,40 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
-const path = require("path");
-const bcrypt = require('bcrypt'); // For hashing passwords
-const jwt = require('jsonwebtoken'); // For generating JSON Web Tokens
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
+
+// Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // Replace with your frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  origin: "http://localhost:5173", // Frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,}));
-
-app.options('*', cors());
+  credentials: true,
+}));
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-const port = process.env.PORT;
-
-// MySQL Database Connection
-const db = mysql.createConnection({
+// Database Connection Pool
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  connectTimeout: 10000,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
-db.connect((err) => {
+// Test the database connection
+pool.getConnection((err) => {
   if (err) {
-    console.error('Database connection failed: ', err.stack);
-    return;
+    console.error('Error connecting to the database:', err);
+    process.exit(1); // Exit the app if the connection fails
+  } else {
+    console.log('Connected to the database.');
   }
-  console.log('Connected to the Hostinger MySQL database.');
 });
 
 // POST: Signup Endpoint
@@ -50,22 +48,27 @@ app.post('/signup', async (req, res) => {
 
   try {
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert data into the database
-    const query = `INSERT INTO users (name, phoneNumber, email, pincode, password) VALUES (?, ?, ?, ?, ?)`;
-    db.query(query, [name, phoneNumber, email, pincode, hashedPassword], (err, result) => {
+    // Insert user data into the database
+    const query = "INSERT INTO users (name, phoneNumber, email, pincode, password) VALUES (?, ?, ?, ?, ?)";
+    pool.query(query, [name, phoneNumber, email, pincode, hashedPassword], (err, result) => {
       if (err) {
-        console.error('Error inserting data: ', err);
-        return res.status(500).json({ message: 'Internal server error.' });
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Failed to register user.' });
       }
 
-      // Generate a JWT
-      const token = jwt.sign({ id: result.insertId, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: result.insertId, email },
+        process.env.JWT_SECRET, // Ensure this is defined in your .env
+        { expiresIn: '1h' }
+      );
 
+      // Successful response
       res.status(201).json({
-        message: 'User registered successfully!',
-        token, // Send the token to the client
+        message: 'User registered successfully.',
+        token,
       });
     });
   } catch (err) {
@@ -74,6 +77,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+// POST: Login Endpoint
 app.post('/login', async (req, res) => {
   const { phoneNumber, password } = req.body;
 
@@ -83,33 +87,38 @@ app.post('/login', async (req, res) => {
   }
 
   try {
-    // Check if the phone number exists in the database
-    const query = `SELECT * FROM users WHERE phoneNumber = ?`;
-    db.query(query, [phoneNumber], async (err, results) => {
+    // Check if user exists
+    const query = "SELECT * FROM users WHERE phoneNumber = ?";
+    pool.query(query, [phoneNumber], async (err, results) => {
       if (err) {
-        console.error('Error querying database: ', err);
+        console.error('Database error:', err);
         return res.status(500).json({ message: 'Internal server error.' });
       }
 
+      // No user found
       if (results.length === 0) {
         return res.status(404).json({ message: 'User not found.' });
       }
 
       const user = results[0];
 
-      // Compare the provided password with the stored hashed password
+      // Check password
       const isMatch = await bcrypt.compare(password, user.password);
-
       if (!isMatch) {
         return res.status(401).json({ message: 'Invalid phone number or password.' });
       }
 
-      // Generate a JWT
-      const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET, // Ensure this is defined in your .env
+        { expiresIn: '1h' }
+      );
 
+      // Successful login response
       res.status(200).json({
         message: 'Login successful!',
-        token, // Send the token to the client
+        token,
       });
     });
   } catch (err) {
@@ -118,7 +127,8 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Start the Server
-app.listen(port, () => {
-  console.log('listening on port', port);
+// Start the server
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
