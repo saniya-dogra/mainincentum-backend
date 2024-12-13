@@ -1,15 +1,23 @@
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
+const path = require("path");
 const bcrypt = require('bcrypt'); // For hashing passwords
 const jwt = require('jsonwebtoken'); // For generating JSON Web Tokens
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:5173", // Replace with your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,}));
 
-const port = process.env.PORT || 8081;
+app.options('*', cors());
+app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+const port = process.env.PORT;
 
 // MySQL Database Connection
 const db = mysql.createConnection({
