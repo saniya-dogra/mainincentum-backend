@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import "../../index.css";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
 
 export default function SignupPage() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [pincode, setPincode] = useState("");
+  const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState({}); // Object to track field errors
 
@@ -42,42 +44,33 @@ export default function SignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return; // Prevent submission if form is invalid
-
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzHp76v83ebTY-dn4HJSj6QCCkoZWo2pHqjY-_tWcyPnGP8g_-1R_EjG4nFpchPAO8xLA/exec";
-
-    const formData = new FormData();
-    formData.append("Name", name);
-    formData.append("Phone No.", phoneNumber);
-    formData.append("Email", email);
-    formData.append("Pincode", pincode);
-
+  async function handleFormSubmit(e) {
+    e.preventDefault(); // Prevent default form submission behavior
+  
     try {
-      const response = await fetch(scriptURL, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        alert("Thank you! Your form has been submitted.");
-        setName("");
-        setPhoneNumber("");
-        setEmail("");
-        setPincode("");
-        setErrors({}); // Clear errors
-
-        // Redirect to the Verify page
-        navigate("/signup-verify", { state: { phoneNumber } });
-      } else {
-        console.error("Form submission failed");
-      }
+      await axios.post(
+        'http://127.0.0.1:8000/signup',
+        {
+          name,
+          email,
+          phoneNumber,
+          pincode,
+          password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json", // Necessary header
+          },
+          withCredentials: true, // Enable credentials
+        }
+      );
+      alert("Registration successful"); // Show success message
     } catch (error) {
-      console.error("Error!", error.message);
+      alert("Failed registration"); // Show error message
+      console.error(error); // Log the error for debugging
     }
-  };
-
+  }
+  
   return (
     <div className="min-h-screen bg-image grid grid-cols-1 xl:grid-cols-2">
       {/* Left Section */}
@@ -162,6 +155,15 @@ export default function SignupPage() {
               }
             />
             {errors.pincode && <p className="text-red-500 text-sm">{errors.pincode}</p>}
+            <input
+              type="text"
+              placeholder="password"
+              className={`w-full p-3 text-lg mb-4 border  rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value) // Allow only digits
+              }
+            />
 
             <button
               type="submit"
