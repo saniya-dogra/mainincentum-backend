@@ -17,30 +17,37 @@ export default function SignupPage() {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.name || !/^[A-Za-z ]{1,32}$/.test(formData.name)) {
-      newErrors.name = "Name must be alphabets only and up to 32 characters.";
+  
+    if (!formData.name || !/^[A-Za-z]+( [A-Za-z]+)*$/.test(formData.name.trim())) {
+      newErrors.name = "Name must contain alphabets only and up to 32 characters.";
+    } else if (formData.name.trim().length > 32) {
+      newErrors.name = "Name must not exceed 32 characters.";
     }
-
-    if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber)) {
+  
+    if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber.trim())) {
       newErrors.phoneNumber = "Phone number must be exactly 10 digits.";
     }
-
-    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+  
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       newErrors.email = "Invalid email format.";
     }
-
-    if (!formData.pincode || !/^\d{6}$/.test(formData.pincode)) {
+  
+    if (!formData.pincode || !/^\d{6}$/.test(formData.pincode.trim())) {
       newErrors.pincode = "Pincode must be exactly 6 digits.";
     }
-
-    if (!formData.password || formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long.";
+  
+    if (
+      !formData.password ||
+      !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(formData.password)
+    ) {
+      newErrors.password =
+        "Password must be at least 6 characters long and include both letters and numbers.";
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

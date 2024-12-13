@@ -1,107 +1,57 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../index.css";
 
 export default function LoginPage() {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [sessionId, setSessionId] = useState(null);
-  const [phoneError, setPhoneError] = useState("");
-  const [otpError, setOtpError] = useState("");
+  const [formData, setFormData] = useState({
+    phoneNumber: "",
+    password: "",
+  });
 
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const api_key = "0a27b9b3-b744-11ef-8b17-0200cd936042"; // Replace with your actual 2Factor API key
+  const validateForm = () => {
+    const newErrors = {};
 
-  // Validate phone number
-  const validatePhoneNumber = (value) => {
-    const phoneRegex = /^[0-9]{0,10}$/;
-    if (!phoneRegex.test(value)) {
-      setPhoneError("Only digits are allowed, up to 10 characters.");
-    } else if (value.length !== 10) {
-      setPhoneError("Phone number must be exactly 10 digits.");
-    } else {
-      setPhoneError("");
+    if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber.trim())) {
+      newErrors.phoneNumber = "Phone number must be exactly 10 digits.";
     }
-    setPhoneNumber(value);
+
+    if (!formData.password || formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Validate OTP
-  const validateOtp = (value) => {
-    const otpRegex = /^[0-9]{0,6}$/;
-    if (!otpRegex.test(value)) {
-      setOtpError("Only digits are allowed, up to 6 characters.");
-    } else if (value.length !== 6) {
-      setOtpError("OTP must be exactly 6 digits.");
-    } else {
-      setOtpError("");
-    }
-    setOtp(value);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Function to send OTP
-  const sendOtp = async () => {
-    if (phoneError || phoneNumber.length !== 10) {
-      setPhoneError("Please enter a valid 10-digit phone number.");
-      return;
-    }
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const url = `https://2factor.in/API/V1/${api_key}/SMS/${phoneNumber}/AUTOGEN?OTPDeliveryMode=Text`;
+    if (!validateForm()) return;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
+      const response = await axios.post("http://127.0.0.1:8080/login", formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-
-      if (data.Status === "Success") {
-        alert("OTP sent successfully!");
-        setSessionId(data.Details); // Save session ID for OTP verification
+      if (response.data.success) {
+        alert("Login successful!");
+        navigate("/HomePage");
       } else {
-        alert(`Failed to send OTP. Message: ${data.Details}`);
+        alert(response.data.message || "Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.error("Error while sending OTP:", error.message);
-      alert("Could not send OTP. Please try again later.");
-    }
-  };
-
-  // Function to verify OTP
-  const verifyOtp = async () => {
-    if (otpError || otp.length !== 6 || !sessionId) {
-      setOtpError("Please enter the OTP and ensure it was sent.");
-      return;
-    }
-
-    const url = `https://2factor.in/API/V1/${api_key}/SMS/VERIFY/${sessionId}/${otp}`;
-
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-
-      if (data.Status === "Success") {
-        alert("OTP verified successfully!");
-        navigate("/HomePage"); // Redirect to the home page
-      } else {
-        alert("Invalid OTP. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error while verifying OTP:", error.message);
-      alert("Could not verify OTP. Please try again later.");
+      console.error("Error during login:", error);
+      alert("Could not log in. Please try again later.");
     }
   };
 
@@ -133,62 +83,38 @@ export default function LoginPage() {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center justify-center h-5/6 p-6 bg-opacity-80">
+      <div className="flex items-center justify-center p-6 bg-opacity-80">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg">
           <h2 className="text-gray-200 text-3xl font-bold mb-4">Login</h2>
           <p className="text-gray-400 text-lg mb-4">Glad you're back!</p>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              verifyOtp();
-            }}
-          >
-            <div className="mb-4">
-              <input
-                type="tel"
-                id="mobile"
-                placeholder="Enter your Mobile Number"
-                className={`w-full p-3 text-lg border rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  phoneError ? "border-red-500" : "border-gray-300"
-                }`}
-                value={phoneNumber}
-                onChange={(e) => validatePhoneNumber(e.target.value)}
-              />
-              {phoneError && (
-                <p className="text-red-500 text-sm mt-2">{phoneError}</p>
-              )}
-            </div>
-
-            <button
-              type="button"
-              onClick={sendOtp}
-              className="w-full py-3 bg-blue-600 text-white text-lg font-bold rounded-lg hover:bg-blue-700 transition mb-4"
-            >
-              Get OTP
-            </button>
-
-            <div className="mb-4">
-              <input
-                type="tel"
-                placeholder="Enter OTP"
-                className={`w-full p-3 text-lg border rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  otpError ? "border-red-500" : "border-gray-300"
-                }`}
-                value={otp}
-                onChange={(e) => validateOtp(e.target.value)}
-              />
-              {otpError && (
-                <p className="text-red-500 text-sm mt-2">{otpError}</p>
-              )}
-            </div>
-
+          <form onSubmit={handleLogin}>
+            {["phoneNumber", "password"].map((field) => (
+              <div key={field}>
+                <input
+                  name={field}
+                  type={field === "password" ? "password" : "text"}
+                  placeholder={
+                    field === "phoneNumber"
+                      ? "Enter your Mobile Number"
+                      : "Enter Password"
+                  }
+                  value={formData[field]}
+                  onChange={handleInputChange}
+                  className={`w-full p-3 text-lg mb-4 border ${
+                    errors[field] ? "border-red-500" : "border-gray-300"
+                  } rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+                {errors[field] && (
+                  <p className="text-red-500 text-sm">{errors[field]}</p>
+                )}
+              </div>
+            ))}
             <button
               type="submit"
               className="w-full py-3 bg-blue-600 text-white text-lg font-bold rounded-lg hover:bg-blue-700 transition"
             >
-              Verify OTP
+              Login
             </button>
-
             <p className="text-center text-gray-400 text-lg mt-6">
               Don't have an account?{" "}
               <Link
