@@ -2,6 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
+import "swiper/css/pagination";
 import { Autoplay } from "swiper/modules"; // Import Autoplay module
 
 const TrustedClients = () => {
@@ -42,7 +43,6 @@ const TrustedClients = () => {
         "Exceptional service from start to finish! [Website Name] made what could have been a stressful process very manageable. I was impressed with the user-friendly application process and the quick responses from their team. The interest rates were competitive, and the terms were explained clearly. Highly recommend this platform for anyone looking for financial assistance.",
       avatar: "https://via.placeholder.com/50",
     },
-    
   ];
 
   return (
@@ -52,14 +52,14 @@ const TrustedClients = () => {
           Our Trusted Clients
         </h1>
         <Swiper
-          spaceBetween={20}
-          slidesPerView={1}
+          spaceBetween={20} // Space between slides
+          slidesPerView={2} // Display 2 slides at once
           autoplay={{
-            delay: 3000, // 3 seconds
+            delay: 3000, // 3 seconds per slide
             disableOnInteraction: false,
           }}
           modules={[Autoplay]} // Add Autoplay as a module
-          loop={true}
+          loop={true} // Enable infinite looping
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>

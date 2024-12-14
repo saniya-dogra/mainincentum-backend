@@ -17,11 +17,12 @@ import HomeTwo from './Pages/Forms/homeforms/HomeTwo';
 import HomeThree from './Pages/Forms/homeforms/HomeThree';
 import HomeFour from './Pages/Forms/homeforms/HomeFour';
 import VehicleOne from './Pages/Forms/vehicleforms/VehicleOne';
-
+import AllinoneChat from './components/widget/allinonechat';
 function App() {
   return (
     <Router>
       <ScrollToTop />
+      <AllinoneChat />
       
       <Routes>
         <Route path='/' element={<Layout/>}>
