@@ -1,6 +1,6 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ScrollToTop from './components/ScrollToTop'; 
+import { Routes, Route } from "react-router-dom";
+
 import SignupPage from './Pages/authentication/SignupPage';
 import LoginPage from './Pages/authentication/LoginPage';
 import HeroSection from './Pages/homePage/homecomponents/HeroSection';
@@ -17,11 +17,11 @@ import HomeTwo from './Pages/Forms/homeforms/HomeTwo';
 import HomeThree from './Pages/Forms/homeforms/HomeThree';
 import HomeFour from './Pages/Forms/homeforms/HomeFour';
 import VehicleOne from './Pages/Forms/vehicleforms/VehicleOne';
+import { UserContextProvider } from './contextapi/UserContext';
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
+        <UserContextProvider>
       
       <Routes>
         <Route path='/' element={<Layout/>}>
@@ -41,10 +41,10 @@ function App() {
         <Route path='/home-details-HomeThree' element={<HomeThree/>}/>
         <Route path='/home-details-HomeFour' element={<HomeFour/>}/>
         <Route path='/vehicle-details-VehicleOne' element={<VehicleOne/>} />
-
         </Route>
       </Routes>
-    </Router>
+      </UserContextProvider>
+   
   );
 }
 

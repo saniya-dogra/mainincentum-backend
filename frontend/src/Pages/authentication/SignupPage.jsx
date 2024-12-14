@@ -56,9 +56,11 @@ export default function SignupPage() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
+  
+    console.log("Form Data to Submit:", formData); // Debug submitted data
+  
     try {
       await axios.post("http://127.0.0.1:8080/signup", formData, {
         headers: { "Content-Type": "application/json" },
@@ -68,10 +70,10 @@ export default function SignupPage() {
       navigate("/login-page");
     } catch (error) {
       alert("Registration failed. Please try again.");
-      console.error(error);
+      console.error("Signup error:", error);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-image grid grid-cols-1 xl:grid-cols-2">
       <div className="flex flex-col w-full p-6 xl:p-12">

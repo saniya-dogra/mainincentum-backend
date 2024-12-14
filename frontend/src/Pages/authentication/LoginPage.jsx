@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../index.css";
+import { UserContext } from "../../contextapi/UserContext";
+axios.defaults.withCredentials = true;
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     phoneNumber: "",
     password: "",
   });
+
+  const { setUser } = useContext(UserContext);
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -43,12 +47,14 @@ export default function LoginPage() {
         withCredentials: true,
       });
 
-      if (response.data.success) {
-        alert("Login successful!");
-        navigate("/HomePage");
-      } else {
-        alert(response.data.message || "Invalid credentials. Please try again.");
-      }
+      // Store the user data (use response.data.token for storing JWT token)
+      setUser(response.data); // Save user info (or token as needed)
+
+      // Optionally store the JWT token in localStorage
+      localStorage.setItem("authToken", response.data.token); // Store token for later usage
+
+      alert("Login Successfully");
+      navigate("/HomePage");
     } catch (error) {
       console.error("Error during login:", error);
       alert("Could not log in. Please try again later.");
