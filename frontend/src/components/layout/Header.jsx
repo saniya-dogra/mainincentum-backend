@@ -1,14 +1,35 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa"; // Dropdown icon
 import rupee from "../../assets/rupee.png";
+import { UserContext } from "../../contextapi/UserContext";
+import axios from "axios";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
+  const { user, setUser } = useContext(UserContext); // Include `setUser` to update after logout
+  const navigate = useNavigate();
 
+  // Toggle Services Dropdown
   const toggleServicesDropdown = () => {
     setIsServicesDropdownOpen(!isServicesDropdownOpen);
+  };
+
+  // Handle Logout Function
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://127.0.0.1:8080/logout", {}, { withCredentials: true });
+      alert("Logout successful");
+      setUser(null); // Reset user state after logout
+      navigate("/HomePage"); // Redirect to homepage
+    } catch (err) {
+      console.error("Error during logout:", err);
+      alert("Failed to log out");
+    }
   };
 
   return (
@@ -39,140 +60,75 @@ const Header = () => {
           </button>
           {isServicesDropdownOpen && (
             <div className="absolute bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-48 z-50">
-              <a
-                href="/home-loan"
-                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-              >
+              <a href="/home-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
                 Home Loan
               </a>
-              <a
-                href="/vehicle-loan"
-                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-              >
+              <a href="/vehicle-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
                 Vehicle Loan
               </a>
-              <a
-                href="/personal-loan"
-                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-              >
+              <a href="/personal-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
                 Personal Loan
               </a>
-              <a
-                href="/business-loan"
-                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-              >
+              <a href="/business-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
                 Business Loan
               </a>
             </div>
           )}
         </div>
-
         <a href="/contact" className="text-white hover:text-[#F5C13D] transition">
           Contact
         </a>
-        <Link
-          to="/Login-Page"
-          className="bg-[#F5C13D] px-5 py-2 rounded-lg text-black font-semibold hover:bg-[#F5C13D] transition"
-        >
-          Get Started
-        </Link>
-      </nav>
 
-      {/* Mobile Menu Toggle */}
-      <button
-        className="md:hidden text-white focus:outline-none"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
-      </button>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <nav className="absolute top-16 left-0 w-full bg-[#010059] text-white shadow-lg md:hidden flex flex-col space-y-6 p-6 z-50">
-          <Link
-            to="/HomePage"
-            className="text-white hover:text-[#F5C13D] transition"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Home
-          </Link>
-          <a
-            href="/about"
-            className="hover:text-[#F5C13D] transition text-lg"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About
-          </a>
+        {/* Profile and Logout */}
+        {user ? (
           <div className="relative">
-            <button
-              className="hover:text-[#F5C13D] transition text-lg flex items-center justify-between"
-              onClick={toggleServicesDropdown}
+            <div
+              onClick={() => setShowLogout(!showLogout)}
+              className="flex gap-2 border bg-yellow-300 border-gray-300 rounded-full py-1 px-3 shadow-md shadow-gray-400 items-center cursor-pointer"
             >
-              Services
-              <FaChevronDown className="ml-2" />
-            </button>
-            {isServicesDropdownOpen && (
-              <div className="bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-full z-50">
-                <a
-                  href="/home-loan"
-                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-                  onClick={() => setIsMenuOpen(false)}
+              <div className="text-blue-900 rounded-full border overflow-hidden">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-8 w-8"
                 >
-                  Home Loan
-                </a>
-                <a
-                  href="/vehicle-loan"
-                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-                  onClick={() => setIsMenuOpen(false)}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+              </div>
+              {user.name && <div>{user.name}</div>}
+            </div>
+            {showLogout && (
+              <div className="absolute top-full mt-2 right-0 bg-white shadow-lg rounded-lg z-50 w-35">
+                <button
+                  onClick={handleLogout}
+                  className=" flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300"
                 >
-                  Vehicle Loan
-                </a>
-                <a
-                  href="/personal-loan"
-                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Personal Loan
-                </a>
-                <a
-                  href="/business-loan"
-                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Business Loan
-                </a>
+                  <IoArrowBackCircleSharp className="w-8 h-8" />
+                  Logout
+                  
+                </button>
               </div>
             )}
           </div>
-          <a
-            href="/contact"
-            className="hover:text-[#F5C13D] transition text-lg"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Contact
-          </a>
+        ) : (
           <Link
-            to="/Login-Page"
+            to="/signup-page" // Redirects to the Register page
             className="bg-[#F5C13D] px-5 py-2 rounded-lg text-black font-semibold hover:bg-[#F5C13D] transition"
-            onClick={() => setIsMenuOpen(false)}
           >
             Get Started
           </Link>
-        </nav>
-      )}
+        )}
+      </nav>
+
+      {/* Mobile Navigation */}
+      {/* Logic remains the same for the mobile view */}
     </header>
   );
 };

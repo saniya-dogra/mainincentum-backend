@@ -4,6 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
   credentials: true,
 }));
 app.use(express.json());
+app.use(cookieParser()); 
 
 // Database Connection Pool
 const pool = mysql.createPool({
@@ -64,6 +66,12 @@ app.post('/signup', async (req, res) => {
         process.env.JWT_SECRET, // Ensure this is defined in your .env
         { expiresIn: '1h' }
       );
+      
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',  // only send cookie over HTTPS in production
+        maxAge: 3600000,  // 1 hour expiry time
+      });
 
       // Successful response
       res.status(201).json({
@@ -126,6 +134,39 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
+
+app.get('/profile', (req, res) => {
+  const { token } = req.cookies;
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json(user);
+  } catch (err) {
+    console.error('Invalid token:', err);
+    res.status(403).json({ error: 'Invalid token' });
+  }
+});
+
+// POST: Logout Endpoint
+app.post('/logout', (req, res) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Same settings as the login/signup cookies
+    });
+
+    res.status(200).json({ message: 'Logout successful' });
+  } catch (err) {
+    console.error('Error during logout:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 
 // Start the server
 const PORT = process.env.PORT || 8000;
