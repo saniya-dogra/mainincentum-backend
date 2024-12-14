@@ -37,7 +37,7 @@ const Salried = () => {
     '3 year form 16 (part A B) and 26 AS',
     '3 year ITR and computation',
     // 'Driving licenses',
-    // 'NOC/Loan close statements for loans closed in one year',
+     'NOC/Loan close statements for loans closed in one year',
   ];
 
   return (
@@ -51,11 +51,12 @@ const Salried = () => {
       <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Loan Applicaton</h2>
         <p className="text-gray-600 mb-6">
-          Documents Required for Applicant 1
+        Amazing ! its almost done ! please upload your documents
         </p>
 
         {/* Steps */}
-        
+        <div className="ml-9 mt-4 form-step-three "></div>
+
         <h1 className="text-xl font-bold mt-8 text-gray-900  mb-8">
               3. Upload Documents for Salaried
             </h1>

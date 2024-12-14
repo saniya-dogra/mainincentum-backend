@@ -30,6 +30,8 @@ const HomeTwo = () => {
         <h3 className="text-xl font-medium mt-4 ml-14">
           Set up your account for your loan Application
         </h3>
+        <div className="ml-9 mt-4 form-step-two "></div>
+
 
         {/* Employment Type Selection */}
         <div className="mt-10 mx-12">

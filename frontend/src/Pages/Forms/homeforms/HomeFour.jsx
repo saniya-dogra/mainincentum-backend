@@ -53,11 +53,12 @@ const SelfEmployed = () => {
       <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Loan Applicaton</h2>
         <p className="text-gray-600 mb-6">
-          Documents Required for Applicant 1
+        Amazing ! its almost done ! please upload your documents
         </p>
 
         {/* Steps */}
-        
+        <div className="ml-9 mt-4 form-step-three "></div>
+
         <h1 className="text-xl font-bold mt-8 text-gray-900  mb-8">
               3. Upload Documents for Self Employed/ Professionals 
             </h1>
