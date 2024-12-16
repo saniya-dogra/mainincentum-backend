@@ -1,31 +1,36 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa"; // Dropdown icon
-import rupee from "../../assets/rupee.png";
-import { UserContext } from "../../contextapi/UserContext";
-import axios from "axios";
+import { FaChevronDown } from "react-icons/fa";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
+import axios from "axios";
 
+import rupee from "../../assets/rupee.png"; // Update the path if needed
+import { UserContext } from "../../contextapi/UserContext";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const { user, setUser } = useContext(UserContext); // Include `setUser` to update after logout
+
+  const { user, setUser, ready } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Toggle Services Dropdown
+  // Ensure we only show the UI once `ready` is true
+  if (!ready) return null;
+
   const toggleServicesDropdown = () => {
     setIsServicesDropdownOpen(!isServicesDropdownOpen);
   };
 
-  // Handle Logout Function
   const handleLogout = async () => {
     try {
-      await axios.post("http://127.0.0.1:8080/logout", {}, { withCredentials: true });
+      await axios.post(
+        "http://127.0.0.1:8080/logout",
+        {},
+        { withCredentials: true }
+      );
       alert("Logout successful");
-      setUser(null); // Reset user state after logout
-      navigate("/HomePage"); // Redirect to homepage
+      setUser(null); // Reset user state
+      navigate("/HomePage"); // Redirect after logout
     } catch (err) {
       console.error("Error during logout:", err);
       alert("Failed to log out");
@@ -42,7 +47,10 @@ const Header = () => {
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-8 text-lg">
-        <Link to="/HomePage" className="text-white hover:text-[#F5C13D] transition">
+        <Link
+          to="/HomePage"
+          className="text-white hover:text-[#F5C13D] transition"
+        >
           Home
         </Link>
         <a href="/about" className="text-white hover:text-[#F5C13D] transition">
@@ -60,16 +68,28 @@ const Header = () => {
           </button>
           {isServicesDropdownOpen && (
             <div className="absolute bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-48 z-50">
-              <a href="/home-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
+              <a
+                href="/home-loan"
+                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+              >
                 Home Loan
               </a>
-              <a href="/vehicle-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
+              <a
+                href="/vehicle-loan"
+                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+              >
                 Vehicle Loan
               </a>
-              <a href="/personal-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
+              <a
+                href="/personal-loan"
+                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+              >
                 Personal Loan
               </a>
-              <a href="/business-loan" className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition">
+              <a
+                href="/business-loan"
+                className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+              >
                 Business Loan
               </a>
             </div>
@@ -79,7 +99,7 @@ const Header = () => {
           Contact
         </a>
 
-        {/* Profile and Logout */}
+        {/* User Profile or Authentication Button */}
         {user ? (
           <div className="relative">
             <div
@@ -108,29 +128,35 @@ const Header = () => {
               <div className="absolute top-full mt-2 right-0 bg-white shadow-lg rounded-lg z-50 w-35">
                 <button
                   onClick={handleLogout}
-                  className=" flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300"
+                  className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300"
                 >
                   <IoArrowBackCircleSharp className="w-8 h-8" />
                   Logout
-                  
-                </button>
+                </button >
+                <Link to={'/user-profile'}><button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300">Profile</button></Link>
               </div>
             )}
           </div>
         ) : (
           <Link
-            to="/signup-page" // Redirects to the Register page
+            to="/signup-page"
             className="bg-[#F5C13D] px-5 py-2 rounded-lg text-black font-semibold hover:bg-[#F5C13D] transition"
           >
             Get Started
           </Link>
         )}
       </nav>
-
-      {/* Mobile Navigation */}
-      {/* Logic remains the same for the mobile view */}
     </header>
   );
 };
 
 export default Header;
+ 
+
+
+
+
+
+
+
+
