@@ -2,27 +2,17 @@ import React, { useState } from "react";
 import Input from "./Input.jsx";
 import Dropdown from "./Dropdown.jsx";
 
-
 export default function PageOne() {
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [applicantCount, setApplicantCount] = useState(1);
 
   const handleOptionSelect = (option) => {
     console.log("Selected:", option);
   };
 
-  const handleAddApplicant = () => {
-    if (applicantCount < 4) {
-      setApplicantCount(applicantCount + 1);
-    }
-  };
-
-  const ApplicantSection = ({ index }) => (
+  const ApplicantSection = () => (
+    
     <div className="mx-12">
-      <h1 className="text-xl font-bold mt-10 text-gray-900 mb-5">
-        {index + 1}.Personal Details of{" "}
-        {index == 0 ? "Applicant 1" : `Applicant ${index + 1}`}
-      </h1>
+      <h1 className="text-xl font-bold mt-10 text-gray-900 mb-5">1. Personal Details</h1>
 
       <div className="mx-10">
         <div className="grid grid-cols-2  w-full gap-6">
@@ -115,8 +105,8 @@ export default function PageOne() {
             options={["Resident Indian", "Non-Resident Indian"]}
             placeholder="Citizenship"
             setOpenDropdown={setOpenDropdown}
-            isOpen={openDropdown === "residenceType"}
-            id="residenceType"
+            isOpen={openDropdown === "citizenship"}
+            id="citizenship"
             onSelect={handleOptionSelect}
           />
         </div>
@@ -165,7 +155,7 @@ export default function PageOne() {
       {/* Right Section */}
       <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Loan Applicaton
+          Loan Application
         </h1>
 
         <h3 className="text-xl font-medium mt-4 ml-14">
@@ -173,22 +163,14 @@ export default function PageOne() {
         </h3>
 
         <div>
-          {Array.from({ length: applicantCount }, (_, index) => (
-            <ApplicantSection key={index} index={index} />
-          ))}
+          <ApplicantSection />
         </div>
-        <div>
-          {applicantCount < 4 && (
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={handleAddApplicant}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600"
-              >
-                + Add Co-Applicant
-              </button>
-            </div>
-          )}
-        </div>
+      </div>
+      <div className="flex justify-end max-w-full w-[12%] m-auto mt-5 mb-5 " style={{ marginLeft: "60%" }}>
+      <Link to = "/vehicle-details-VehicleTwo"
+       className="text-lg font-medium px-6 py-2 text-center text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition cursor-pointer w-full">
+          Next
+          </Link>
       </div>
     </div>
   );
