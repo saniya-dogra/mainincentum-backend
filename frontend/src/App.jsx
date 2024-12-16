@@ -18,6 +18,7 @@ import HomeThree from './Pages/Forms/homeforms/HomeThree';
 import HomeFour from './Pages/Forms/homeforms/HomeFour';
 import VehicleOne from './Pages/Forms/vehicleforms/VehicleOne';
 import { UserContextProvider } from './contextapi/UserContext';
+import Profile from './Pages/authentication/Profile';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path='/home-details-HomeThree' element={<HomeThree/>}/>
         <Route path='/home-details-HomeFour' element={<HomeFour/>}/>
         <Route path='/vehicle-details-VehicleOne' element={<VehicleOne/>} />
+        <Route path='/user-profile' element={<Profile/>}/>
         </Route>
       </Routes>
       </UserContextProvider>

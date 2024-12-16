@@ -136,6 +136,12 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
+  const user = req.session.user; // Use session management
+  if (!user) {
+    return res.status(401).send({ message: 'Unauthorized' });
+  }
+  res.status(200).send(user);
+  
   const { token } = req.cookies;
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' });
