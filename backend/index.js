@@ -136,11 +136,11 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  const user = req.session.user; // Use session management
-  if (!user) {
-    return res.status(401).send({ message: 'Unauthorized' });
-  }
-  res.status(200).send(user);
+  // const user = req.session.user; // Use session management
+  // if (!user) {
+  //   return res.status(401).send({ message: 'Unauthorized' });
+  // }
+  // res.status(200).send(user);
   
   const { token } = req.cookies;
   if (!token) {
@@ -171,6 +171,173 @@ app.post('/logout', (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+
+
+// API to create a new form entry
+app.post('/forms', (req, res) => {
+  const {
+    full_name,
+    father_name,
+    mobile_number,
+    email_id,
+    dob,
+    gender,
+    qualification,
+    employment_type,
+    marital_status,
+    spouse_employment_type,
+    no_of_dependents,
+    pan_number,
+    residence_type,
+    citizenship,
+    permanent_state,
+    permanent_district,
+    permanent_address,
+    permanent_pincode,
+    present_state,
+    present_district,
+    present_address,
+    present_pincode
+  } = req.body;
+
+
+
+  const query = `
+    INSERT INTO app_loan_one (
+      full_name, father_name, mobile_number, email_id, dob, gender, qualification,
+      employment_type, marital_status, spouse_employment_type, no_of_dependents,
+      pan_number, residence_type, citizenship, permanent_state, permanent_district,
+      permanent_address, permanent_pincode, present_state, present_district,
+      present_address, present_pincode
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const values = [
+    full_name, father_name, mobile_number, email_id, dob, gender, qualification,
+    employment_type, marital_status, spouse_employment_type, no_of_dependents,
+    pan_number, residence_type, citizenship, permanent_state, permanent_district,
+    permanent_address, permanent_pincode, present_state, present_district,
+    present_address, present_pincode
+  ];
+
+  pool.query(query, values, (err, result) => {
+    if (err) {
+      console.error('Error inserting data:', err);
+      return res.status(500).send('Error saving form data');
+    }
+    res.status(201).send('Form data saved successfully');
+  });
+});
+
+
+// API to fetch all form entries
+// app.get('/forms', (req, res) => {
+//   const query = 'SELECT * FROM Forms';
+//   pool.query(query, (err, results) => {
+//     if (err) {
+//       console.error('Error fetching data:', err);
+//       res.status(500).send('Error fetching form data');
+//       return;
+//     }
+//     res.json(results);
+//   });
+// });
+
+// API to fetch a single form entry by ID
+// app.get('/forms/:id', (req, res) => {
+//   const { id } = req.params;
+//   const query = 'SELECT * FROM Forms WHERE id = ?';
+
+//   pool.query(query, [id], (err, result) => {
+//     if (err) {
+//       console.error('Error fetching data:', err);
+//       res.status(500).send('Error fetching form data');
+//       return;
+//     }
+//     if (result.length === 0) {
+//       res.status(404).send('Form not found');
+//       return;
+//     }
+//     res.json(result[0]);
+//   });
+// });
+
+// // API to update a form entry
+// app.put('/forms/:id', (req, res) => {
+//   const { id } = req.params;
+//   const updates = req.body;
+
+//   const fields = Object.keys(updates).map(field => `${field} = ?`).join(', ');
+//   const values = [...Object.values(updates), id];
+
+//   const query = `UPDATE Forms SET ${fields} WHERE id = ?`;
+
+//   pool.query(query, values, (err, result) => {
+//     if (err) {
+//       console.error('Error updating data:', err);
+//       res.status(500).send('Error updating form data');
+//       return;
+//     }
+//     res.send('Form data updated successfully');
+//   });
+// });
+
+// // API to delete a form entry
+// app.delete('/forms/:id', (req, res) => {
+//   const { id } = req.params;
+//   const query = 'DELETE FROM Forms WHERE id = ?';
+
+//   pool.query(query, [id], (err, result) => {
+//     if (err) {
+//       console.error('Error deleting data:', err);
+//       res.status(500).send('Error deleting form data');
+//       return;
+//     }
+//     res.send('Form data deleted successfully');
+//   });
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
