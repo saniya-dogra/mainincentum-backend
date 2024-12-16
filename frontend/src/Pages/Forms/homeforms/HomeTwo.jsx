@@ -96,7 +96,7 @@ const HomeTwo = () => {
                 onSelect={handleOptionSelect}
               />
               <Dropdown
-                options={Array.from({ length: 36 }, (_, i) => `${i + 1} months`)}
+                options={Array.from({ length: 6 }, (_, i) => `${i + 1} year`)}
                 placeholder="Work Experience Duration"
                 setOpenDropdown={setOpenDropdown}
                 isOpen={openDropdown === "workExperienceDuration"}
@@ -229,13 +229,10 @@ const HomeTwo = () => {
               <Input placeholder="Agreement/MoU Value (Rs.)" />
               <Input placeholder="Loan Amount Required (Rs.)" />
           </div>
-
           <div className="mt-2">
-          <Dropdown
-            options={["Bank 1", "Bank 2", "Bank 3", "Bank 4", "Bank 5"]}
-            placeholder="Your Preferred Banks (select up to 3)"
-            
-          />
+          <div className="flex flex-col space-y-4">
+              <Input placeholder="Enter your Preferred Banks" />
+          </div>
           </div>
 
         {/* Continue Button */}
