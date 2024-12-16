@@ -299,6 +299,131 @@ app.post('/forms', (req, res) => {
 // });
 
 
+app.post("/form-two", (req, res) => {
+  const {
+    user_type,
+    organisation_name,
+    designation_salaried,
+    organisation_type,
+    work_experience,
+    work_experience_duration,
+    monthly_salary,
+    place_of_posting,
+    salary_bank_name,
+    company_name,
+    company_type,
+    incorporation_date,
+    designation_self,
+    years_in_business,
+    years_of_itr_filing,
+    property_finalised,
+    property_address,
+    agreement_executed,
+    agreement_mou_value,
+    loan_amount_required,
+    preferred_banks
+  } = req.body;
+
+  const query = `
+    INSERT INTO app_loan_two 
+    (user_type, organisation_name, designation_salaried, organisation_type, work_experience, 
+     work_experience_duration, monthly_salary, place_of_posting, salary_bank_name, company_name, 
+     company_type, incorporation_date, designation_self, years_in_business, years_of_itr_filing, 
+     property_finalised, property_address, agreement_executed, agreement_mou_value, loan_amount_required, 
+     preferred_banks) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  pool.query(
+    query,
+    [
+      user_type,
+      organisation_name,
+      designation_salaried,
+      organisation_type,
+      work_experience,
+      work_experience_duration,
+      monthly_salary,
+      place_of_posting,
+      salary_bank_name,
+      company_name,
+      company_type,
+      incorporation_date,
+      designation_self,
+      years_in_business,
+      years_of_itr_filing,
+      property_finalised,
+      property_address,
+      agreement_executed,
+      agreement_mou_value,
+      loan_amount_required,
+      preferred_banks
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Error inserting data:", err);
+        return res.status(500).json({ message: "Failed to save loan application.", error: err });
+      }
+      res.status(201).json({ message: "Loan application submitted successfully!", id: result.insertId });
+    }
+  );
+});
+
+// // 2. READ - Fetch all loan applications
+// app.get("/loan-applications", (req, res) => {
+//   const query = "SELECT * FROM app_loan_two";
+
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error("Error fetching data:", err);
+//       return res.status(500).json({ message: "Failed to retrieve loan applications.", error: err });
+//     }
+//     res.status(200).json(results);
+//   });
+// });
+
+// // 3. READ - Fetch a single loan application by ID
+// app.get("/loan-application/:id", (req, res) => {
+//   const { id } = req.params;
+
+//   const query = "SELECT * FROM app_loan_two WHERE id = ?";
+//   db.query(query, [id], (err, results) => {
+//     if (err || results.length === 0) {
+//       console.error("Error fetching record:", err);
+//       return res.status(404).json({ message: "Loan application not found." });
+//     }
+//     res.status(200).json(results[0]);
+//   });
+// });
+
+// // 4. UPDATE - Update a specific loan application
+// app.put("/loan-application/:id", (req, res) => {
+//   const { id } = req.params;
+//   const updates = req.body;
+
+//   const query = "UPDATE app_loan_two SET ? WHERE id = ?";
+//   db.query(query, [updates, id], (err, result) => {
+//     if (err || result.affectedRows === 0) {
+//       console.error("Error updating data:", err);
+//       return res.status(404).json({ message: "Loan application not found or failed to update." });
+//     }
+//     res.status(200).json({ message: "Loan application updated successfully." });
+//   });
+// });
+
+// // 5. DELETE - Delete a loan application by ID
+// app.delete("/loan-application/:id", (req, res) => {
+//   const { id } = req.params;
+
+//   const query = "DELETE FROM app_loan_two WHERE id = ?";
+//   db.query(query, [id], (err, result) => {
+//     if (err || result.affectedRows === 0) {
+//       console.error("Error deleting record:", err);
+//       return res.status(404).json({ message: "Loan application not found." });
+//     }
+//     res.status(200).json({ message: "Loan application deleted successfully." });
+//   });
+// });
+
 
 
 

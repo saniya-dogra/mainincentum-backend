@@ -7,14 +7,15 @@ export default function Dropdown({
   isOpen,
   setOpenDropdown,
   id,
-  value, // Track selected value
+  value,
 }) {
   const handleOptionClick = (option) => {
     onSelect(option); // Notify parent of the selected option
     setOpenDropdown(null); // Close dropdown after selection
   };
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (e) => {
+    e.preventDefault();  // Prevent event from propagating to form submission
     setOpenDropdown(isOpen ? null : id); // Toggle dropdown open/close
   };
 

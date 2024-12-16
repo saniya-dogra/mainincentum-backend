@@ -5,6 +5,7 @@ import axios from "axios";
 
 
 export default function PageOne() {
+  const [name, setName] =useState("")
   const [formValues, setFormValues] = useState({
     "full_name": "",
     "father_name": "",
@@ -67,15 +68,24 @@ export default function PageOne() {
       <h1 className="text-xl font-bold mt-10 text-gray-900 mb-5">1. Personal Details</h1>
       <div className="mx-10">
         <div className="grid grid-cols-2 w-full gap-6">
-        <Input
+        {/* <Input
             placeholder="Full Name as per Pan card"
-            name="fullName"
+            name="full_name"
             value={formValues.full_name}
             onChange={handleInputChange}
-          />
+          /> */}
+           <input
+        id="full_name"
+        name="full_name"
+        type="text"
+        value={name}
+        onChange={(e)=>setName(e.target.value)}
+        placeholder="Full Name as per Pan card"
+        className="w-full border border-blue-400 bg-[#D3EEFF] text-[16px] py-[11px] pl-6 rounded-xl mb-4 placeholder-gray-40 shadow-md font-base text-start focus:outline-none hover:bg-blue-200 transition-all duration-300"
+      />
           <Input
             placeholder="Father Name"
-            name="fatherName"
+            name="father_name"
             value={formValues.father_name}
             onChange={handleInputChange}
           />
