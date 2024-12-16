@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 import PageOne from '../../../components/form/Pageone'
-import Button from "../../../components/form/Button.jsx";
 
 
 const HomeOne = () => {
