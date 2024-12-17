@@ -24,10 +24,12 @@ import { UserContextProvider } from './contextapi/UserContext';
 import Coapplicant from './Pages/Forms/vehicleforms/Coapplicant';
 import Profile from './Pages/authentication/Profile';
 import Homedashboard from './Pages/dashboard/homedashboard';
+import { HomeOneContextProvider } from './contextapi/HomeOneContext';
 
 function App() {
   return (
         <UserContextProvider>
+          <HomeOneContextProvider>
       
       <Routes>
         <Route path='/' element={<Layout/>}>
@@ -55,6 +57,7 @@ function App() {
         <Route path='/dashboard' element={<Homedashboard/>}/>
         </Route>
       </Routes>
+      </HomeOneContextProvider>
       </UserContextProvider>
    
   );

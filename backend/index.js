@@ -134,28 +134,43 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
-
-app.get('/profile', (req, res) => {
-  // const user = req.session.user; // Use session management
-  // if (!user) {
-  //   return res.status(401).send({ message: 'Unauthorized' });
-  // }
-  // res.status(200).send(user);
-  
+app.get('/profile', async (req, res) => {
+  // Retrieve token from cookies
   const { token } = req.cookies;
+
+  // Validate token
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorized. Token is missing.' });
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    res.status(200).json(user);
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Fetch user data from the database
+    const query = "SELECT id, name, phoneNumber, email, pincode FROM users WHERE id = ?";
+    pool.query(query, [decoded.id], (err, results) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Internal server error.' });
+      }
+
+      // No user found
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+
+      // Send user profile
+      res.status(200).json({
+        message: 'Profile fetched successfully.',
+        user: results[0],
+      });
+    });
   } catch (err) {
-    console.error('Invalid token:', err);
-    res.status(403).json({ error: 'Invalid token' });
+    console.error('Invalid or expired token:', err);
+    res.status(403).json({ error: 'Invalid or expired token.' });
   }
 });
-
 // POST: Logout Endpoint
 app.post('/logout', (req, res) => {
   try {
@@ -232,17 +247,17 @@ app.post('/forms', (req, res) => {
 
 
 // API to fetch all form entries
-// app.get('/forms', (req, res) => {
-//   const query = 'SELECT * FROM Forms';
-//   pool.query(query, (err, results) => {
-//     if (err) {
-//       console.error('Error fetching data:', err);
-//       res.status(500).send('Error fetching form data');
-//       return;
-//     }
-//     res.json(results);
-//   });
-// });
+app.get('/forms', (req, res) => {
+  const query = 'SELECT * FROM app_loan_one';
+  
+  pool.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      return res.status(500).send('Error fetching form data');
+    }
+    return res.json(results);
+  });
+});
 
 // API to fetch a single form entry by ID
 // app.get('/forms/:id', (req, res) => {
@@ -325,7 +340,7 @@ app.post("/form-two", (req, res) => {
   } = req.body;
 
   const query = `
-    INSERT INTO app_loan_two 
+    INSERT INTO app_loan_two  
     (user_type, organisation_name, designation_salaried, organisation_type, work_experience, 
      work_experience_duration, monthly_salary, place_of_posting, salary_bank_name, company_name, 
      company_type, incorporation_date, designation_self, years_in_business, years_of_itr_filing, 

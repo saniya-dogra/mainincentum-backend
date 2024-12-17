@@ -1,14 +1,13 @@
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../../components/form/Input.jsx";
 import Dropdown from "../../../components/form/Dropdown.jsx";
-import Button from "../../../components/form/Button.jsx";
+  import Button from "../../../components/form/Button.jsx";
 import axios from "axios";
 
 const HomeTwo = () => {
-  const [employmentType, setEmploymentType] = useState("");
   const [openDropdown, setOpenDropdown] = useState(null);
+  const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     user_type: "",
     organisation_name: "",
@@ -64,7 +63,13 @@ const HomeTwo = () => {
       });
 
       alert("data send successfully");
-      // navigate("/HomePage");
+      navigate(
+        formValues.user_type === "Salaried"
+          ? "/home-details-HomeThree"
+          : formValues.user_type === "Self-Employed"
+          ? "/home-details-HomeFour"
+          : "#"
+      );
     } catch (error) {
       console.error("Error during form submit:", error);
       alert("Could not submit form. Please try again later.");
@@ -161,7 +166,7 @@ const HomeTwo = () => {
                     onSelect={(option) => handleOptionSelect("work_experience", option)}
                   />
                   <Dropdown
-                    options={Array.from({ length: 6 }, (_, i) => `${i + 1} years`)}
+                    options={["1 year","2 year","3 year","4 year","5 year","5 year",]}
                     placeholder="Work Experience Duration"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === "workExperienceDuration"}
@@ -231,7 +236,7 @@ const HomeTwo = () => {
 
                 <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
-                    options={Array.from({ length: 9 }, (_, i) => `${i + 1} years`)}
+                    options={["1 year","2 year","3 year","4 year","5 year","5 year","6 year","7 year","8 year","9 year"]}
                     placeholder="Firm Registration/Incorporation Date"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === "firmRegistrationDate"}
@@ -252,7 +257,7 @@ const HomeTwo = () => {
 
                 <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
-                    options={Array.from({ length: 9 }, (_, i) => `${i + 1} years`)}
+                    options={["1 year","2 year","3 year","4 year","5 year","5 year","6 year","7 year","8 year","9 year"]}
                     placeholder="Years in Line of Business (VINTAGE)"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === "lineOfBusiness"}
@@ -261,7 +266,7 @@ const HomeTwo = () => {
                     onSelect={(option) => handleOptionSelect("years_in_business", option)}
                   />
                   <Dropdown
-                    options={Array.from({ length: 9 }, (_, i) => `${i + 1} years`)}
+                    options={["1 year","2 year","3 year","4 year","5 year","5 year","6 year","7 year","8 year","9 year"]}
                     placeholder="Years of ITR Filing (VINTAGE)"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === "itrFiling"}
@@ -361,7 +366,7 @@ const HomeTwo = () => {
           {/* Preferred Banks */}
           <div className="mt-2">
             <Input
-              placeholder="Your Preferred Banks (select up to 3)"
+              placeholder=" Enter Your Preferred Banks "
               name="preferred_banks"
               value={formValues.preferred_banks}
               onChange={handleInputChange}
@@ -369,16 +374,8 @@ const HomeTwo = () => {
           </div>
           <div>
 
-          {/* Continue Button */}
-          <div className="mt-8">
-          {formValues.user_type === "Self-Employed" && (
-              <div>
-                {/* Similar content for Self-Employed */}
-              </div>
-            )}
-          </div>
-
-          {/* Submit Button */}
+         
+      
           <Button type="submit" text="Submit" className="mt-6" />
           </div>
         </form>
