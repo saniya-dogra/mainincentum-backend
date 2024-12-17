@@ -4,13 +4,13 @@ import axios from "axios";
 export const UserContext = createContext({});
 
 export function UserContextProvider({ children }) {
-  const [user, setUser] = useState("true");
+  const [user, setUser] = useState("");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     axios
       .get('http://127.0.0.1:8080/profile', { withCredentials: true },{credentials: 'include',})
-      .then(({ data }) => {
+      .then((data ) => {
         console.log("Fetched profile data:", data); // Debug API response
         setUser(data); 
         setReady(true);

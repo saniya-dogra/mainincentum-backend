@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { HomeOneContext } from "../../contextapi/HomeOneContext";
 
 const Dashboard = () => {
 
+  const { user } = useContext(HomeOneContext)
     const loanApplications = [
         {
           id: 1,
@@ -57,30 +59,40 @@ const Dashboard = () => {
         {/* Personal Information */}
         <h2 className="text-lg font-medium mb-6 bg-blue-200 mix-w-full w-[20%] text-center rounded-full py-1">Personal Information</h2>
         <div className="grid grid-cols-3 gap-6 mb-8 bg-gray-200 p-4 rounded-lg">
+        <div className="flex flex-col">
+  <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
+  {user ? (
+    <input
+      type="text"
+      placeholder="Full Name"
+      className="w-full border border-gray-300 rounded-lg p-2"
+      value={user?.data[0]?.full_name ?? 'hey'}
+    />
+  ) : (
+    <p>Loading...</p>
+  )}
+</div>
           <div className="flex flex-col">
-            <label className="block text-gray-700 font-semibold mb-1">First Name </label>
+            <label className="block text-gray-700 font-semibold mb-1">Pincode</label>
             <input
               type="text"
-              placeholder="First Name"
+              placeholder="Pincode"
               className="w-full border border-gray-300 rounded-lg p-2"
             />
           </div>
           <div className="flex flex-col">
-            <label className="block text-gray-700 font-semibold mb-1">Last Name </label>
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="w-full border border-gray-300 rounded-lg p-2"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="block text-gray-700 font-semibold mb-1">Email ID </label>
-            <input
-              type="email"
-              placeholder="xxxxxxx@gmail.com"
-              className="w-full border border-gray-300 rounded-lg p-2"
-            />
-          </div>
+  <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
+  {user ? (
+    <input
+      type="text"
+      placeholder="Full Name"
+      className="w-full border border-gray-300 rounded-lg p-2"
+      value={user?.data[0]?.email_id ?? 'hey'}
+    />
+  ) : (
+    <p>Loading...</p>   
+  )}
+</div>
           <div className="flex flex-col">
             <label className="block text-gray-700 font-semibold mb-1">Contact Number </label>
             <input

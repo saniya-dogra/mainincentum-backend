@@ -2,10 +2,12 @@ import React, { useState,  useCallback } from "react";
 import Dropdown from "./Dropdown.jsx";
 import Input from "./Input.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Button from "./Button.jsx";
 
 
 export default function PageOne() {
-  const [name, setName] =useState("")
+  const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     "full_name": "",
     "father_name": "",
@@ -56,33 +58,35 @@ export default function PageOne() {
       });
 
       alert("Form submitted successfully");
-      // navigate("/HomePage");
+      navigate("/home-details-HomeTwo");
     } catch (error) {
       console.error("Error during form submit:", error);
       alert("Could not submit form. Please try again later.");
     }
   };
 
-  const ApplicantSection = () => (
-    <div className="mx-12">
+  return (
+    <div className="flex flex-col lg:flex-row p-7 py-10 rounded-lg shadow-md form-bg-image bg-[#C0F7FB]">
+      <div className="p-7 lg:w-1/3 flex flex-col items-center">
+        <div className="form-slidebar"></div>
+      </div>
+      <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Loan Application</h1>
+        <h3 className="text-xl font-medium mt-4 ml-14">
+          Set up your account for your loan application
+        </h3>
+        <form action="" onSubmit={submitForm}>
+        <div className="mx-12">
       <h1 className="text-xl font-bold mt-10 text-gray-900 mb-5">1. Personal Details</h1>
       <div className="mx-10">
         <div className="grid grid-cols-2 w-full gap-6">
-        {/* <Input
+        <Input
             placeholder="Full Name as per Pan card"
             name="full_name"
             value={formValues.full_name}
             onChange={handleInputChange}
-          /> */}
-           <input
-        id="full_name"
-        name="full_name"
-        type="text"
-        value={name}
-        onChange={(e)=>setName(e.target.value)}
-        placeholder="Full Name as per Pan card"
-        className="w-full border border-blue-400 bg-[#D3EEFF] text-[16px] py-[11px] pl-6 rounded-xl mb-4 placeholder-gray-40 shadow-md font-base text-start focus:outline-none hover:bg-blue-200 transition-all duration-300"
-      />
+          />
+         
           <Input
             placeholder="Father Name"
             name="father_name"
@@ -93,13 +97,13 @@ export default function PageOne() {
         <div className="grid grid-cols-2 w-full gap-6">
           <Input
             placeholder="Enter 10-digit mobile number"
-            name="mobileNumber"
+            name="mobile_number"
             value={formValues.mobile_number}
             onChange={handleInputChange}
           />
           <Input
             placeholder="Email ID"
-            name="email"
+            name="email_id"
             value={formValues.email_id}
             onChange={handleInputChange}
           />
@@ -179,7 +183,7 @@ export default function PageOne() {
           />
           <Input
             placeholder="Pan Number"
-            name="panNumber"
+            name="pan_number"
             value={formValues.pan_number}
             onChange={handleInputChange}
           />
@@ -196,7 +200,7 @@ export default function PageOne() {
           />
           <Dropdown
             options={["Resident Indian", "Non-Resident Indian"]}
-            placeholder="Citizenship"
+            placeholder="citizenship"
             setOpenDropdown={setOpenDropdown}
             isOpen={openDropdown === "citizenship"}
             id="citizenship"
@@ -213,13 +217,13 @@ export default function PageOne() {
         <div className="grid grid-cols-2 w-full gap-6">
           <Input
             placeholder="State"
-            name="permanentState"
+            name="permanent_state"
             value={formValues.permanent_state}
             onChange={handleInputChange}
           />
           <Input
             placeholder="District"
-            name="permanentDistrict"
+            name="permanent_district"
             value={formValues.permanent_district}
             onChange={handleInputChange}
           />
@@ -227,13 +231,13 @@ export default function PageOne() {
         <div className="grid grid-cols-2 w-full gap-6">
           <Input
             placeholder="Enter Your Permanent Address"
-            name="permanentAddress"
+            name="permanent_address"
             value={formValues.permanent_address}
             onChange={handleInputChange}
           />
           <Input
             placeholder="Pin Code"
-            name="permanentPincode"
+            name="permanent_pincode"
             value={formValues.permanent_pincode}
             onChange={handleInputChange}
           />
@@ -247,13 +251,13 @@ export default function PageOne() {
         <div className="grid grid-cols-2 w-full gap-6">
           <Input
             placeholder="State"
-            name="presentState"
+            name="present_state"
             value={formValues.present_state}
             onChange={handleInputChange}
           />
           <Input
             placeholder="District"
-            name="presentDistrict"
+            name="present_district"
             value={formValues.present_district}
             onChange={handleInputChange}
           />
@@ -261,40 +265,22 @@ export default function PageOne() {
         <div className="grid grid-cols-2 w-full gap-6">
           <Input
             placeholder="Enter Your Present Address"
-            name="presentAddress"
+            name="present_address"
             value={formValues.present_address}
             onChange={handleInputChange}
           />
           <Input
             placeholder="Pin Code"
-            name="presentPincode"
+            name="present_pincode"
             value={formValues.present_pincode}
             onChange={handleInputChange}
           />
         </div>
       </div>
     </div>
-  );
-
-  return (
-    <div className="flex flex-col lg:flex-row p-7 py-10 rounded-lg shadow-md form-bg-image bg-[#C0F7FB]">
-      <div className="p-7 lg:w-1/3 flex flex-col items-center">
-        <div className="form-slidebar"></div>
-      </div>
-      <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Loan Application</h1>
-        <h3 className="text-xl font-medium mt-4 ml-14">
-          Set up your account for your loan application
-        </h3>
-        <form action="" onSubmit={submitForm}>
-          <ApplicantSection />
           <div className="mt-8">
-            <button
-              type="submit"
-              className="w-full py-3 px-8 bg-blue-600 text-white text-lg rounded-xl shadow-lg hover:bg-blue-700"
-            >
-              Submit
-            </button>
+           <Button type="submit" text="Submit" className="mt-6" />
+       
           </div>
         </form>
       </div>
