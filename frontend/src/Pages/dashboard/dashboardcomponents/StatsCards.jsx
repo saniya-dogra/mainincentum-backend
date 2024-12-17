@@ -1,24 +1,153 @@
 import React from "react";
 
 const StatsCards = () => {
-  const stats = [
-    { title: "Clients", value: 19, color: "text-blue-500" },
-    { title: "In Progress", value: 22, color: "text-yellow-500" },
-    { title: "Total Loan Revenue", value: 0, color: "text-green-500" },
-    { title: "Application Pending", value: 0, color: "text-red-500" },
-  ];
-
   return (
-    <div className="grid grid-cols-4 gap-4 mt-6 px-6">
-      {stats.map((stat, index) => (
-        <div
-          key={index}
-          className={`flex items-center justify-center bg-white shadow-md rounded-md py-4`}
-        >
-          <div className={`text-3xl font-bold ${stat.color}`}>{stat.value}</div>
-          <div className="ml-2 text-gray-700">{stat.title}</div>
+    <div className="flex flex-wrap gap-4 p-4 bg-green-50">
+      {/* Card 1 - Clients */}
+      <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
+        <div>
+          <p className="text-gray-500 text-sm">Enrolled</p>
+          <p className="text-blue-600 font-semibold text-lg mt-1">Clients</p>
         </div>
-      ))}
+        <div className="relative">
+          <svg className="w-16 h-16 text-blue-400" viewBox="0 0 36 36">
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              className="opacity-25"
+            ></circle>
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              strokeDasharray="100"
+              strokeDashoffset="70"
+              strokeLinecap="round"
+            ></circle>
+          </svg>
+          <span className="absolute inset-0 flex items-center justify-center font-bold text-blue-600">
+            19
+          </span>
+        </div>
+      </div>
+
+      {/* Card 2 - In Progress */}
+      <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
+        <div>
+          <p className="text-gray-500 text-sm">Enrolled</p>
+          <p className="text-yellow-600 font-semibold text-lg mt-1">
+            In Progress
+          </p>
+        </div>
+        <div className="relative">
+          <svg className="w-16 h-16 text-yellow-400" viewBox="0 0 36 36">
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              className="opacity-25"
+            ></circle>
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              strokeDasharray="100"
+              strokeDashoffset="60"
+              strokeLinecap="round"
+            ></circle>
+          </svg>
+          <span className="absolute inset-0 flex items-center justify-center font-bold text-yellow-600">
+            22
+          </span>
+        </div>
+      </div>
+
+      {/* Card 3 - Total Loan Revenue */}
+      <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
+        <div>
+          <p className="text-gray-500 text-sm">Amount</p>
+          <p className="text-green-600 font-semibold text-lg mt-1">
+            Total loan Revenue
+          </p>
+        </div>
+        <div className="relative">
+          <svg className="w-16 h-16 text-green-400" viewBox="0 0 36 36">
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              className="opacity-25"
+            ></circle>
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              strokeDasharray="100"
+              strokeDashoffset="100"
+              strokeLinecap="round"
+            ></circle>
+          </svg>
+          <span className="absolute inset-0 flex items-center justify-center font-bold text-green-600">
+            0
+          </span>
+        </div>
+      </div>
+
+      {/* Card 4 - Application Pending */}
+      <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
+        <div>
+          <p className="text-gray-500 text-sm">Enrolled</p>
+          <p className="text-red-600 font-semibold text-lg mt-1">
+            Application Pending
+          </p>
+        </div>
+        <div className="relative">
+          <svg className="w-16 h-16 text-red-400" viewBox="0 0 36 36">
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              className="opacity-25"
+            ></circle>
+            <circle
+              cx="18"
+              cy="18"
+              r="16"
+              stroke="currentColor"
+              strokeWidth="3"
+              fill="transparent"
+              strokeDasharray="100"
+              strokeDashoffset="90"
+              strokeLinecap="round"
+            ></circle>
+          </svg>
+          <span className="absolute inset-0 flex items-center justify-center font-bold text-red-600">
+            0
+          </span>
+        </div>
+      </div>
     </div>
   );
 };
