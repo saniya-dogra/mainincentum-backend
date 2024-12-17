@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../../components/form/Input.jsx";
 import Dropdown from "../../../components/form/Dropdown.jsx";
-  import Button from "../../../components/form/Button.jsx";
+import Button from "../../../components/form/Button.jsx";
 import axios from "axios";
 
 const HomeTwo = () => {

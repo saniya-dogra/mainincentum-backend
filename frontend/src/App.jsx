@@ -23,8 +23,10 @@ import VehicleFour from './Pages/Forms/vehicleforms/VehicleFour';
 import { UserContextProvider } from './contextapi/UserContext';
 import Coapplicant from './Pages/Forms/vehicleforms/Coapplicant';
 import Profile from './Pages/authentication/Profile';
-import Homedashboard from './Pages/dashboard/homedashboard';
+import HomeDashboard from './Pages/dashboard/homedashboard';
 import { HomeOneContextProvider } from './contextapi/HomeOneContext';
+import ClientApplication from './Pages/dashboard/ClientApplication';
+import UserApplications from './Pages/dashboard/UserApplications';
 
 function App() {
   return (
@@ -54,7 +56,11 @@ function App() {
         <Route path='/vehicle-details-VehiclFour' element={<VehicleFour/>} />
         <Route path='/vehicle-details-Coapplicant' element={<Coapplicant/>} />
         <Route path='/user-profile' element={<Profile/>}/>
-        <Route path='/dashboard' element={<Homedashboard/>}/>
+        <Route path='/dashboard' element={<HomeDashboard/>}/>
+        <Route path='/client-application' element={<ClientApplication/>}/>
+        <Route path='/user-applications' element={<UserApplications/>}/>
+
+        
         </Route>
       </Routes>
       </HomeOneContextProvider>

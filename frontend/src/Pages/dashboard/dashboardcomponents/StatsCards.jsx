@@ -2,7 +2,7 @@ import React from "react";
 
 const StatsCards = () => {
   return (
-    <div className="flex flex-wrap gap-4 p-4 bg-green-50">
+    <div className="flex flex-wrap gap-4 p-5 bg-green-50">
       {/* Card 1 - Clients */}
       <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
         <div>
@@ -41,7 +41,7 @@ const StatsCards = () => {
       {/* Card 2 - In Progress */}
       <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
         <div>
-          <p className="text-gray-500 text-sm">Enrolled</p>
+          <p className="text-gray-500 text-sm">Application</p>
           <p className="text-yellow-600 font-semibold text-lg mt-1">
             In Progress
           </p>
@@ -115,9 +115,9 @@ const StatsCards = () => {
       {/* Card 4 - Application Pending */}
       <div className="flex items-center justify-between w-64 bg-white rounded-lg shadow-lg p-4">
         <div>
-          <p className="text-gray-500 text-sm">Enrolled</p>
+          <p className="text-gray-500 text-sm">Application</p>
           <p className="text-red-600 font-semibold text-lg mt-1">
-            Application Pending
+             Pending
           </p>
         </div>
         <div className="relative">

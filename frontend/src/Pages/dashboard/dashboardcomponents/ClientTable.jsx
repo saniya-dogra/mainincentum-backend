@@ -1,14 +1,56 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const ClientApplication = () => {
   const [applications, setApplications] = useState([
     {
-      firstName: "Aimee",
-      lastName: "Liu",
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
       applicationNo: "21001",
       email: "ututopro@gmail.com",
       contactNumber: "6479949992",
-      username: "Aimee000",
+      pincode: "411014",
+      status: "In Process",
+    },
+    {
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
+      applicationNo: "21001",
+      email: "ututopro@gmail.com",
+      contactNumber: "6479949992",
+      pincode: "411014",
+      status: "In Process",
+    },{
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
+      applicationNo: "21001",
+      email: "ututopro@gmail.com",
+      contactNumber: "6479949992",
+      pincode: "411014",
+      status: "In Process",
+    },{
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
+      applicationNo: "21001",
+      email: "ututopro@gmail.com",
+      contactNumber: "6479949992",
+      pincode: "411014",
+      status: "In Process",
+    },{
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
+      applicationNo: "21001",
+      email: "ututopro@gmail.com",
+      contactNumber: "6479949992",
+      pincode: "411014",
+      status: "In Process",
+    },{
+      fullName: "Aimee",
+      loanAmount: "50,00,000",
+      applicationNo: "21001",
+      email: "ututopro@gmail.com",
+      contactNumber: "6479949992",
+      pincode: "411014",
       status: "In Process",
     },
       ]);
@@ -22,25 +64,39 @@ const ClientApplication = () => {
           alt="profile"
           className="w-8 h-8 rounded-full"
         />
-        <h1 className="text-lg font-semibold">Clients Application</h1>
+        <Link 
+        to="/client-application"
+        className="text-lg font-semibold">Clients Application
+        </Link>
+      
       </div>
 
       {/* Filter Section */}
       <div className="flex items-center justify-start gap-4 mb-4">
-        <select className="border border-gray-300 p-2 rounded w-60">
-          <option>Application Status</option>
-        </select>
-        <input
-          type="date"
-          className="border border-gray-300 p-2 rounded w-60"
-        />
-        <select className="border border-gray-300 p-2 rounded w-60">
-          <option>Select Sections</option>
-        </select>
-        <select className="border border-gray-300 p-2 rounded w-60">
-          <option>Select Subjects</option>
-        </select>
-      </div>
+  <select className="border border-gray-300 p-2 rounded w-60">
+    <option>Application Status</option>
+    <option>In Progress</option>
+    <option>Closed</option>
+    <option>Pending</option>
+  </select>
+  <input
+    type="date"
+    className="border border-gray-300 p-2 rounded w-60"
+  />
+  <select className="border border-gray-300 p-2 rounded w-60">
+    <option>Pin Code</option>
+    <option>411011</option>
+    <option>411012</option>
+    <option>411013</option>
+    <option>411014</option>
+    <option>411015</option>
+    <option>411016</option>
+  </select>
+  <select className="border border-gray-300 p-2 rounded w-60">
+    <option>Select </option>
+  </select>
+</div>
+
 
       {/* Table */}
       <div className="overflow-auto border border-gray-300">
@@ -51,12 +107,12 @@ const ClientApplication = () => {
                 <input type="checkbox" />
               </th>
               <th className="p-3 border">Profile</th>
-              <th className="p-3 border">First Name</th>
-              <th className="p-3 border">Last Name</th>
+              <th className="p-3 border">Full Name</th>
+              <th className="p-3 border">Loan Amount</th>
               <th className="p-3 border">Application No</th>
               <th className="p-3 border">Email ID</th>
               <th className="p-3 border">Contact Number</th>
-              <th className="p-3 border">Username</th>
+              <th className="p-3 border">Pincode</th>
               <th className="p-3 border">Status</th>
               <th className="p-3 border">Actions</th>
             </tr>
@@ -77,12 +133,12 @@ const ClientApplication = () => {
                     👤
                   </div>
                 </td>
-                <td className="p-3 border">{app.firstName}</td>
-                <td className="p-3 border">{app.lastName}</td>
+                <td className="p-3 border">{app.fullName}</td>
+                <td className="p-3 border">{app.loanAmount}</td>
                 <td className="p-3 border">{app.applicationNo}</td>
                 <td className="p-3 border">{app.email}</td>
                 <td className="p-3 border">{app.contactNumber}</td>
-                <td className="p-3 border">{app.username}</td>
+                <td className="p-3 border">{app.pincode}</td>
                 <td className="p-3 border">
                   <span
                     className={`${
@@ -95,8 +151,10 @@ const ClientApplication = () => {
                   </span>
                 </td>
                 <td className="p-3 border space-x-2">
-                  <button className="text-blue-600 hover:underline">✏️</button>
-                  <button className="text-red-500 hover:underline">🗑️</button>
+                <Link 
+                    to="/user-applications"
+                    className="text-blue-600 hover:underline"> VIEW  ✏️
+                    </Link>
                 </td>
               </tr>
             ))}
