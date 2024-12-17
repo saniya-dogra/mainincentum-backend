@@ -7,6 +7,8 @@ axios.defaults.withCredentials = true;
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
+    name:"",
+    email:"",
     phoneNumber: "",
     password: "",
   });
@@ -46,13 +48,8 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-
-      // Store the user data (use response.data.token for storing JWT token)
-      setUser(response.data); // Save user info (or token as needed)
-
-      // Optionally store the JWT token in localStorage
-      localStorage.setItem("authToken", response.data.token); // Store token for later usage
-
+      setUser(response);
+      console.log("response",response)
       alert("Login Successfully");
       navigate("/HomePage");
     } catch (error) {

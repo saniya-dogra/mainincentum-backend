@@ -13,8 +13,9 @@ app.use(cors({
   origin: "http://localhost:5173", // Frontend URL
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  credentials: true, // Allows cookies to be sent
 }));
+
 app.use(express.json());
 app.use(cookieParser()); 
 
@@ -67,11 +68,12 @@ app.post('/signup', async (req, res) => {
         { expiresIn: '1h' }
       );
       
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',  // only send cookie over HTTPS in production
-        maxAge: 3600000,  // 1 hour expiry time
-      });
+  res.cookie('token', token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production', // Set to true in production
+  sameSite: 'lax', // Adjust based on cross-origin needs
+  maxAge: 24 * 60 * 60 * 1000, // 1 day
+});
 
       // Successful response
       res.status(201).json({
@@ -127,6 +129,7 @@ app.post('/login', async (req, res) => {
       res.status(200).json({
         message: 'Login successful!',
         token,
+        results
       });
     });
   } catch (err) {
@@ -134,43 +137,29 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error.' });
   }
 });
-app.get('/profile', async (req, res) => {
-  // Retrieve token from cookies
+app.get('/profile', (req, res) => {
+  console.log('Headers:', req.headers); // Inspect request headers
+  console.log('Cookies:', req.cookies); // Inspect received cookies
+
   const { token } = req.cookies;
 
-  // Validate token
   if (!token) {
-    return res.status(401).json({ error: 'Unauthorized. Token is missing.' });
+    console.error('Token is missing from cookies.');
+    return res.status(401).json({ error: 'Unauthorized: Token is missing.' });
   }
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('Decoded token:', decoded);
 
-    // Fetch user data from the database
-    const query = "SELECT id, name, phoneNumber, email, pincode FROM users WHERE id = ?";
-    pool.query(query, [decoded.id], (err, results) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Internal server error.' });
-      }
-
-      // No user found
-      if (results.length === 0) {
-        return res.status(404).json({ error: 'User not found.' });
-      }
-
-      // Send user profile
-      res.status(200).json({
-        message: 'Profile fetched successfully.',
-        user: results[0],
-      });
-    });
+    res.status(200).json({ message: 'Profile fetched successfully.', userId: decoded.id });
   } catch (err) {
-    console.error('Invalid or expired token:', err);
-    res.status(403).json({ error: 'Invalid or expired token.' });
+    console.error('JWT verification failed:', err.message);
+    return res.status(401).json({ error: 'Invalid or expired token.' });
   }
 });
+
+
 // POST: Logout Endpoint
 app.post('/logout', (req, res) => {
   try {
