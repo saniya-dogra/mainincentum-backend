@@ -28,7 +28,7 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://127.0.0.1:8080/logout",
+        "http://localhost:8080/api/v1/users/logout",
         {},
         { withCredentials: true }
       );

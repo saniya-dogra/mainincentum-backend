@@ -8,7 +8,7 @@ export function HomeOneContextProvider({ children }) {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8080/forms', {
+      .get('http://localhost:8080/api/v1/forms/form-one', {
         withCredentials: true, // To include cookies if needed
       })
       .then((response) => {

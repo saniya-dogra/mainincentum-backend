@@ -57,7 +57,7 @@ const HomeTwo = () => {
   const submitFormTwo = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:8080/form-two", formValues, {
+      await axios.post("http://localhost:8080/api/v1/forms/form-two", formValues, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });

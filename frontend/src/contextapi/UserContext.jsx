@@ -1,29 +1,30 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const UserContext = createContext({});
 
 export function UserContextProvider({ children }) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
 
+  // Check for user token and fetch user data
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8080/profile', { withCredentials: true },{credentials: 'include',})
-      .then((data ) => {
-        console.log("Fetched profile data:", data); // Debug API response
-        setUser(data); 
-        setReady(true);
+      .get("http://localhost:8080/api/v1/users/profile", { withCredentials: true })
+      .then(response => {
+        setUser(response.data); // Set user data
       })
-      .catch((err) => {
-        console.error("Error fetching profile:", err);
-        setReady(true); // Ensure ready is set even on failure
+      .catch(() => {
+        setUser(null); // Clear user if token verification fails
+      })
+      .finally(() => {
+        setReady(true); // Mark as ready
       });
   }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, ready }}>
-      {children}
+      {ready ? children : <div>Loading...</div>}
     </UserContext.Provider>
   );
 }
