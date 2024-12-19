@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import axios from "axios";
 
@@ -10,15 +10,19 @@ import { UserContext } from "../../contextapi/UserContext";
 const Header = () => {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { user, setUser, ready } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Ensure we only show the UI once `ready` is true
   if (!ready) return null;
 
   const toggleServicesDropdown = () => {
     setIsServicesDropdownOpen(!isServicesDropdownOpen);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLogout = async () => {
@@ -29,8 +33,8 @@ const Header = () => {
         { withCredentials: true }
       );
       alert("Logout successful");
-      setUser(null); // Reset user state
-      navigate("/HomePage"); // Redirect after logout
+      setUser(null);
+      navigate("/HomePage");
     } catch (err) {
       console.error("Error during logout:", err);
       alert("Failed to log out");
@@ -45,6 +49,107 @@ const Header = () => {
         <Link to="/HomePage">INCENTUM</Link>
       </div>
 
+      {/* Hamburger Menu Icon for Mobile */}
+      <button
+        className="text-white text-2xl md:hidden"
+        onClick={toggleMobileMenu}
+      >
+        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <nav className="absolute top-full left-0 w-full bg-[#010059] flex flex-col items-start p-4 space-y-4 md:hidden">
+          <Link
+            to="/HomePage"
+            className="text-white hover:text-[#F5C13D] transition"
+            onClick={toggleMobileMenu}
+          >
+            Home
+          </Link>
+          <a
+            href="/about"
+            className="text-white hover:text-[#F5C13D] transition"
+            onClick={toggleMobileMenu}
+          >
+            About
+          </a>
+          <div className="relative w-full">
+            <button
+              className="text-white flex items-center w-full justify-between hover:text-[#F5C13D] transition cursor-pointer"
+              onClick={toggleServicesDropdown}
+            >
+              Services
+              <FaChevronDown className="ml-2 text-sm" />
+            </button>
+            {isServicesDropdownOpen && (
+              <div className="bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-full z-50">
+                <a
+                  href="/home-loan"
+                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+                  onClick={toggleMobileMenu}
+                >
+                  Home Loan
+                </a>
+                <a
+                  href="/vehicle-loan"
+                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+                  onClick={toggleMobileMenu}
+                >
+                  Vehicle Loan
+                </a>
+                <a
+                  href="/personal-loan"
+                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+                  onClick={toggleMobileMenu}
+                >
+                  Personal Loan
+                </a>
+                <a
+                  href="/business-loan"
+                  className="block px-4 py-2 hover:bg-[#F5C13D] hover:text-gray-900 transition"
+                  onClick={toggleMobileMenu}
+                >
+                  Business Loan
+                </a>
+              </div>
+            )}
+          </div>
+          <a
+            href="/contact"
+            className="text-white hover:text-[#F5C13D] transition"
+            onClick={toggleMobileMenu}
+          >
+            Contact
+          </a>
+          {user ? (
+            <>
+              <button
+                onClick={handleLogout}
+                className="text-white hover:text-[#F5C13D] transition"
+              >
+                Logout
+              </button>
+              <Link
+                to="/user-profile"
+                className="text-white hover:text-[#F5C13D] transition"
+                onClick={toggleMobileMenu}
+              >
+                Profile
+              </Link>
+            </>
+          ) : (
+            <Link
+              to="/signup-page"
+              className="bg-[#F5C13D] px-5 py-2 rounded-lg text-black font-semibold hover:bg-[#F5C13D] transition"
+              onClick={toggleMobileMenu}
+            >
+              Get Started
+            </Link>
+          )}
+        </nav>
+      )}
+
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-8 text-lg">
         <Link
@@ -56,8 +161,6 @@ const Header = () => {
         <a href="/about" className="text-white hover:text-[#F5C13D] transition">
           About
         </a>
-
-        {/* Services Dropdown */}
         <div className="relative">
           <button
             className="text-white flex items-center hover:text-[#F5C13D] transition cursor-pointer"
@@ -98,8 +201,6 @@ const Header = () => {
         <a href="/contact" className="text-white hover:text-[#F5C13D] transition">
           Contact
         </a>
-
-        {/* User Profile or Authentication Button */}
         {user ? (
           <div className="relative">
             <div
@@ -132,8 +233,12 @@ const Header = () => {
                 >
                   <IoArrowBackCircleSharp className="w-8 h-8" />
                   Logout
-                </button >
-                <Link to={'/user-profile'}><button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300">Profile</button></Link>
+                </button>
+                <Link to={"/user-profile"}>
+                  <button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300">
+                    Profile
+                  </button>
+                </Link>
               </div>
             )}
           </div>
@@ -151,12 +256,3 @@ const Header = () => {
 };
 
 export default Header;
- 
-
-
-
-
-
-
-
-

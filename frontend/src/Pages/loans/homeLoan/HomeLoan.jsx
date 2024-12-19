@@ -21,7 +21,7 @@ export default function HomeLoan() {
             </Link>
           </button>
           <h2 className="font-bold text-[26px] sm:text-[48px] lg:text-[50px] leading-[44px] sm:leading-[60px] lg:leading-[55px]">
-            Drive The Car You've Always Dreamed Of, With Ease
+          Step Into Your Dream Home with Confidence
           </h2>
           <div className="flex lg:hidden justify-center items-center mt-12 lg:mt-[310px]">
             <img
@@ -31,18 +31,18 @@ export default function HomeLoan() {
             />
           </div>
           <p className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3">
-           We know owning you dream car isn't about the ride, it's about the freedom and joy that comes with is. Our AI driven consultantion is here to make that happen, without the stress. Whether you're eyeing a aleek sports car, a family-friendly SUV, or a reliable everyday vehicle, we,ve got you covered.{" "}
+          Owning a home is one of life’s most significant milestones—a symbol of security, comfort, and achievement. At INCENTUM, we are committed to turning this aspiration into reality by providing seamless and expert-guided home loan solutions. Whether it’s a modern apartment, a luxurious villa, or your first independent house, our professional services and AI-driven insights ensure your journey to homeownership is smooth and rewarding.{" "}
           </p>
    
           <p className="text-md sm:text-lg lg:text-[14px]  leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800">
-            We bring you any and every feature of car loan being offered by indian financial institution. Be it flexible repayment options, competitive rate, and quick approval, we take care of the complicated stuff so you can focus on what matters most-enjoying the road ahead.
+          We partner with leading financial institutions across India to bring you competitive interest rates, flexible repayment tenures, and expedited approvals. By handling the complexities of the home loan process, we empower you to focus on what truly matters—creating a haven for your loved ones.
           </p>
           <h2 className="text-xl  lg:text-[22px]  mt-4 lg:mt-6 lg:leading-7 ">
-            And yes, we will incentivise you too.
+          And yes, our incentives add an extra reason to celebrate.
           </h2>
           <h2 className="text-xl lg:text-[20px] lg:leading-7 ">
-            You are a click away from your dream car. Are you ready for the
-            drive of your dreams?
+          Take the first step today and transform
+           your dream into an address!
           </h2>
           <Link to={'/home-details-HomeOne'}>
           <Button/>
