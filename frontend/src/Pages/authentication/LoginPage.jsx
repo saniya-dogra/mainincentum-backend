@@ -11,6 +11,7 @@ export default function LoginPage() {
     email:"",
     phoneNumber: "",
     password: "",
+    pincode:""
   });
 
   const { setUser } = useContext(UserContext);
@@ -38,26 +39,17 @@ export default function LoginPage() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
     try {
-      const response = await axios.post("http://127.0.0.1:8080/login", formData, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-      setUser(response);
-      console.log("response",response)
-      alert("Login Successfully");
-      navigate("/HomePage");
-    } catch (error) {
-      console.error("Error during login:", error);
-      alert("Could not log in. Please try again later.");
+      const response = await axios.post("http://localhost:8080/api/v1/users/login", formData, { withCredentials: true });
+      setUser(response.data);
+      alert("Login successful");
+      navigate("/");
+    } catch {
+      alert("Login failed.");
     }
   };
-
   return (
     <div className="min-h-screen bg-image grid grid-cols-1 xl:grid-cols-2">
       {/* Left Section */}
@@ -90,7 +82,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg">
           <h2 className="text-gray-200 text-3xl font-bold mb-4">Login</h2>
           <p className="text-gray-400 text-lg mb-4">Glad you're back!</p>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             {["phoneNumber", "password"].map((field) => (
               <div key={field}>
                 <input

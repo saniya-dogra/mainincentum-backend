@@ -11,11 +11,8 @@ const Header = () => {
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
 
-  const { user, setUser, ready } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // Destructure setUser from UserContext
   const navigate = useNavigate();
-
-  // Ensure we only show the UI once `ready` is true
-  if (!ready) return null;
 
   const toggleServicesDropdown = () => {
     setIsServicesDropdownOpen(!isServicesDropdownOpen);
@@ -24,13 +21,14 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://127.0.0.1:8080/logout",
-        {},
-        { withCredentials: true }
+        "http://localhost:8080/api/v1/users/logout",
+        {}, // Body (empty)
+        { withCredentials: true } // Include credentials (cookies)
       );
+
+      setUser(null); // Reset the user context
       alert("Logout successful");
-      setUser(null); // Reset user state
-      navigate("/HomePage"); // Redirect after logout
+      navigate("/HomePage"); // Redirect to the signup page
     } catch (err) {
       console.error("Error during logout:", err);
       alert("Failed to log out");
@@ -47,10 +45,7 @@ const Header = () => {
 
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-8 text-lg">
-        <Link
-          to="/HomePage"
-          className="text-white hover:text-[#F5C13D] transition"
-        >
+        <Link to="/HomePage" className="text-white hover:text-[#F5C13D] transition">
           Home
         </Link>
         <a href="/about" className="text-white hover:text-[#F5C13D] transition">
@@ -132,8 +127,12 @@ const Header = () => {
                 >
                   <IoArrowBackCircleSharp className="w-8 h-8" />
                   Logout
-                </button >
-                <Link to={'/user-profile'}><button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300">Profile</button></Link>
+                </button>
+                <Link to={'/user-profile'}>
+                  <button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-300">
+                    Profile
+                  </button>
+                </Link>
               </div>
             )}
           </div>
@@ -151,12 +150,3 @@ const Header = () => {
 };
 
 export default Header;
- 
-
-
-
-
-
-
-
-

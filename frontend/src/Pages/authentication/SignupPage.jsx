@@ -10,6 +10,7 @@ export default function SignupPage() {
     email: "",
     pincode: "",
     password: "",
+    confirmpassword:"",
   });
 
   const [errors, setErrors] = useState({});
@@ -54,24 +55,11 @@ export default function SignupPage() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!validateForm()) return;
-  
-    console.log("Form Data to Submit:", formData); // Debug submitted data
-  
-    try {
-      await axios.post("http://127.0.0.1:8080/signup", formData, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-      alert("Registration successful");
-      navigate("/login-page");
-    } catch (error) {
-      alert("Registration failed. Please try again.");
-      console.error("Signup error:", error);
-    }
+    await axios.post("http://localhost:8080/api/v1/users/register", formData);
+    alert("Registration successful");
+    navigate("/login-page");
   };
   
   return (
@@ -103,8 +91,8 @@ export default function SignupPage() {
       <div className="flex items-center justify-center p-6 bg-opacity-80">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg">
           <h2 className="text-gray-200 text-3xl font-bold mb-4">Signup</h2>
-          <form onSubmit={handleFormSubmit}>
-            {["name", "phoneNumber", "email", "pincode", "password"].map((field) => (
+          <form onSubmit={handleSubmit}>
+            {["name", "phoneNumber", "email", "pincode", "password","confirmpassword"].map((field) => (
               <div key={field}>
                 <input
                   name={field}

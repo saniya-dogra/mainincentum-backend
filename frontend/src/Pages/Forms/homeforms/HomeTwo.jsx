@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../../components/form/Input.jsx";
 import Dropdown from "../../../components/form/Dropdown.jsx";
-  import Button from "../../../components/form/Button.jsx";
+import Button from "../../../components/form/Button.jsx";
 import axios from "axios";
 
 const HomeTwo = () => {
@@ -57,7 +57,7 @@ const HomeTwo = () => {
   const submitFormTwo = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:8080/form-two", formValues, {
+      await axios.post("http://localhost:8080/api/v1/forms/form-two", formValues, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });

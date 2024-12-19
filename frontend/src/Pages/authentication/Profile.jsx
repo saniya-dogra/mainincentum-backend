@@ -60,23 +60,27 @@ const Dashboard = () => {
         <h2 className="text-lg font-medium mb-6 bg-blue-200 mix-w-full w-[20%] text-center rounded-full py-1">Personal Information</h2>
         <div className="grid grid-cols-3 gap-6 mb-8 bg-gray-200 p-4 rounded-lg">
         <div className="flex flex-col">
-  <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
-  {user ? (
-    <input
-      type="text"
-      placeholder="Full Name"
-      className="w-full border border-gray-300 rounded-lg p-2"
-      value={user?.data[0]?.full_name ?? 'hey'}
-    />
+  <label className="block text-gray-700 font-semibold mb-1">Full Names</label>
+  {user?.data?.results ? (
+    user.data.results.map((userObj, index) => (
+      <input
+        key={index}
+        type="text"
+        placeholder="Full Name"
+        className="w-full border border-gray-300 rounded-lg p-2 mb-2"
+        value={userObj?.name ?? 'Unknown Name'}
+        readOnly
+      />
+    ))
   ) : (
-    <p>Loading...</p>
+    <p>Loading user data...</p>
   )}
 </div>
           <div className="flex flex-col">
             <label className="block text-gray-700 font-semibold mb-1">Pincode</label>
             <input
               type="text"
-              placeholder="Pincode"
+              placeholder=""
               className="w-full border border-gray-300 rounded-lg p-2"
             />
           </div>

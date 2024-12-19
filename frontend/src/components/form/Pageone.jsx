@@ -52,7 +52,7 @@ export default function PageOne() {
   const submitForm = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://127.0.0.1:8080/forms", formValues, {
+      await axios.post("http://localhost:8080/api/v1/forms/form-one", formValues, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
