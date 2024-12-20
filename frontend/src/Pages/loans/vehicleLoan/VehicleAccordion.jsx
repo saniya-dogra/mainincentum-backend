@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
     Accordion,
     AccordionHeader,
@@ -9,6 +9,8 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { IoMdContacts } from "react-icons/io";
 import { TbListDetails } from "react-icons/tb";
 import { MdOutlineDataExploration } from "react-icons/md";
+import "aos/dist/aos.css";
+import AOS from "aos";
 
 function VehicleAccordion({ type, openAccordion, handleAccordionClick }) {
     const sections = {
@@ -215,9 +217,17 @@ function VehicleAccordion({ type, openAccordion, handleAccordionClick }) {
         offer:"/commonloanimg/offer.png"
     };
 
+     useEffect(() => {
+            AOS.init({
+                duration: 1000, 
+                once: true, 
+            });
+        }, []);
+    
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-0 mt-2" id={type}>
-            <div className="mt-[10px] lg:mt-[25px] mx-6 lg:ml-[120px]">
+            <div className="mt-[10px] lg:mt-[25px] mx-6 lg:ml-[120px]"  data-aos="fade-right" >
                 <h1 className="text-[40px] md:ml-[10px] lg:text-[45px] font-bold heading">{titles[type]}</h1>
                 <p className="ext-[18px] md:ml-[10px] lg:text-[18px] text-white font-medium  leading-[30px] lg:leading-[35px]">
                     {descriptions[type][0]}
@@ -262,7 +272,7 @@ function VehicleAccordion({ type, openAccordion, handleAccordionClick }) {
                     })}
                 </div>
             </div>
-            <div className="flex justify-center lg:justify-start">
+            <div className="flex justify-center lg:justify-start" data-aos="fade-left" >
                 <img
                     src={images[type]}
                     alt={`${titles[type]} Illustration`}
