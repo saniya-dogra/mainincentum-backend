@@ -6,13 +6,12 @@ export default {
   ],
   theme: {
     extend: {
-      colors:{
-           primary:"#090982",
-           auColor:"#242699",
-           auButtomColor:"#02E8FF"
-          }
+      colors: {
+        primary: "#090982",
+        auColor: "#242699",
+        auButtomColor: "#02E8FF",
+      },
     },
   },
   plugins: [],
-}
-
+};

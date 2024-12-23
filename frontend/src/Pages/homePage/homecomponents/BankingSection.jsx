@@ -24,8 +24,6 @@ const BankingSection = () => {
   </div>
 </div>
 
-
-
       {/* Image Section */}
       <div className="py-8 sm:py-14 max-w-7xl h-auto mx-auto px-4">
         <img
