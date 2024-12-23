@@ -1,8 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import rupee from "../../assets/rupee.png"; // Update the path if needed
 import { UserContext } from "../../contextapi/UserContext";
@@ -14,6 +16,23 @@ const Header = () => {
 
   const { user, setUser, ready } = useContext(UserContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Close the logout dropdown when clicked outside
+    const handleClickOutside = (event) => {
+      if (event.target.closest(".user-profile-dropdown") === null) {
+        setShowLogout(false);
+      }
+    };
+
+    // Attach the event listener on mount
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (!ready) return null;
 
@@ -27,20 +46,38 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
+      // Step 1: Send the logout request to the backend
       await axios.post(
         "http://localhost:8080/api/v1/users/logout",
         {},
-        { withCredentials: true }
+        { withCredentials: true }  // Make sure withCredentials is true
       );
-      alert("Logout successful");
+  
+      // Step 2: Remove the token from localStorage
+      localStorage.removeItem("token");
+  
+      // Step 3: Set the user state to null (this will also update the UI)
       setUser(null);
-      navigate("/HomePage");
+  
+      // Step 4: Show a success toast
+      toast.success("Logout successful!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+  
+      // Step 5: Navigate to home after the toast disappears
+      await new Promise((resolve) => setTimeout(resolve, 2000));  // Wait for 2 seconds
+      navigate("/");
+  
     } catch (err) {
-      console.error("Error during logout:", err);
-      alert("Failed to log out");
+      toast.error(err.response?.data?.message || "Logout failed", {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   };
-
+  
+  
   return (
     <header className="bg-[#010059] py-4 px-6 flex justify-between items-center">
       {/* Logo Section */}
@@ -202,7 +239,7 @@ const Header = () => {
           Contact
         </a>
         {user ? (
-          <div className="relative">
+          <div className="relative user-profile-dropdown">
             <div
               onClick={() => setShowLogout(!showLogout)}
               className="flex gap-2 border bg-yellow-300 border-gray-300 rounded-full py-1 px-3 shadow-md shadow-gray-400 items-center cursor-pointer"
@@ -250,6 +287,7 @@ const Header = () => {
             Get Started
           </Link>
         )}
+        <ToastContainer position="top-center" autoClose={2000} />
       </nav>
     </header>
   );

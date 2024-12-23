@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../../../components/form/Button.jsx";
-import axios from "axios";
 
-const Salried = () => {
-  const navigate = useNavigate();  // for navigation after success
+const FormThree = () => {
+  const [userType, setUserType] = useState(""); // Manage user type state
   const [files, setFiles] = useState({
     pan_card: null,
     aadhar_card: null,
@@ -41,7 +40,7 @@ const Salried = () => {
           <p className="text-blue-500">Drop the files here...</p>
         ) : (
           <p className="text-gray-500">
-            Drag and drop files here or{' '}
+            Drag and drop files here or{" "}
             <span className="text-blue-500 underline">Select files</span>
           </p>
         )}
@@ -49,47 +48,65 @@ const Salried = () => {
     );
   };
 
-  // Document list
-  const documentList = [
-    "Pan Card",
+  // Salaried Document List
+  const salariedDocumentList = [
+    "PAN Card",
     "Aadhar Card",
-    "Employer ID card",
+    "Employer ID Card",
     "Joining/Confirmation/Experience Letter",
-    "Last 12 month salary Account Statement",
+    "Last 12 Month Salary Account Statement",
     "Existing Loan Account Statement",
-    "Latest 6 month salary slip",
-    "2 year form 16 (part A B) and 26 AS",
-    "2/3 year ITR and computation",
+    "Latest 6 Month Salary Slip",
+    "Form 16 (Part A & B) and 26 AS",
+    "ITR and Computation",
+  ];
+
+  // Self-Employed Document List
+  const selfEmployedDocumentList = [
+    "PAN Card",
+    "Aadhar Card",
     "Firm Registration Certificate",
     "GSTR Last Year",
-    "Current Account Statement",
+    "Last 6/12 Month Current Account Statement",
+    "Last 12 Month Savings Bank Account Statement",
+    "Existing Loan Account Statement",
+    "ITR and Computation",
     "Balance Sheets",
     "Loan Closure Statements",
   ];
 
   return (
-    <div className="flex flex-col lg:flex-row p-7 py-10 rounded-lg shadow-md form-bg-image bg-[#C0F7FB] ">
-      {/* Left Section */}
-      <div className="p-7 lg:w-1/3 flex flex-col items-center">
-        <div className="form-slidebar"></div>
+    <div className="flex flex-col items-center p-7 py-10 rounded-lg shadow-md bg-[#C0F7FB]">
+      <h2 className="text-3xl font-bold text-gray-900 mb-4">Loan Application</h2>
+      <p className="text-gray-600 mb-6">
+        Please select your user type to proceed with the loan application.
+      </p>
+
+      {/* Dropdown for User Type */}
+      <div className="mb-6">
+        <label htmlFor="userType" className="block text-gray-800 mb-2">
+          Select User Type:
+        </label>
+        <select
+          id="userType"
+          value={userType}
+          onChange={(e) => setUserType(e.target.value)}
+          className="border border-gray-300 rounded-lg p-2 w-full"
+        >
+          <option value="">-- Select --</option>
+          <option value="salaried">Salaried</option>
+          <option value="self_employed">Self-Employed</option>
+        </select>
       </div>
 
-      {/* Right Section */}
-      <div className="lg:w-2/3 bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Loan Application</h2>
-        <p className="text-gray-600 mb-6">
-          Amazing! It's almost done! Please upload your documents.
-        </p>
+      {/* Render Form Based on User Type */}
+      {userType && (
+        <div className="w-full bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Upload Documents for {userType === "salaried" ? "Salaried" : "Self-Employed"}
+          </h1>
 
-        {/* Steps */}
-        <div className="ml-9 mt-4 form-step-three"></div>
-
-        <h1 className="text-xl font-bold mt-8 text-gray-900 mb-8">
-          3. Upload Documents for Salaried
-        </h1>
-
-        {/* Document Upload Table */}
-        <form >
+          {/* Document Upload Table */}
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
@@ -99,7 +116,10 @@ const Salried = () => {
               </tr>
             </thead>
             <tbody>
-              {documentList.map((doc, index) => {
+              {(userType === "salaried"
+                ? salariedDocumentList
+                : selfEmployedDocumentList
+              ).map((doc, index) => {
                 const name = doc.toLowerCase().replace(/\s+/g, "_"); // Generate name based on doc text
                 return (
                   <tr key={index} className="hover:bg-gray-50">
@@ -116,12 +136,14 @@ const Salried = () => {
 
           {/* Submit Button */}
           <div className="mt-8">
-            <Button type="submit">Upload Documents</Button>
+            <Link to="/next-step"> {/* Adjust this route as per your application */}
+              <Button type="button" text="Submit" />
+            </Link>
           </div>
-        </form>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Salried;
+export default FormThree;

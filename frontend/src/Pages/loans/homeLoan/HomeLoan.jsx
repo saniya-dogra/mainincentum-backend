@@ -44,9 +44,9 @@ export default function HomeLoan() {
           Take the first step today and transform
            your dream into an address!
           </h2>
-          <Link to={'/home-details-HomeOne'}>
+          
           <Button/>
-          </Link>
+      
         
         </div>
         <div className=" justify-center hidden lg:block items-center  lg:mt-[70px]">

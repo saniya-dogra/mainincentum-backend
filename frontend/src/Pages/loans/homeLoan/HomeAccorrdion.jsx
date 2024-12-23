@@ -59,14 +59,14 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
                 icon: <IoDocumentTextOutline className="w-8 lg:w-8 h-7 lg:h-8" />,
             },
             {
-                heading: "Property Documents:",
-                content: "Sale agreement, builder’s demand letter, or allotment letter etc. Approved building plan or encumbrance certificate (EC) etc.No Objection Certificate (NOC) from project financing institution.",
-                icon: <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />,
+                heading: "Liability Statements",
+                content: "Existing loan details (if any).",
+                icon: <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
-                heading: "Proof Of Income",
-                content: "Bank statements, tax returns, or salary slips to verify your earnings.",
-                icon: <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />,
+                heading: "Property Documents:",
+                content: "Sale agreement, builder’s demand letter, or allotment letter etc. Approved building plan or encumbrance certificate (EC) etc. No Objection Certificate (NOC) from project financing institution.",
+                icon: <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
                 heading: "Other Supporting Documents",
@@ -122,51 +122,76 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
         ],
         offer:[
             {
-                heading: "How Much Time It Will Take?",
-                content: "Your credit score is a critical factor in determining your eligibility. It reflects your financial history and reliability.",
+                heading: "Customized Incentives",
+                content: "Benefit from exclusive rebates and incentives, directly enhancing your savings. We offer up to 100% of Bank charges as incentives (Cash back).",
                 icon: (
                     <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "How Much Can You Borrow?",
-                content: "Stable income ensures you have the capacity to repay any financial commitments you make.",
-                icon: (
-                  <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />
+                heading: "High Loan-to-Value (LTV)",
+                content: "Get up to 90% financing of the property value for ready-to-move homes, with 80% for higher-value properties.",
+                icon: (  
+                <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "What Will Be The Interest Rate?",
-                content: "Consistent employment history shows financial reliability and the ability to sustain regular payments.",
+                heading: "High Loan amount",
+                content: "Incentum offers highest FOIR upto 95% to its customers and upto 100% of net salary of your spouse. You get the highest loan amount against your salary.",
                 icon: (
                   <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "What Will Be Tje Repayment period?",
-                content: "This ratio measures your ability to manage debts. A lower ratio increases your chances of approval.",
+                heading: "Highest Moratorium",
+                content: "Option to choose moratorium period up to 48 months",
                 icon: (
                   <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />
     
                 ),
             },
             {
-                heading: "And The Processing Charges?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "No EMI till possession",
+                content: "Youngsters can make the most out of it by choosing deferment of EMI and/or interest servicing till possession of the house",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
             {
-                heading: "Monthly Instalments?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Flexible Tenures",
+                content: "Repayment terms range up to 30 years, allowing you to plan your EMIs conveniently.",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
             {
-                heading: "Any Extra Fees?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Competitive Interest Rates",
+                content: "Choose between fixed rates (providing stability) and floating rates (linked to external benchmarks like the Repo Rate) starting at 8.35% per annum.",
+                icon: (
+                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
+                ),
+            },
+            {
+                heading: "Tax Benefits",
+                content: "Enjoy tax deductions up to ₹1.5 lakh under Section 80C for principal repayment and ₹2 lakh under Section 24(b) for interest paid annually.",
+                icon: (
+                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
+                ),
+            },{
+                heading: "Quick Approvals",
+                content: "Applications are processed within 3-7 business days, with a commitment to efficiency.",
+                icon: (
+                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
+                ),
+            },{
+                heading: "Prepayment and Foreclosure Options",
+                content: "Reduce your financial burden with minimal or zero prepayment penalties as per lender policies.",
+                icon: (
+                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
+                ),
+            },{
+                heading: "Customised loan schemes",
+                content: "Loan terms and conditions customisation available",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
@@ -178,7 +203,7 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
         eligibility: "Eligibility Criteria: Tailored to Your Financial Profile",
         documents: "Comprehensive Document ",
         apply:"Your Application Journey, Simplified",
-        offer:"What's The Offer?",
+        offer:"Key Features of Our Home Loan Solutions",
     };
 
     const descriptions = {
@@ -191,10 +216,10 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
             " Here’s what you’ll need",
         ],
         apply:[
-            "At INCENTUM, we redefine convenience in home loan processing. Follow these straightforward steps:"
+            "At INCENTUM, we redefine convenience in home loan processing. Follow these straightforward steps"
         ],
         offer:[
-            "Before you drive away with your dream car, here are a few things to keep in mind:"
+            " "
         ]
     };
 

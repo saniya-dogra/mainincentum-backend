@@ -2,20 +2,19 @@ import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../index.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../contextapi/UserContext";
+
 axios.defaults.withCredentials = true;
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
-    name:"",
-    email:"",
     phoneNumber: "",
     password: "",
-    pincode:""
   });
 
   const { setUser } = useContext(UserContext);
-
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -41,15 +40,48 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    if (!validateForm()) {
+      toast.error("Please correct the errors in the form!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:8080/api/v1/users/login", formData, { withCredentials: true });
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/users/login",
+        formData,
+        { withCredentials: true }
+      );
+  
+      console.log("Login response:", response);  // Check if data is being received properly
       setUser(response.data);
-      alert("Login successful");
-      navigate("/");
-    } catch {
-      alert("Login failed.");
+      toast.dismiss();  // Dismiss any existing toasts
+  
+      toast.success("Login successful!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          navigate("/");  // Navigate after toast closes
+        },
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      const errorMessage =
+        error.response?.data?.message || "Login failed. Please try again.";
+  
+      toast.dismiss();  // Dismiss any existing toast
+      toast.error(errorMessage, {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   };
+  
+  
+
   return (
     <div className="min-h-screen bg-image grid grid-cols-1 xl:grid-cols-2">
       {/* Left Section */}
@@ -122,6 +154,9 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 }

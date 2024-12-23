@@ -84,16 +84,21 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
+  // Clear the refresh token in the database
   const user = await User.findByPk(userId);
-  user.refreshtoken = null;
-  await user.save();
+  if (user) {
+    user.refreshtoken = null;
+    await user.save();
+  }
 
+  // Clear the cookies on the client-side
   return res
     .status(200)
-    .clearCookie("accessToken")
-    .clearCookie("refreshToken")
+    .clearCookie("token") // Clear the access token
+    .clearCookie("refreshToken") // Clear the refresh token
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
+
 
 // Profile
 const profile = asyncHandler(async (req, res) => {

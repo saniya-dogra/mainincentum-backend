@@ -1,69 +1,105 @@
-import React, { useState,  useCallback } from "react";
-import Dropdown from "./Dropdown.jsx";
-import Input from "./Input.jsx";
+
+import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Button from "./Button.jsx";
+import { Link, useNavigate } from "react-router-dom";
+import Input from "../../components/form/Input.jsx";
+import Dropdown from "../../components/form/Dropdown.jsx";
+import Button from "../../components/form/Button.jsx";
 
 
 export default function PageOne() {
-  const navigate = useNavigate()
-  const [formValues, setFormValues] = useState({
-    "full_name": "",
-    "father_name": "",
-    "mobile_number": "",
-    "email_id": "",
-    "dob": "",
-    "gender": "",
-    "qualification": "",
-    "employment_type": "",
-    "marital_status": "",
-    "spouse_employment_type": "",
-    "no_of_dependents": "",
-    "pan_number": "",
-    "residence_type": "",
-    "citizenship": "",
-    "permanent_state": "",
-    "permanent_district": "",
-    "permanent_address": "",
-    "permanent_pincode": "",
-    "present_state": "",
-    "present_district": "",
-    "present_address": "",
-    "present_pincode": ""
-  });
+  const navigate = useNavigate();
+  const [formValuesList, setFormValuesList] = useState([
+    {
+      "full_name": "",
+      "father_name": "",
+      "mobile_number": "",
+      "email_id": "",
+      "dob": "",
+      "gender": "",
+      "qualification": "",
+      "employment_type": "",
+      "marital_status": "",
+      "spouse_employment_type": "",
+      "no_of_dependents": "",
+      "pan_number": "",
+      "residence_type": "",
+      "citizenship": "",
+      "permanent_state": "",
+      "permanent_district": "",
+      "permanent_address": "",
+      "permanent_pincode": "",
+      "present_state": "",
+      "present_district": "",
+      "present_address": "",
+      "present_pincode": "",
+    },
+  ]);
 
   const [openDropdown, setOpenDropdown] = useState(null);
+  
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (index, e) => {
     const { name, value } = e.target;
-    setFormValues((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    console.log(value)
+    setFormValuesList((prevState) => {
+      const updatedForms = [...prevState];
+      updatedForms[index] = { ...updatedForms[index], [name]: value };
+      return updatedForms;
+    });
   };
 
-  const handleOptionSelect = (name, option) => {
-    setFormValues({ ...formValues, [name]: option });
-    console.log(`Selected ${name}:`, option);
+  const handleOptionSelect = (index, name, option) => {
+    setFormValuesList((prevState) => {
+      const updatedForms = [...prevState];
+      updatedForms[index][name] = option;
+      return updatedForms;
+    });
   };
 
-  const submitForm = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:8080/api/v1/forms/form-one", formValues, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-
-      alert("Form submitted successfully");
-      navigate("/home-details-HomeTwo");
-    } catch (error) {
-      console.error("Error during form submit:", error);
-      alert("Could not submit form. Please try again later.");
-    }
+  const handleNumberOfFormsChange = (num) => {
+    const updatedForms = Array.from({ length: num }, (_, i) =>
+      formValuesList[i] || {
+        "full_name": "",
+        "father_name": "",
+        "mobile_number": "",
+        "email_id": "",
+        "dob": "",
+        "gender": "",
+        "qualification": "",
+        "employment_type": "",
+        "marital_status": "",
+        "spouse_employment_type": "",
+        "no_of_dependents": "",
+        "pan_number": "",
+        "residence_type": "",
+        "citizenship": "",
+        "permanent_state": "",
+        "permanent_district": "",
+        "permanent_address": "",
+        "permanent_pincode": "",
+        "present_state": "",
+        "present_district": "",
+        "present_address": "",
+        "present_pincode": "",
+      }
+    );
+    setFormValuesList(updatedForms);
   };
+
+  // const submitForm = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.post("http://127.0.0.1:8080/forms", formValuesList, {
+  //       headers: { "Content-Type": "application/json" },
+  //       withCredentials: true,
+  //     });
+  //     alert("Forms submitted successfully");
+  //     navigate("/home-details-HomeTwo");
+  //   } catch (error) {
+  //     console.error("Error during form submit:", error);
+  //     alert("Could not submit forms. Please try again later.");
+  //   }
+  // };
 
   return (
     <div className="flex flex-col lg:flex-row p-7 py-10 rounded-lg shadow-md form-bg-image bg-[#C0F7FB]">
@@ -75,10 +111,24 @@ export default function PageOne() {
         <h3 className="text-xl font-medium mt-4 ml-14">
           Set up your account for your loan application
         </h3>
-        <form action="" onSubmit={submitForm}>
-        <div className="mx-12">
-      <h1 className="text-xl font-bold mt-10 text-gray-900 mb-5">1. Personal Details</h1>
-      <div className="mx-10">
+        <div className="grid grid-cols-2 w-full gap-6 ml-14 mt-4">
+        <Dropdown  
+          options={["1", "2", "3", "4"]}
+          placeholder="Number of Forms"
+          setOpenDropdown={setOpenDropdown}
+          isOpen={openDropdown === "numberOfForms"}
+          id="numberOfForms"
+          value={formValuesList.length}
+          onSelect={(option) => handleNumberOfFormsChange(Number(option))}
+        />
+        </div>
+        <form >
+          {formValuesList.map((formValues, index) => (
+            <div key={index} className="mx-12">
+              <h1 className="text-xl font-bold mt-8 text-gray-900 mb-5">
+                Personal Details - {index + 1}
+              </h1>
+              <div className="mx-8">
         <div className="grid grid-cols-2 w-full gap-6">
         <Input
             placeholder="Full Name as per Pan card"
@@ -209,7 +259,6 @@ export default function PageOne() {
           />
         </div>
       </div>
-
       <h1 className="text-xl font-bold mt-2 ml-3 text-gray-900 mb-5">
         Permanent Address Details
       </h1>
@@ -243,13 +292,12 @@ export default function PageOne() {
           />
         </div>
       </div>
-
       <h1 className="text-xl font-bold mt-2 ml-3 text-gray-900 mb-5">
-        Present Address Details
+         Present Address Details
       </h1>
       <div className="mx-12">
         <div className="grid grid-cols-2 w-full gap-6">
-          <Input
+           <Input
             placeholder="State"
             name="present_state"
             value={formValues.present_state}
@@ -277,10 +325,12 @@ export default function PageOne() {
           />
         </div>
       </div>
-    </div>
+            </div>
+          ))}
           <div className="mt-8">
-           <Button type="submit" text="Submit" className="mt-6" />
-       
+            <Link to={"/form-details-two"}>
+            <Button type="submit" text="Submit" className="mt-6" />
+            </Link>
           </div>
         </form>
       </div>

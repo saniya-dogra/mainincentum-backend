@@ -17,27 +17,22 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
         eligibility: [
             {
                 heading: "Credit Score",
-                content: "Your credit score is a critical factor in determining your eligibility. It reflects your financial history and reliability.",
+                content: "720+ preferred. Some lenders may accept lesser scores.",
                 icon: <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
                 heading: "Income Details",
-                content: "Stable income ensures you have the capacity to repay any financial commitments you make.",
+                content: "Stable Minimum income ₹15,000 monthly.",
                 icon: <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
-                heading: "Employment History",
-                content: "Consistent employment history shows financial reliability and the ability to sustain regular payments.",
+                heading: "FOIR",
+                content: "Below 40% for better approval chances.",
                 icon: <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
-                heading: "Personal Details",
-                content: "This ratio measures your ability to manage debts. A lower ratio increases your chances of approval.",
-                icon: <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />,
-            },
-            {
-                heading: "Debt-to-Income Ratio",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Age",
+                content: "21-60 years (salaried); up to 65 years (self-employed).",
                 icon: <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
         ],
@@ -53,80 +48,50 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
                 icon: <IoDocumentTextOutline className="w-8 lg:w-8 h-7 lg:h-8" />,
             },
             {
-                heading: "Proof Of Employment",
-                content: "Recent pay slips or an employment letter confirming your position and salary.",
-                icon: <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />,
-            },
-            {
                 heading: "Proof Of Income",
-                content: "Bank statements, tax returns, or salary slips to verify your earnings.",
+                content: "3-month salary slips, 2-year Form 16, Appointment letter/ Experience certificate, 2 Year IT returns, Computation, Balance sheets etc",
                 icon: <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
-                heading: "Proof Of Liability",
-                content: "Details about any existing loans or financial obligations.",
-                icon: <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>,
-            },
-            {
-                heading: "Vehicle Information",
-                content: "Details of the vehicle to be financed, including make, model, and cost.",
+                heading: "Bank statements ",
+                content: "Last 3-6 months/Passbook of previous 6 months",
                 icon: <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>,
             },
         ],
         apply:[
             {
-                heading: "Select Your Preference",
-                content: "Your credit score is a critical factor in determining your eligibility. It reflects your financial history and reliability.",
+                heading: "Loan Amount",
+                content: "₹50,000-₹40 lakh, based on eligibility",
                 icon: (
                     <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "Gateher Documents",
-                content: "Stable income ensures you have the capacity to repay any financial commitments you make.",
+                heading: "Repayment Tenure",
+                content: "12-60 months",
                 icon: (
                   <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
+            
             {
-                heading: "Complete Application",
-                content: "Consistent employment history shows financial reliability and the ability to sustain regular payments.",
-                icon: (
-                  <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6"/>
-                ),
-            },
-            {
-                heading: "Upload Documents",
-                content: "This ratio measures your ability to manage debts. A lower ratio increases your chances of approval.",
+                heading: "Processing Fees",
+                content: "Up to 2.5% of the loan amount. May differ according to lenders",
                 icon: (
                   <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />
     
                 ),
             },
             {
-                heading: "Dont't Wait For Approval",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Pre-Payment Conditions",
+                content: "Allowed after 12 EMIs; some lenders waive charges for personal fund prepayments.",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
             {
-                heading: "Review Loan Terms",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
-                icon: (
-                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
-                ),
-            },
-            {
-                heading: "Sign The Agreement",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
-                icon: (
-                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
-                ),
-            },
-            {
-                heading: "Finalize Your Purchase",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Other Charges",
+                content: "Includes processing fee, stamp duty, documentation fees etc., and GST as applicable.",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
@@ -134,51 +99,51 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
         ],
         offer:[
             {
-                heading: "How Much Time It Will Take?",
-                content: "Your credit score is a critical factor in determining your eligibility. It reflects your financial history and reliability.",
+                heading: "Quick Response",
+                content: "Incentum shall reach you within 20 minutes",
                 icon: (
                     <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "How Much Can You Borrow?",
-                content: "Stable income ensures you have the capacity to repay any financial commitments you make.",
+                heading: "Expert Guidance",
+                content: ": From eligibility checks to document submissions, our experts handle every detail",
                 icon: (
                   <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "What Will Be The Interest Rate?",
-                content: "Consistent employment history shows financial reliability and the ability to sustain regular payments.",
+                heading: "Customized Incentives",
+                content: "Benefit from exclusive rebates and incentives, directly enhancing your savings.",
                 icon: (
                   <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
-                heading: "What Will Be Tje Repayment period?",
-                content: "This ratio measures your ability to manage debts. A lower ratio increases your chances of approval.",
+                heading: "Transparency First",
+                content: "No hidden charges—our advice is professional and trustworthy.",
                 icon: (
                   <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />
     
                 ),
             },
             {
-                heading: "And The Processing Charges?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Tech-Driven Solutions",
+                content: "Leverage AI to match you with the best lender, saving up to 70% of the usual processing time.",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
             {
-                heading: "Monthly Instalments?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "End-to-End Support: ",
+                content: "From document collection to repayment planning, we’re with you every step of the way, ensuring stress-free disbursal.",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
             {
-                heading: "Any Extra Fees?",
-                content: "Your residency status and location may impact your eligibility based on local regulations.",
+                heading: "Convenience",
+                content: "Incentum prioritize convenience. Our online platform empowers you to: Apply from the comfort of your home. Track your application status in real time. Access all necessary information with clarity, ensuring no hidden charges",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
@@ -189,24 +154,24 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
     const titles = {
         eligibility: "Eligibility",
         documents: "Documents Required",
-        apply:"How To Apply",
-        offer:"What's The Offer?",
+        apply:"Loan Details and Charges",
+        offer:"Why Choose INCENTUM?",
     };
 
     const descriptions = {
         eligibility: [
             "Am I Eligible? Let's Find Out Together!",
-            "We believe in making dreams come true, but let's make sure we're ready for the road.",
+            "We believe in making dreams come true, but let's make sure we're ready for the loan.",
         ],
         documents: [
             "Documents You'll Need for Your Loan",
-            "To make your car loan process quick and easy, make sure you have the following.",
+            "To make your personal loan process quick and easy, make sure you have the following.",
         ],
         apply:[
-            "Getting a car loan should be stress-free, and we're here to make sure of that. Just follow these simple steps:"
+            "Getting a personal loan should be stress-free."
         ],
         offer:[
-            "Before you drive away with your dream car, here are a few things to keep in mind:"
+            " "
         ]
     };
 
