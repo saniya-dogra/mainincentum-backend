@@ -70,7 +70,7 @@ export default function AllInOneChat() {
           <div className="flex justify-around p-4 border-t border-gray-300">
             {/* WhatsApp */}
             <a
-              href="https://wa.me/917818948921" // Replace with your WhatsApp number
+              href="https://wa.me/918767836233" 
               target="_blank"
               rel="noopener noreferrer"
               className="w-16 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
@@ -79,21 +79,21 @@ export default function AllInOneChat() {
             </a>
             {/* Email */}
             <a
-              href="mailto:divamgarg9@gmail.com" // Email address
+              href="mailto:services@incentum.loans" 
               className="w-16 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow hover:bg-blue-600 transition-all duration-300 transform hover:scale-110"
             >
               <FaEnvelope className="text-white text-xl" />
             </a>
             {/* Phone */}
             <a
-              href="tel:+919627707937" // Replace with your phone number
+              href="tel:+918767836233" 
               className="w-16 h-12 bg-green-600 rounded-xl flex items-center justify-center shadow hover:bg-green-700 transition-all duration-300 transform hover:scale-110"
             >
               <FaPhoneAlt className="text-white text-xl" />
             </a>
             {/* Telegram */}
             <a
-              href="https://t.me/9627707937" // Replace with your Telegram username
+              href="https://t.me/8767836233" 
               target="_blank"
               rel="noopener noreferrer"
               className="w-16 h-12 bg-blue-400 rounded-xl flex items-center justify-center shadow hover:bg-blue-500 transition-all duration-300 transform hover:scale-110"

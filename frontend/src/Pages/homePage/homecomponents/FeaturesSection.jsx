@@ -206,7 +206,7 @@ const FeaturesSection = () => {
             src={incentmbenfi}
             alt="Benefits Graph"
             className="rounded-lg w-full"
-          />
+          /> 
         </div>
       </div>
     </>
