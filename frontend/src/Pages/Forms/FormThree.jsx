@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { Link } from "react-router-dom";
-import Button from "../../../components/form/Button.jsx";
+import { Link, useLocation } from "react-router-dom";
+import Button from "../../components/form/Button.jsx";
 
 const FormThree = () => {
-  const [userType, setUserType] = useState(""); // Manage user type state
+  const location = useLocation();
+  const [userType, setUserType] = useState("");
+  const [loanType, setLoanType] = useState("");
   const [files, setFiles] = useState({
     pan_card: null,
     aadhar_card: null,
@@ -22,7 +24,14 @@ const FormThree = () => {
     loan_closure_statements: null,
   });
 
-  // File uploader component
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const type = params.get("user_type");
+    const loan = params.get("loan_type");
+    if (type) setUserType(type);
+    if (loan) setLoanType(loan);
+  }, [location]);
+
   const FileUploader = ({ name }) => {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop: (acceptedFiles) => {
@@ -40,7 +49,7 @@ const FormThree = () => {
           <p className="text-blue-500">Drop the files here...</p>
         ) : (
           <p className="text-gray-500">
-            Drag and drop files here or{" "}
+            Drag and drop files here or {" "}
             <span className="text-blue-500 underline">Select files</span>
           </p>
         )}
@@ -48,7 +57,6 @@ const FormThree = () => {
     );
   };
 
-  // Salaried Document List
   const salariedDocumentList = [
     "PAN Card",
     "Aadhar Card",
@@ -61,7 +69,6 @@ const FormThree = () => {
     "ITR and Computation",
   ];
 
-  // Self-Employed Document List
   const selfEmployedDocumentList = [
     "PAN Card",
     "Aadhar Card",
@@ -75,38 +82,58 @@ const FormThree = () => {
     "Loan Closure Statements",
   ];
 
+  const vehicleSalariedDocuments = [
+    "Pan Card",
+    "Aadhar Card",
+    "Employer ID card",
+    "Joining/Confirmation/Experience Letter",
+    "Last 12 month salary Account Statement",
+    "Existing Loan Account Statement",
+    "Latest 6 month salary slip",
+    "3 year form 16 (part A B) and 26 AS",
+    "3 year ITR and computation",
+    "NOC/Loan close statements for loans closed in one year",
+  ];
+
+  const vehicleSelfEmployedDocuments = [
+    "PAN Card",
+    "Aadhar Card",
+    "Firm registration (Shop Act/ Udyog Aadhar/ GST Certificate/Article of Association/ Memorandum of Association, Certificate for Incorporation/Licenses/Others)",
+    "GSTR for last year",
+    "Last 6/12 Month Current Account Statement",
+    "Last 12 Month Savings Bank Account Statement",
+    "Existing Loan Account Statements",
+    "2/3 Year ITR & Computation",
+    "2/3 Year Balance Sheets",
+    "NOC /Loan closure statements for loans closed in 1 year",
+  ];
+
+  const getDocumentList = () => {
+    if (loanType === "home") {
+      return userType === "salaried"
+        ? salariedDocumentList
+        : selfEmployedDocumentList;
+    } else if (loanType === "vehicle") {
+      return userType === "salaried"
+        ? vehicleSalariedDocuments
+        : vehicleSelfEmployedDocuments;
+    }
+    return [];
+  };
+
   return (
     <div className="flex flex-col items-center p-7 py-10 rounded-lg shadow-md bg-[#C0F7FB]">
       <h2 className="text-3xl font-bold text-gray-900 mb-4">Loan Application</h2>
       <p className="text-gray-600 mb-6">
-        Please select your user type to proceed with the loan application.
+        Upload the required documents to proceed with the loan application.
       </p>
 
-      {/* Dropdown for User Type */}
-      <div className="mb-6">
-        <label htmlFor="userType" className="block text-gray-800 mb-2">
-          Select User Type:
-        </label>
-        <select
-          id="userType"
-          value={userType}
-          onChange={(e) => setUserType(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2 w-full"
-        >
-          <option value="">-- Select --</option>
-          <option value="salaried">Salaried</option>
-          <option value="self_employed">Self-Employed</option>
-        </select>
-      </div>
-
-      {/* Render Form Based on User Type */}
       {userType && (
         <div className="w-full bg-white mt-8 p-8 py-11 mx-4 rounded-3xl shadow-md">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Upload Documents for {userType === "salaried" ? "Salaried" : "Self-Employed"}
           </h1>
 
-          {/* Document Upload Table */}
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
@@ -116,11 +143,8 @@ const FormThree = () => {
               </tr>
             </thead>
             <tbody>
-              {(userType === "salaried"
-                ? salariedDocumentList
-                : selfEmployedDocumentList
-              ).map((doc, index) => {
-                const name = doc.toLowerCase().replace(/\s+/g, "_"); // Generate name based on doc text
+              {getDocumentList().map((doc, index) => {
+                const name = doc.toLowerCase().replace(/\s+/g, "_");
                 return (
                   <tr key={index} className="hover:bg-gray-50">
                     <td className="border border-gray-300 p-4 text-center">{index + 1}</td>
@@ -134,9 +158,8 @@ const FormThree = () => {
             </tbody>
           </table>
 
-          {/* Submit Button */}
           <div className="mt-8">
-            <Link to="/next-step"> {/* Adjust this route as per your application */}
+            <Link to="/next-step">
               <Button type="button" text="Submit" />
             </Link>
           </div>

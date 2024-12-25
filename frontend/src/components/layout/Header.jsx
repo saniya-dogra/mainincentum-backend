@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import rupee from "../../assets/rupee.png"; // Update the path if needed
+import rupee from "../../assets/rupee.webp"; // Update the path if needed
 import { UserContext } from "../../contextapi/UserContext";
 
 const Header = () => {
@@ -18,17 +18,14 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Close the logout dropdown when clicked outside
     const handleClickOutside = (event) => {
       if (event.target.closest(".user-profile-dropdown") === null) {
         setShowLogout(false);
       }
     };
 
-    // Attach the event listener on mount
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -46,29 +43,19 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      // Step 1: Send the logout request to the backend
       await axios.post(
         "http://localhost:8080/api/v1/users/logout",
         {},
-        { withCredentials: true }  // Make sure withCredentials is true
+        { withCredentials: true }
       );
-  
-      // Step 2: Remove the token from localStorage
       localStorage.removeItem("token");
-  
-      // Step 3: Set the user state to null (this will also update the UI)
       setUser(null);
-  
-      // Step 4: Show a success toast
       toast.success("Logout successful!", {
         position: "top-center",
         autoClose: 2000,
       });
-  
-      // Step 5: Navigate to home after the toast disappears
-      await new Promise((resolve) => setTimeout(resolve, 2000));  // Wait for 2 seconds
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       navigate("/");
-  
     } catch (err) {
       toast.error(err.response?.data?.message || "Logout failed", {
         position: "top-center",
@@ -76,17 +63,17 @@ const Header = () => {
       });
     }
   };
-  
-  
+
   return (
-    <header className="bg-primary py-4 px-6 flex justify-between items-center transition-all duration-500">
-      {/* Logo Section */}
+    <header className="bg-primary py-2 px-6 flex justify-between items-center relative">
+      {/* Logo */}
       <div className="text-white font-bold text-xl flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
-        <img src={rupee} alt="Rupee Icon" className="w-10 h-10 animate-bounce" />
-        <Link to="/HomePage">INCENTUM</Link>
+        <Link to="/HomePage">
+        <img src={rupee} alt="Rupee Icon" className="w-[150px] h-[60px]" />
+        </Link>
       </div>
 
-      {/* Hamburger Menu Icon for Mobile */}
+      {/* Hamburger Menu Button */}
       <button
         className="text-white text-2xl md:hidden"
         onClick={toggleMobileMenu}
@@ -95,12 +82,20 @@ const Header = () => {
         {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Mobile Menu */}
+      {/* Mobile Navbar */}
       <nav
-        className={`absolute top-full left-0 w-full bg-primary flex flex-col items-start p-4 space-y-4 md:hidden transform transition-transform duration-500 ${
+        className={`absolute top-0 left-0 w-full bg-primary flex flex-col items-start p-4 space-y-4 md:hidden transform transition-transform duration-500 z-50 ${
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
+        {/* Close Button */}
+        <button
+          className="self-end text-white text-2xl mb-4"
+          onClick={toggleMobileMenu}
+        >
+          <FaTimes />
+        </button>
+
         <Link
           to="/HomePage"
           className="text-white hover:text-auButtomColor transition"
@@ -108,13 +103,13 @@ const Header = () => {
         >
           Home
         </Link>
-        <a
-          href="/about"
+        <Link
+          to="/about-us"
           className="text-white hover:text-auButtomColor transition"
           onClick={toggleMobileMenu}
         >
           About
-        </a>
+        </Link>
         <div className="relative w-full">
           <button
             className="text-white flex items-center w-full justify-between hover:text-auButtomColor transition cursor-pointer"
@@ -132,43 +127,44 @@ const Header = () => {
               isServicesDropdownOpen ? "max-h-screen" : "max-h-0"
             }`}
           >
-            <a
-              href="/home-loan"
+            <Link
+              to="/home-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
               onClick={toggleMobileMenu}
             >
               Home Loan
-            </a>
-            <a
-              href="/vehicle-loan"
+            </Link>
+            <Link
+              to="/vehicle-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
               onClick={toggleMobileMenu}
             >
               Vehicle Loan
-            </a>
-            <a
-              href="/personal-loan"
+            </Link>
+            <Link
+              to="/personal-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
               onClick={toggleMobileMenu}
             >
               Personal Loan
-            </a>
-            <a
-              href="/business-loan"
+            </Link>
+            <Link
+              to="/business-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
               onClick={toggleMobileMenu}
             >
               Business Loan
-            </a>
+            </Link>
           </div>
         </div>
-        <a
-          href="/contact"
+        <Link
+          to="/contact-us"
           className="text-white hover:text-auButtomColor transition"
           onClick={toggleMobileMenu}
         >
           Contact
-        </a>
+        </Link>
+
         {user ? (
           <>
             <button
@@ -188,7 +184,7 @@ const Header = () => {
         ) : (
           <Link
             to="/signup-page"
-            className="bg-auButtomColor px-5 py-2 rounded-lg text-black font-semibold hover:bg-auColor transition"
+            className="bg-yellow-300 px-5 py-2 rounded-lg text-black font-semibold hover:bg-yellow-200 transition"
             onClick={toggleMobileMenu}
           >
             Get Started
@@ -196,7 +192,7 @@ const Header = () => {
         )}
       </nav>
 
-      {/* Desktop Navigation */}
+      {/* Desktop Navbar */}
       <nav className="hidden md:flex items-center space-x-8 text-lg">
         <Link
           to="/HomePage"
@@ -204,12 +200,12 @@ const Header = () => {
         >
           Home
         </Link>
-        <a
-          href="/about"
+        <Link
+          to="/about-us"
           className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"
         >
           About
-        </a>
+        </Link>
         <div className="relative">
           <button
             className="text-white flex items-center hover:text-auButtomColor transition cursor-pointer"
@@ -227,38 +223,39 @@ const Header = () => {
               isServicesDropdownOpen ? "max-h-screen" : "max-h-0"
             }`}
           >
-            <a
-              href="/home-loan"
+            <Link
+              to="/home-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Home Loan
-            </a>
-            <a
-              href="/vehicle-loan"
+            </Link>
+            <Link
+              to="/vehicle-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Vehicle Loan
-            </a>
-            <a
-              href="/personal-loan"
+            </Link>
+            <Link
+              to="/personal-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Personal Loan
-            </a>
-            <a
-              href="/business-loan"
+            </Link>
+            <Link
+              to="/business-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Business Loan
-            </a>
+            </Link>
           </div>
         </div>
-        <a
-          href="/contact"
+
+        <Link
+          to="/contact-us"
           className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"
         >
           Contact
-        </a>
+        </Link>
         {user ? (
           <div className="relative user-profile-dropdown">
             <div
@@ -303,7 +300,7 @@ const Header = () => {
         ) : (
           <Link
             to="/signup-page"
-            className="bg-auButtomColor px-5 py-2 rounded-lg text-black font-semibold hover:bg-auColor transition hover:scale-105 duration-300"
+            className="bg-yellow-300 px-5 py-2 rounded-lg text-black font-semibold hover:bg-yellow-200 transition hover:scale-105 duration-300"
           >
             Get Started
           </Link>

@@ -70,10 +70,7 @@ const FeaturesSection = () => {
                 <span className="text-blue-700"> Home Loan</span> Solution
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-                Owning a home should be a joyous experience, not a source of stress.
-                We understand that purchasing a home is one of the most significant
-                financial decisions you'll ever make. That’s why we’ve developed
-                AI-powered home loan solutions that give you access...
+              Owning a home should be a joyous experience, not a source of stress. We understand that purchasing a home is one of the most significant financial decisions you'll ever make. That's why we've developed advanced home loan solutions that give you access to competitive interest rate...
               </p>
               <div className="mt-10">
                 <Link
@@ -105,13 +102,11 @@ const FeaturesSection = () => {
                 VEHICLE LOAN
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-                Unlock Your Dream <span className="text-blue-700">Car</span> With Our
+              Drive Your Dream <span className="text-blue-700">Car </span> with Our Tailored 
                 <span className="text-blue-700"> Vehicle Loan</span> Solution
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-                Get competitive rates and flexible terms tailored to your needs.
-                Whether you're a first-time buyer or looking to refinance, our
-                expert team is here to guide you every step of the way.
+              The journey toward owning your dream car should be filled with something other than roadblocks. Our advanced vehicle loan options are designed to take you from application to approval quickly and effortlessly. Whether you're looking for a sleek sports car, a family-friendly SUV...
               </p>
               <div className="mt-10">
                 <Link
@@ -143,13 +138,10 @@ const FeaturesSection = () => {
                 PERSONAL LOAN
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-                Unlock Your <span className="text-blue-700">Work</span> With Our
-                <span className="text-blue-700"> Personal Loan</span> Solution!
+              Fuel Your <span className="text-blue-700">Personal Goals </span> With Our  Flexible <span className="text-blue-700"> Personal Loan</span> Solution!
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-                Get competitive rates and flexible terms tailored to your needs.
-                Whether you're a first-time buyer or looking to refinance, our
-                expert team is here to guide you every step of the way.
+              Life is full of unexpected moments, and having access to quick, hassle-free funding can make all the difference. Whether you're renovating your home, covering medical expenses, or financing a personal project, our personal loan solutions are tailored to meet your individual needs...
               </p>
               <div className="mt-10">
                 <Link
@@ -181,13 +173,11 @@ const FeaturesSection = () => {
                 BUSINESS LOAN
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-                Unlock Your Startup <span className="text-blue-700">/Business</span> With Our
-                <span className="text-blue-700"> Business Loan</span> Solution!
+              Grow Your <span className="text-blue-700"> Business</span> With Our Custom
+                <span className="text-blue-700"> Business Loan</span> Options!
               </h2>
-              <p className="mt-4 text-sm sm:text-xl text-gray-600">
-                Get competitive rates and flexible terms tailored to your needs.
-                Whether you're a first-time buyer or looking to refinance, our
-                expert team is here to guide you every step of the way.
+              <p className="mt-4 text-sm sm:text-xl text-gray-600">   
+              Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
               </p>
               <div className="mt-10">
                 <Link

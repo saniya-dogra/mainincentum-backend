@@ -10,8 +10,8 @@ import AllInOneChat from './components/widget/allinonechat.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
   <BrowserRouter>
+  <AllInOneChat />
   <ScrollToTop />
- <AllInOneChat />
   <App />
   </BrowserRouter>
 </StrictMode>,

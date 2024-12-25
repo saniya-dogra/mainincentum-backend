@@ -29,7 +29,7 @@ const SelfEmployed = () => {
 
   // Document list
   const documentList = [ 
-      'PAN Card',	
+      'PAN Card',	  
       'Aadhar Card',
       'Firm registration (Shop Act/ Udyog Aadhar/ GST Certificate/Article of Association/ Memorandum of Association, Certificate for Incorporation/Licenses/Others)',	
       'GSTR for last year',

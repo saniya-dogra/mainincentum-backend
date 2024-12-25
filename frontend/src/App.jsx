@@ -11,7 +11,6 @@ import HomeLoan from './Pages/loans/homeLoan/HomeLoan';
 import VehicelLoan from './Pages/loans/vehicleLoan/VehicleLoan';
 import PersonalLoan from './Pages/loans/personalLoan/PersonalLoan';
 import BusinessLoan from './Pages/loans/businessLoan/BusinessLoan';
-import PageFive from './Pages/Forms/vehicleforms/VehicleFive';
 import HomeThree from './Pages/Forms/homeforms/HomeThree';
 import HomeFour from './Pages/Forms/homeforms/HomeFour';
 import VehicleThree from './Pages/Forms/vehicleforms/VehicleThree';
@@ -24,7 +23,9 @@ import ClientApplication from './Pages/dashboard/ClientApplication';
 import UserApplications from './Pages/dashboard/UserApplications';
 import FormTwo from './Pages/Forms/FormTwo';
 import FormOne from './Pages/Forms/FormOne';
-
+import FormThree from './Pages/Forms/FormThree';
+import AboutUs from './Pages/Others/Aboutus';
+import ContactUs from './Pages/Others/ContactUS';
 function App() {
   return (
         <UserContextProvider>
@@ -42,17 +43,22 @@ function App() {
         <Route path='personal-loan' element={<PersonalLoan/>}/>
         <Route path='business-loan' element={<BusinessLoan/>}/>
         <Route path='/HomePage' element={<HomePage/>} />
-        <Route path='/presonal-details-formFive' element={<PageFive/>}/>
         <Route path='/form-detail-one' element={<FormOne/>} />
         <Route path='/form-details-two' element={<FormTwo/>} />
+        <Route path='/form-details-three' element={<FormThree/>} />
         <Route path='/home-details-HomeThree' element={<HomeThree/>}/>
         <Route path='/home-details-HomeFour' element={<HomeFour/>}/>
         <Route path='/vehicle-details-VehicleThree' element={<VehicleThree/>} />
-        <Route path='/vehicle-details-VehiclFour' element={<VehicleFour/>} />
+        <Route path='/vehicle-details-VehicleFour' element={<VehicleFour/>} />
         <Route path='/user-profile' element={<Profile/>}/>
         <Route path='/dashboard' element={<HomeDashboard/>}/>
         <Route path='/client-application' element={<ClientApplication/>}/>
         <Route path='/user-applications' element={<UserApplications/>}/>
+        <Route path='/about-us' element={<AboutUs/>}/>
+        <Route path='/contact-us' element={<ContactUs/>}/>
+
+
+
 
         
         </Route>

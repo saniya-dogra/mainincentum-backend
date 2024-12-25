@@ -41,10 +41,14 @@ const FormTwo = () => {
     }));
     console.log(`Updated ${name}:`, value);
   };
-  const handleEmploymentChange = (event) => {
-    setEmploymentType(event.target.value);
-  };
 
+  const handleEmploymentChange = (event) => {
+    setFormValues((prevState) => ({
+      ...prevState,
+      user_type: event.target.value, // Update formValues.user_type directly
+    }));
+    console.log(`Selected user_type:`, event.target.value);
+  };
   const handleOptionSelect = (name, option) => {
     setFormValues({ ...formValues, [name]: option });
     console.log(`Selected ${name}:`, option);
@@ -89,25 +93,26 @@ const FormTwo = () => {
     //   alert("Could not submit form. Please try again later.");
     // }
   };
-
+  
   const getNavigationPath = () => {
     const { loan, user_type } = formValues;
-
+  
     if (loan === "Home Loan") {
       return user_type === "Salaried"
-        ? "/home-details-HomeThree"
+        ? "/form-details-three?loan_type=home&user_type=salaried"
         : user_type === "Self-Employed"
-        ? "/home-details-HomeFour"
+        ? "/form-details-three?loan_type=home&user_type=self_employed"
         : "#";
     } else if (loan === "Vehicle Loan") {
       return user_type === "Salaried"
-        ? "/vehicle-details-VehicleThree"
+        ? "/form-details-three?loan_type=vehicle&user_type=salaried"
         : user_type === "Self-Employed"
-        ? "/vehicle-details-VehiclFour"
+        ? "/form-details-three?loan_type=vehicle&user_type=self_employed"
         : "#";
     }
     return "#";
   };
+  
 
   return (
     <div className="flex flex-col lg:flex-row p-7 py-10 rounded-lg shadow-md form-bg-image bg-[#C0F7FB]">
@@ -526,7 +531,7 @@ const FormTwo = () => {
                     <input
                       type="radio"
                       value="Salaried"
-                      checked={employmentType === "Salaried"}
+                      checked={formValues.user_type === "Salaried"}
                       onChange={handleEmploymentChange}
                       className="form-radio h-5 w-5 text-blue-600"
                     />
@@ -536,7 +541,7 @@ const FormTwo = () => {
                     <input
                       type="radio"
                       value="Self-Employed"
-                      checked={employmentType === "Self-Employed"}
+                      checked={formValues.user_type === "Self-Employed"}
                       onChange={handleEmploymentChange}
                       className="form-radio h-5 w-5 text-blue-600"
                     />
@@ -705,12 +710,15 @@ const FormTwo = () => {
                   <Input placeholder="Desired loan amount  " />
                 </div>
 
-                <div className="mt-2">
-                  <Dropdown
-                    options={["Bank 1", "Bank 2", "Bank 3", "Bank 4", "Bank 5"]}
-                    placeholder="Your Preferred Banks (select up to 3)"
-                  />
-                </div>
+                 {/* Preferred Banks */}
+              <div className="mt-2">
+                <Input
+                  placeholder=" Enter Your Preferred Banks "
+                  name="preferred_banks"
+                  value={formValues.preferred_banks}
+                  onChange={handleInputChange}
+                />
+              </div>
               </div>
             </div>
           )}
@@ -726,3 +734,5 @@ const FormTwo = () => {
 };
 
 export default FormTwo;
+
+

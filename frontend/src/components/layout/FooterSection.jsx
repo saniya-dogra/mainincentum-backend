@@ -1,4 +1,6 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Footer = () => {
   return (
@@ -28,8 +30,12 @@ const Footer = () => {
           <div>
             <h3 className="text-lg md:text-xl font-bold uppercase">Company</h3>
             <ul className="mt-4 space-y-2 text-sm md:text-base">
+              <Link to = "/about-us" >
               <li>About</li>
-              <li>Contact</li>
+              </Link>
+              <Link to = "/contact-us" >
+              <li> Contact </li>
+              </Link>
               <li>Affiliates</li>
               <li>Careers</li>
               <li>Reviews</li>
