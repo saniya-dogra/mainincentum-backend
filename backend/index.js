@@ -1,19 +1,13 @@
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const cookieParser = require('cookie-parser');
-const router = require('./src/routes/user.router');
-const { sequelize } = require('./src/db');
-const formRouter = require('./src/routes/forms/formOne.router');
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
+const { connectToDatabase } = require("./src/db");
 
-const multer = require('multer');
-const storage = multer.memoryStorage(); // Store files in memory as buffer
-const upload = multer({ storage });
+// Routers
+const router = require("./src/routes/user.router");
 
-
+require("events").EventEmitter.defaultMaxListeners = 15; // Increase event listener limit
 
 const app = express();
 
@@ -24,48 +18,20 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Allows cookies to be sent
 }));
-
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
-// routesssssss
-app.use("/api/v1/users",router )
-app.use("/api/v1/forms",formRouter )
+// Routes
+app.use("/api/v1/users", router);
 
+// Connect to Database
 
-sequelize.sync()
-  .then(() => console.log('User table created or synced successfully!'))
-  .catch(err => console.log('Failed to create/sync user table:', err));
-
-  sequelize.sync()
-  .then(() => {
-    console.log(' form one Table created or updated successfully!');
-  })
-  .catch(error => {
-    console.error('Unable to create or update the table:', error);
-  });
-
-  
-sequelize.sync({ alter: true })
-.then(() => {
-  console.log("AppLoanTwo table created or updated successfully.");
-})
-.catch((err) => {
-  console.error("Error creating or updating table: ", err);
-});
-sequelize.sync({ alter: true })
-.then(() => {
-  console.log("AppLoanthree table created or updated successfully.");
-})
-.catch((err) => {
-  console.error("Error creating or updating table: ", err);
-});
-
+connectToDatabase();
 
 
 // Start the server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  
 });
+

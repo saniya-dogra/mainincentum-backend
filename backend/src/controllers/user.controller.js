@@ -1,13 +1,13 @@
-const { User } = require("../models/authentication/User.models");
+const { User } = require("../models/authentication/User.models"); // Mongoose model
 const jwt = require("jsonwebtoken");
-const { asyncHandler } = require("../utils/asyncHandler");
-const ApiError = require("../utils/ApiError");
-const ApiResponse = require("../utils/ApiResponse");
+const { asyncHandler } = require("../utils/asyncHandler.js");
+const {ApiError} = require("../utils/ApiError");
+const {ApiResponse} = require("../utils/ApiResponse");
 
 // Function to generate access and refresh tokens
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findById(userId);
     if (!user) {
       throw new ApiError(404, "User not found");
     }
@@ -43,13 +43,14 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Passwords do not match");
   }
 
-  const existingUser = await User.findOne({ where: { email, phoneNumber } });
-
+  const existingUser = await User.findOne({ email, phoneNumber });
   if (existingUser) {
     throw new ApiError(409, "User already exists! Please login.");
   }
 
-  const newUser = await User.create({ name, email, phoneNumber, pincode, password });
+  const newUser = new User({ name, email, phoneNumber, pincode, password });
+  await newUser.save();
+
   return res
     .status(201)
     .json(new ApiResponse(201, newUser, "User Registered Successfully"));
@@ -63,12 +64,12 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Phone number and password are required");
   }
 
-  const user = await User.findOne({ where: { phoneNumber } });
+  const user = await User.findOne({ phoneNumber });
   if (!user || !(await user.isPasswordCorrect(password))) {
     throw new ApiError(401, "Invalid credentials");
   }
 
-  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user.id);
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
   return res
     .status(200)
     .cookie("token", accessToken, {
@@ -82,23 +83,20 @@ const loginUser = asyncHandler(async (req, res) => {
 
 // Logout user
 const logoutUser = asyncHandler(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
 
-  // Clear the refresh token in the database
-  const user = await User.findByPk(userId);
+  const user = await User.findById(userId);
   if (user) {
     user.refreshtoken = null;
     await user.save();
   }
 
-  // Clear the cookies on the client-side
   return res
     .status(200)
-    .clearCookie("token") // Clear the access token
-    .clearCookie("refreshToken") // Clear the refresh token
+    .clearCookie("token")
+    .clearCookie("refreshToken")
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
-
 
 // Profile
 const profile = asyncHandler(async (req, res) => {
@@ -121,19 +119,17 @@ const profile = asyncHandler(async (req, res) => {
     }
 
     try {
-      const user = await User.findByPk(decoded.id);
+      const user = await User.findById(decoded.id);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      // Return user details
       return res.status(200).json({
-        id: user.id,
+        id: user._id,
         name: user.name,
         email: user.email,
-        pincode:user.pincode,
-        phoneNumber:user.phoneNumber,
-        
+        pincode: user.pincode,
+        phoneNumber: user.phoneNumber,
       });
     } catch (dbError) {
       console.error("Database Error:", dbError.message);

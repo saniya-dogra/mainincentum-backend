@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/authentication/User.models");
+const { User } = require("../models/authentication/User.models"); // Mongoose model
 const ApiError = require("../utils/ApiError");
 const { asyncHandler } = require("../utils/asyncHandler");
 
@@ -23,7 +23,7 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
     }
 
     // Fetch user by ID
-    const user = await User.findByPk(decoded.id);
+    const user = await User.findById(decoded.id);
     if (!user) {
       throw new ApiError(401, "Unauthorized: User not found.");
     }

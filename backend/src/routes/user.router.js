@@ -11,3 +11,4 @@ router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/profile").get(profile);
 
 module.exports = router;
+
