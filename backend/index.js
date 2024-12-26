@@ -26,7 +26,7 @@ app.use("/api/v1/users", router);
 
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
-});
+}); 
 // Connect to Database
 
 connectToDatabase();
