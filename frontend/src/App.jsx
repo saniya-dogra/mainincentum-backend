@@ -25,7 +25,7 @@ import FormTwo from './Pages/Forms/FormTwo';
 import FormOne from './Pages/Forms/FormOne';
 import FormThree from './Pages/Forms/FormThree';
 // import AboutUs from './Pages/Others/Aboutus';
-import ContactUs from './Pages/Others/ContactUS';
+// import ContactUs from './Pages/Others/ContactUS';
 function App() {
   return (
         <UserContextProvider>
@@ -55,7 +55,7 @@ function App() {
         <Route path='/client-application' element={<ClientApplication/>}/>
         <Route path='/user-applications' element={<UserApplications/>}/>
         {/* <Route path='/about-us' element={<AboutUs/>}/> */}
-        <Route path='/contact-us' element={<ContactUs/>}/>
+        {/* <Route path='/contact-us' element={<ContactUs/>}/> */}
 
 
 
