@@ -15,8 +15,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",        // Development frontend URL
-    "http://incentum.ai",          // Deployed frontend URL
-    "http://www.incentum.ai"       // Handle with or without `www`
+    "https://incentum.ai",          // Deployed frontend URL
+    "https://www.incentum.ai"       // Handle with or without `www`
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
