@@ -50,12 +50,9 @@ export default function LoginPage() {
     }
   
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/users/login",
-        formData,
-        { withCredentials: true }
-      );
-  
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/login`, formData, {
+        withCredentials: true,
+      });
       console.log("Login response:", response);  // Check if data is being received properly
       setUser(response.data);
       toast.dismiss();  // Dismiss any existing toasts
