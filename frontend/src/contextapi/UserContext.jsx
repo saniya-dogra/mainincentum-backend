@@ -9,7 +9,7 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/users/profile", {
+      .get(`${import.meta.env.VITE_API_URL}/profile`, {
         withCredentials: true,
       })
       .then((response) => {

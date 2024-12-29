@@ -17,7 +17,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
     const refreshToken = user.generateRefreshToken();
 
     // Save the refresh token in the database
-    user.refreshtoken = refreshToken;
+    user.refreshToken = refreshToken;
     await user.save();
 
     return { accessToken, refreshToken };
@@ -87,7 +87,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const user = await User.findById(userId);
   if (user) {
-    user.refreshtoken = null;
+    user.refreshToken = null;
     await user.save();
   }
 

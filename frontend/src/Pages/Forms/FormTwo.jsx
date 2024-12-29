@@ -62,37 +62,37 @@ const FormTwo = () => {
     console.log(`Selected ${name}:`, value);
   };
 
-  const submitFormTwo = async (e) => {
-    // e.preventDefault();
-    // try {
-    //   await axios.post(
-    //     "http://localhost:8080/api/v1/forms/form-two",
-    //     formValues,
-    //     {
-    //       headers: { "Content-Type": "application/json" },
-    //       withCredentials: true,
-    //     }
-    //   );
+  // const submitFormTwo = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.post(
+  //       "http://localhost:8080/api/v1/forms/form-two",
+  //       formValues,
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //         withCredentials: true,
+  //       }
+  //     );
 
-    //   alert("data send successfully");
-    //   navigate(
-    //     formValues.loan ==="Home Loan"?
-    //     formValues.user_type === "Salaried"
-    //       ? "/home-details-HomeThree"
-    //       : formValues.user_type === "Self-Employed"
-    //       ? "/home-details-HomeFour"
-    //       : "#" : formValues.loan==="Vehicle Loan"?
-    //       formValues.user_type === "Salaried"
-    //       ? "/vehicle-details-VehicleThree"
-    //       : formValues.user_type === "Self-Employed"
-    //       ? "/vehicle-details-VehiclFour"
-    //       : "#"
-    //   );
-    // } catch (error) {
-    //   console.error("Error during form submit:", error);
-    //   alert("Could not submit form. Please try again later.");
-    // }
-  };
+  //     alert("data send successfully");
+  //     navigate(
+  //       formValues.loan ==="Home Loan"?
+  //       formValues.user_type === "Salaried"
+  //         ? "/home-details-HomeThree"
+  //         : formValues.user_type === "Self-Employed"
+  //         ? "/home-details-HomeFour"
+  //         : "#" : formValues.loan==="Vehicle Loan"?
+  //         formValues.user_type === "Salaried"
+  //         ? "/vehicle-details-VehicleThree"
+  //         : formValues.user_type === "Self-Employed"
+  //         ? "/vehicle-details-VehiclFour"
+  //         : "#"
+  //     );
+  //   } catch (error) {
+  //     console.error("Error during form submit:", error);
+  //     alert("Could not submit form. Please try again later.");
+  //   }
+  // };
   
   const getNavigationPath = () => {
     const { loan, user_type } = formValues;
