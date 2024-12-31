@@ -14,9 +14,9 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    "https://localhost:5173",        // Development frontend URL
-    "https://incentum.ai",          // Deployed frontend URL
-    "https://www.incentum.ai"       // Handle with or without `www`
+    "http://localhost:5173",        // Development frontend URL
+    "http://incentum.ai",          // Deployed frontend URL
+    "http://www.incentum.ai"       // Handle with or without `www`
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -28,10 +28,9 @@ app.use(cookieParser());
 // Routes
 app.use("/", router);
 
-// Health check route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the API" });
-});
+app.get('/api', (req, res) => {
+  res.json({ message: 'Welcome to the API' });
+}); 
 
 
 connectToDatabase();
