@@ -25,20 +25,17 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
-app.use("/", router); // Ensure the `/api` prefix is applied correctly
+// Routes (Add the /api prefix here to match the frontend's request)
+app.use("/api", router);  // Add the /api prefix
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
-}); 
-
+});
 
 connectToDatabase();
 
-
 // Start the server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080; // Make sure your backend is listening on port 8080
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
