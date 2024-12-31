@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use("/api", router); // Ensure the `/api` prefix is applied correctly
 
 // Health check route
-app.get("/api", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Welcome to the API" });
 });
 
