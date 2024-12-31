@@ -28,7 +28,7 @@ app.use(cookieParser());
 // Routes
 app.use("/", router); // Ensure the `/api` prefix is applied correctly
 
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 }); 
 
