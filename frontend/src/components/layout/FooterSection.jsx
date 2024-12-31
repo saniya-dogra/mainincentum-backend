@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#010059] text-white py-8 px-6">
+    <footer className="bg-[#010059] text-white py-8 px-6 ">
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Left Section */}
         <div className="col-span-2">

@@ -225,63 +225,63 @@ function BusinessLoan({ type, openAccordion, handleAccordionClick }) {
             });
         }, []);
     
-
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-0 mt-2" id={type}>
-            <div className="mt-[10px] lg:mt-[25px] mx-6 lg:ml-[120px]"  data-aos="fade-right" >
-                <h1 className="text-[40px] md:ml-[10px] lg:text-[45px] font-bold heading">{titles[type]}</h1>
-                <p className="ext-[18px] md:ml-[10px] lg:text-[18px] text-white font-medium  leading-[30px] lg:leading-[35px]">
-                    {descriptions[type][0]}
-                </p>
-                <p className="text-[18px] md:ml-[10px] text-white lg:text-[18px] font-medium leading-[28px] lg:leading-[25px]">
-                    {descriptions[type][1]}
-                </p>
-                <div className="mt-6 lg:mt-8 max-w-full lg:w-[80%] md:w-[80%] w-full">
-                    {sections[type].map((section, index) => {
-                        const accordionKey = `${type}-${index + 1}`;
-                        return (
-                            <Accordion
-                                key={accordionKey}
-                                open={openAccordion === accordionKey}
-                                className={`rounded-xl mb-6 pb-2 transition-all duration-500 ease-in-out ${openAccordion === accordionKey
-                                   ? "border-b-[4px] border-auButtomColor"
-                                : "border-b-[4px] border-white"
+        return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-0 mt-2" id={type}>
+                <div className="mt-[10px] lg:mt-[25px] mx-6 lg:ml-[120px]" data-aos="fade-right">
+                    <h1 className="text-[40px] md:ml-[10px] lg:text-[45px] font-bold heading">{titles[type]}</h1>
+                    <p className="text-[18px] md:ml-[10px] lg:text-[18px] text-white font-medium leading-[30px] lg:leading-[35px]">
+                        {descriptions[type][0]}
+                    </p>
+                    <p className="text-[18px] md:ml-[10px] text-white lg:text-[18px] font-medium leading-[28px] lg:leading-[25px]">
+                        {descriptions[type][1]}
+                    </p>
+                    <div className="mt-6 lg:mt-8 max-w-full lg:w-[80%] md:w-[80%] w-full">
+                        {sections[type].map((section, index) => {
+                            const accordionKey = `${type}-${index + 1}`;
+                            return (
+                                <Accordion
+                                    key={accordionKey}
+                                    open={openAccordion === accordionKey}
+                                    className={`rounded-xl mb-6 pb-2 transition-all duration-500 ease-in-out hover:scale-[1.03] hover:shadow-[0_0_12px_rgba(255,255,255,0.4)] ${openAccordion === accordionKey
+                                        ? "border-b-[4px] border-auButtomColor"
+                                        : "border-b-[4px] border-white"
                                     } bg-auColor`}
-                            >
-                                <AccordionHeader
-                                    onClick={() => handleAccordionClick(accordionKey)}
-                                    className="px-6  pt-4  pb-2 font-medium cursor-pointer text-white flex justify-start items-center border-none"
                                 >
-                                    <div>{section.icon}</div>
-                                    <h2 className="ml-4 lg:ml-5 text-[19px] md:text-[20px] font-bold">
-                                        {section.heading}
-                                    </h2>
-                                </AccordionHeader>
-                                <div
-                                    style={{
-                                        maxHeight: openAccordion === accordionKey ? "500px" : "0",
-                                        overflow: "hidden",
-                                        transition: "max-height 0.5s ease-in-out",
-                                    }}
-                                >
-                                    <AccordionBody className="px-6 lg:px-16 pb-4 lg:pb-2 text-white text-[20px] lg:text-[17px]">
-                                        {section.content}
-                                    </AccordionBody>
-                                </div>
-                            </Accordion>
-                        );
-                    })}
+                                    <AccordionHeader
+                                        onClick={() => handleAccordionClick(accordionKey)}
+                                        className="px-6 pt-4 pb-2 font-medium cursor-pointer text-white flex justify-start items-center border-none"
+                                    >
+                                        <div>{section.icon}</div>
+                                        <h2 className="ml-4 lg:ml-5 text-[19px] md:text-[20px] font-bold">
+                                            {section.heading}
+                                        </h2>
+                                    </AccordionHeader>
+                                    <div
+                                        style={{
+                                            maxHeight: openAccordion === accordionKey ? "500px" : "0",
+                                            overflow: "hidden",
+                                            transition: "max-height 0.5s ease-in-out",
+                                        }}
+                                    >
+                                        <AccordionBody className="px-6 lg:px-16 pb-4 lg:pb-2 text-white text-[20px] lg:text-[17px]">
+                                            {section.content}
+                                        </AccordionBody>
+                                    </div>
+                                </Accordion>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div className="flex justify-center lg:justify-start" data-aos="fade-left">
+                    <img
+                        src={images[type]}
+                        alt={`${titles[type]} Illustration`}
+                        className="mt-[30px] lg:mt-[160px] lg:ml-[90px] w-[370px] h-[320px] md:w-[480px] md:h-[380px] imgBorder my-4 rounded-lg hover:scale-[1.05] hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all duration-300 ease-out"
+                    />
                 </div>
             </div>
-            <div className="flex justify-center lg:justify-start" data-aos="fade-left" >
-                <img
-                    src={images[type]}
-                    alt={`${titles[type]} Illustration`}
-                    className="mt-[30px] lg:mt-[160px] lg:ml-[90px] w-[370px] h-[320px] md:w-[480px] md:h-[380px]  imgBorder my-4 rounded-lg"
-                />
-            </div>
-        </div>
-    );
+        );
+        
 }
 
 export default function App() { 

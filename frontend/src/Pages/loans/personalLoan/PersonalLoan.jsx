@@ -1,65 +1,127 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion"; // Imported motion for animations
 import EmiCalculator from "../../homePage/homecomponents/EmiCalculator";
 import PersonalAccordion from "./PersonalAccordion";
 import LoanNav from "../../../components/loanSec/LoanNav";
 import Button from "../../../components/loanSec/Button";
 
 export default function PersonalLoan() {
+  // Animation Variants
+  const fadeInUp = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
+
+  const slideInLeft = {
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  };
+
+  const slideInRight = {
+    initial: { opacity: 0, x: 100 },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
+  };
+
+  const scaleIn = {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { opacity: 1, scale: 1, transition: { duration: 0.7 } },
+  };
 
   return (
     <>
-  <div className=" scroll-smooth focus:scroll-auto"
->
-     <div className="landingheader">
-      <div className="  grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 lg:px-0">
-        <div className="mt-4 lg:mt-[35px] lg:ml-[120px]">
-          <button className="mb-4 lg:mb-6">
-            <Link className="bg-primary text-white text-sm sm:text-md px-4 py-3 md:px-5  md:py-3 hover:bg-blue-800 rounded-full font-medium">
-             PERSONAL LOAN
-            </Link>
-          </button>
-          <h2 className="font-bold text-[26px] sm:text-[48px] lg:text-[50px] leading-[44px] sm:leading-[60px] lg:leading-[55px]">
-            Drive The Car You've Always Dreamed Of, With Ease
-          </h2>
-          <div className="flex lg:hidden justify-center items-center mt-12 lg:mt-[310px]">
-            <img
-              src="/personalloanimg/personalgif.gif"
-              alt=""
-              className="h-auto max-w-full w-[300px] sm:w-[500px] lg:w-[700px] lg:h-[500px]"
-            />
+      <div className="scroll-smooth focus:scroll-auto">
+        <div className="landingheader">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 lg:px-0">
+            {/* Left Section */}
+            <div className="mt-4 lg:mt-[70px] lg:ml-[120px]">
+              <motion.div {...slideInLeft}>
+                <button className="mb-4 lg:mb-6 hover:scale-105 hover:shadow-lg transform transition-all duration-300">
+                  <Link
+                    className="bg-primary text-white text-sm sm:text-md px-4 py-3 md:px-5 md:py-3 rounded-full font-medium hover:bg-blue-800"
+                  >
+                    PERSONAL LOAN
+                  </Link>
+                </button>
+              </motion.div>
+
+              <motion.h2
+                {...fadeInUp}
+                className="font-bold text-[26px] sm:text-[48px] lg:text-[50px] leading-[44px] sm:leading-[60px] lg:leading-[55px]"
+              >
+                Make Your Dreams a Reality With Ease
+              </motion.h2>
+
+              {/* Mobile View GIF */}
+              <div className="flex lg:hidden justify-center items-center mt-12 lg:mt-[310px]">
+                <motion.img
+                  {...scaleIn}
+                  src="/personalloanimg/personalgif.gif"
+                  alt="Personal Loan GIF"
+                  className="h-auto max-w-full w-[300px] sm:w-[500px] lg:w-[700px] lg:h-[500px]"
+                />
+              </div>
+
+              <motion.p
+                {...fadeInUp}
+                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+              >
+                Owning your dream is not just a goal, it’s about achieving the freedom and joy that come with it. Our AI-driven consultation simplifies the process, eliminating stress. Whether it's personal needs or ambitions, we’re here to assist.
+              </motion.p>
+
+              <motion.p
+                {...fadeInUp}
+                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+              >
+                Our services include flexible repayment options, competitive rates, and fast approval. We handle the complexities so you can focus on achieving your goals.
+              </motion.p>
+
+              <motion.h2
+                {...fadeInUp}
+                className="text-xl lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
+              >
+                And yes, incentives await you too.
+              </motion.h2>
+
+              <motion.h2
+                {...fadeInUp}
+                className="text-xl lg:text-[20px] lg:leading-7"
+              >
+                Take the first step toward your dreams. Ready to make it happen?
+              </motion.h2>
+
+              <motion.div {...slideInLeft}>
+                <Link to="/personal-details-PersonalLoan">
+                  <Button />
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* Right Section */}
+            <div className="justify-center hidden lg:block items-center lg:mt-[70px]">
+              <motion.img
+                {...slideInRight}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0px 15px 30px rgba(0, 0, 0, 0.3)",
+                }}
+                transition={{ duration: 0.3 }}
+                src="/personalloanimg/personalgif.gif"
+                alt="Personal Loan GIF"
+                className="h-auto max-w-full w-[300px] sm:w-[350px] lg:w-[650px] lg:ml-[50px] lg:h-[549px] rounded-lg"
+              />
+            </div>
           </div>
-          <p className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3">
-           We know owning you dream car isn't about the ride, it's about the freedom and joy that comes with is. Our AI driven consultantion is here to make that happen, without the stress. Whether you're eyeing a aleek sports car, a family-friendly SUV, or a reliable everyday vehicle, we,ve got you covered.{" "}
-          </p>
-   
-          <p className="text-md sm:text-lg lg:text-[14px]  leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800">
-            We bring you any and every feature of car loan being offered by indian financial institution. Be it flexible repayment options, competitive rate, and quick approval, we take care of the complicated stuff so you can focus on what matters most-enjoying the road ahead.
-          </p>
-          <h2 className="text-xl  lg:text-[22px]  mt-4 lg:mt-6 lg:leading-7 ">
-            And yes, we will incentivise you too.
-          </h2>
-          <h2 className="text-xl lg:text-[20px] lg:leading-7 ">
-            You are a click away from your dream car. Are you ready for the
-            drive of your dreams?
-          </h2>
-         <Button/>
         </div>
-        <div className=" justify-center hidden lg:block items-center  lg:mt-[70px]">
-          <img
-          src="/personalloanimg/personalgif.gif"
-            alt=""
-            className="h-auto max-w-full w-[300px] sm:w-[350px] lg:w-[650px] lg:ml-[50px] lg:h-[549px]"
-          />
+
+        {/* Footer Section */}
+        <div className="landingfooter">
+          <motion.div {...fadeInUp}>
+            <LoanNav />
+            <PersonalAccordion />
+            <EmiCalculator />
+          </motion.div>
         </div>
-      </div>
-      </div>
-       
-       <div className="landingfooter">
-     <LoanNav/>
-      <PersonalAccordion/>
-      <EmiCalculator/>
-      </div>
       </div>
     </>
   );
