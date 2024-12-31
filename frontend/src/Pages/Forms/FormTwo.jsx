@@ -141,7 +141,7 @@ const FormTwo = () => {
           />
         </div>
 
-        <form onSubmit={submitFormTwo}>
+        <form >
           {formValues.loan === "Home Loan" && (
             <div>
               <div className="mt-10 mx-12">
