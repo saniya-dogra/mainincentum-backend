@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    "https://localhost:5173",
+    "http://localhost:5173",
     "https://incentum.ai",         // Deployed frontend URL
     "https://www.incentum.ai"      // Handle with or without `www`
   ],
@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api", router); // Ensure the `/api` prefix is applied correctly
+app.use("/", router); // Ensure the `/api` prefix is applied correctly
 
 // Health check route
 app.get("/", (req, res) => {
