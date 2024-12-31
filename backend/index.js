@@ -28,9 +28,10 @@ app.use(cookieParser());
 // Routes
 app.use("/", router);
 
-app.get('/api', (req, res) => {
-  res.json({ message: 'Welcome to the API' });
-}); 
+// Health check route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the API" });
+});
 
 
 connectToDatabase();
