@@ -64,16 +64,16 @@ export default function BusinessLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
               >
-                Whether you're expanding your operations, upgrading equipment, or covering day-to-day expenses, our AI-driven consultation ensures you secure the best loan for your business needs. Experience a seamless process, tailored to your requirements.
+              At INCENTUM, we are dedicated to providing businesses with the financial resources they need to grow and thrive. Whether you are looking to expand your operations, invest in equipment, or manage working capital, our Business Loan Services are designed to offer you unmatched benefits and flexibility.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
               >
-                With options for flexible repayment terms, competitive rates, and fast approvals, we take the stress out of securing financing, leaving you free to focus on growing your business.
+                With INCENTUM, funding your business is now easier, faster, and more rewarding. Contact us to know more about our business loan offerings, eligibility, and incentives.
               </motion.p>
 
               <motion.h2

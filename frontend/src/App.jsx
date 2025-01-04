@@ -11,6 +11,7 @@ import HomeLoan from './Pages/loans/homeLoan/HomeLoan';
 import VehicelLoan from './Pages/loans/vehicleLoan/VehicleLoan';
 import PersonalLoan from './Pages/loans/personalLoan/PersonalLoan';
 import BusinessLoan from './Pages/loans/businessLoan/BusinessLoan';
+import MortgageLoan from './Pages/loans/mortgageLoan/MortgageLoan';
 import { UserContextProvider } from './contextapi/UserContext';
 import Profile from './Pages/authentication/Profile';
 import HomeDashboard from './Pages/dashboard/homedashboard';
@@ -38,6 +39,7 @@ function App() {
         <Route path='home-loan' element={<HomeLoan/>}/>
         <Route path='personal-loan' element={<PersonalLoan/>}/>
         <Route path='business-loan' element={<BusinessLoan/>}/>
+        <Route path='Mortgage-loan' element={<MortgageLoan/>}/>
         <Route path='/HomePage' element={<HomePage/>} />
         <Route path='/form-detail-one' element={<FormOne/>} />
         <Route path='/form-details-two' element={<FormTwo/>} />

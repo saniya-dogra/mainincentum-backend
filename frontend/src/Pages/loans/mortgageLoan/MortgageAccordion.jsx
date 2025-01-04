@@ -12,21 +12,21 @@ import { MdOutlineDataExploration } from "react-icons/md";
 import "aos/dist/aos.css";
 import AOS from "aos";
 
-function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
+function MortgageAccordion({ type, openAccordion, handleAccordionClick }) {
     const sections = {
         eligibility: [
             {
                 heading: "Credit Score",
-                content: "720+ preferred. Some lenders may accept lesser scores.",
+                content: "700+ preferred. Some lenders may accept lesser scores.",
                 icon: <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
                 heading: "Income Details",
-                content: "Stable Minimum income ₹15,000 monthly.",
+                content: "Stable income from employment, business, or other sources.",
                 icon: <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
             {
-                heading: "FOIR",
+                heading: "Property Type",
                 content: "Below 40% for better approval chances.",
                 icon: <IoMdContacts className="w-7 h-6 lg:w-6  lg:h-6" />,
             },
@@ -57,18 +57,23 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
                 content: "Last 3-6 months/Passbook of previous 6 months",
                 icon: <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>,
             },
+            {
+                heading: "Property Documents ",
+                content: "Title deed, sale agreement, and NOC from the builder or society etc.",
+                icon: <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>,
+            },
         ],
         apply:[
             {
                 heading: "Loan Amount",
-                content: "₹50,000-₹40 lakh, based on eligibility",
+                content: "Generally up to 50-60% of the property’s market value/Distressed value depending on Residential or commercial nature of property",
                 icon: (
                     <BsSpeedometer2 className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
             },
             {
                 heading: "Repayment Tenure",
-                content: "12-60 months",
+                content: "5-20 YEARS, offering long-term affordability",
                 icon: (
                   <IoDocumentTextOutline className="w-7 h-6 lg:w-6  lg:h-6" />
                 ),
@@ -84,7 +89,7 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
             },
             {
                 heading: "Pre-Payment Conditions",
-                content: "Allowed after 12 EMIs; some lenders waive charges for personal fund prepayments.",
+                content: "Allowed, though some lenders may charge nominal fees",
                 icon: (
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
@@ -141,13 +146,6 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
                   <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
                 ),
             },
-            {
-                heading: "Convenience",
-                content: "Incentum prioritize convenience. Our online platform empowers you to: Apply from the comfort of your home. Track your application status in real time. Access all necessary information with clarity, ensuring no hidden charges",
-                icon: (
-                  <MdOutlineDataExploration className="w-7 h-6 lg:w-6  lg:h-6"/>
-                ),
-            },
         ],
     };
 
@@ -155,7 +153,7 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
         eligibility: "Eligibility Criteria",
         documents: "Documents Required",
         apply:"Loan Details and Charges",
-        offer:"Why Choose INCENTUM?",
+        offer:"Loan-to-Value Ratio (LTV)",
     };
 
     const descriptions = {
@@ -165,13 +163,13 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
         ],
         documents: [
             "Documents You'll Need for Your Loan",
-            "To make your personal loan process quick and easy, make sure you have the following.",
+            "To make your property loan process quick and easy, make sure you have the following.",
         ],
         apply:[
-            "Getting a personal loan should be stress-free."
+            "Getting your property loan should be stress-free."
         ],
         offer:[
-            " "
+            " LTV defines the percentage of the property’s value that the lender is willing to finance"
         ]
     };
 
@@ -246,8 +244,7 @@ function PersonalLoan({ type, openAccordion, handleAccordionClick }) {
                 </div>
             </div>
         );
-    }
-        
+    }   
 
 export default function App() { 
     const [openAccordion, setOpenAccordion] = useState(null);
@@ -258,10 +255,10 @@ export default function App() {
 
     return (
         <div>
-            <PersonalLoan type="eligibility" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
-            <PersonalLoan type="documents" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
-            <PersonalLoan type="apply" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
-            <PersonalLoan type="offer" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
+            <MortgageAccordion type="eligibility" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
+            <MortgageAccordion type="documents" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
+            <MortgageAccordion type="apply" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
+            <MortgageAccordion type="offer" openAccordion={openAccordion} handleAccordionClick={handleAccordionClick} />
         </div>
     );
 }

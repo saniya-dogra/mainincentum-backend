@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import rupee from "../../assets/rupee.webp"; // Update the path if needed
+import logo from "../../assets/logo.webp"; 
 import { UserContext } from "../../contextapi/UserContext";
 
 const Header = () => {
@@ -16,16 +16,27 @@ const Header = () => {
 
   const { user, setUser, ready } = useContext(UserContext);
   const navigate = useNavigate();
+  const servicesDropdownRef = useRef(null);
+  const logoutDropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (event.target.closest(".user-profile-dropdown") === null) {
+      if (
+        servicesDropdownRef.current &&
+        !servicesDropdownRef.current.contains(event.target)
+      ) {
+        setIsServicesDropdownOpen(false);
+      }
+
+      if (
+        logoutDropdownRef.current &&
+        !logoutDropdownRef.current.contains(event.target)
+      ) {
         setShowLogout(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -33,18 +44,14 @@ const Header = () => {
 
   if (!ready) return null;
 
-  const toggleServicesDropdown = () => {
-    setIsServicesDropdownOpen(!isServicesDropdownOpen);
-  };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleDropdown = (setter) => {
+    setter((prev) => !prev);
   };
 
   const handleLogout = async () => {
     try {
       await axios.post(
-          `${import.meta.env.VITE_API_URL}/logout`,
+        `${import.meta.env.VITE_API_URL}/logout`,
         {},
         { withCredentials: true }
       );
@@ -65,18 +72,18 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-primary py-2 px-6 flex justify-between items-center relative">
+    <header className="bg-primary py-2 px-6 flex justify-between items-center relative shadow-md">
       {/* Logo */}
       <div className="text-white font-bold text-xl flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
         <Link to="/HomePage">
-        <img src={rupee} alt="Rupee Icon" className="w-[150px] h-[60px]" />
+          <img src={logo} alt="Logo" className="w-[110px] h-[50px]" />
         </Link>
       </div>
 
       {/* Hamburger Menu Button */}
       <button
-        className="text-white text-2xl md:hidden"
-        onClick={toggleMobileMenu}
+        className="text-white text-2xl md:hidden focus:outline-none"
+        onClick={() => toggleDropdown(setIsMobileMenuOpen)}
         aria-label="Toggle Menu"
       >
         {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
@@ -88,10 +95,9 @@ const Header = () => {
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Close Button */}
         <button
-          className="self-end text-white text-2xl mb-4"
-          onClick={toggleMobileMenu}
+          className="self-end text-white text-2xl mb-4 focus:outline-none"
+          onClick={() => toggleDropdown(setIsMobileMenuOpen)}
         >
           <FaTimes />
         </button>
@@ -99,21 +105,21 @@ const Header = () => {
         <Link
           to="/HomePage"
           className="text-white hover:text-auButtomColor transition"
-          onClick={toggleMobileMenu}
+          onClick={() => toggleDropdown(setIsMobileMenuOpen)}
         >
           Home
         </Link>
         <Link
           to="/about-us"
           className="text-white hover:text-auButtomColor transition"
-          onClick={toggleMobileMenu}
+          onClick={() => toggleDropdown(setIsMobileMenuOpen)}
         >
           About
         </Link>
-        <div className="relative w-full">
+        <div className="relative w-full" ref={servicesDropdownRef}>
           <button
             className="text-white flex items-center w-full justify-between hover:text-auButtomColor transition cursor-pointer"
-            onClick={toggleServicesDropdown}
+            onClick={() => toggleDropdown(setIsServicesDropdownOpen)}
           >
             Services
             <FaChevronDown
@@ -130,37 +136,44 @@ const Header = () => {
             <Link
               to="/home-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
             >
               Home Loan
             </Link>
             <Link
               to="/vehicle-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
             >
               Vehicle Loan
             </Link>
             <Link
               to="/personal-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
             >
               Personal Loan
             </Link>
             <Link
               to="/business-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
             >
               Business Loan
+            </Link>
+            <Link
+              to="/Mortgage-loan"
+              className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
+            >
+              Mortgage Loan
             </Link>
           </div>
         </div>
         <Link
           to="/contact-us"
           className="text-white hover:text-auButtomColor transition"
-          onClick={toggleMobileMenu}
+          onClick={() => toggleDropdown(setIsMobileMenuOpen)}
         >
           Contact
         </Link>
@@ -176,7 +189,7 @@ const Header = () => {
             <Link
               to="/user-profile"
               className="text-white hover:text-auButtomColor transition"
-              onClick={toggleMobileMenu}
+              onClick={() => toggleDropdown(setIsMobileMenuOpen)}
             >
               Profile
             </Link>
@@ -185,7 +198,7 @@ const Header = () => {
           <Link
             to="/signup-page"
             className="bg-yellow-300 px-5 py-2 rounded-lg text-black font-semibold hover:bg-yellow-200 transition"
-            onClick={toggleMobileMenu}
+            onClick={() => toggleDropdown(setIsMobileMenuOpen)}
           >
             Get Started
           </Link>
@@ -206,10 +219,10 @@ const Header = () => {
         >
           About
         </Link>
-        <div className="relative">
+        <div className="relative" ref={servicesDropdownRef}>
           <button
             className="text-white flex items-center hover:text-auButtomColor transition cursor-pointer"
-            onClick={toggleServicesDropdown}
+            onClick={() => toggleDropdown(setIsServicesDropdownOpen)}
           >
             Services
             <FaChevronDown
@@ -236,16 +249,16 @@ const Header = () => {
               Vehicle Loan
             </Link>
             <Link
-              to="/personal-loan"
-              className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-            >
-              Personal Loan
-            </Link>
-            <Link
               to="/business-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Business Loan
+            </Link>
+            <Link
+              to="/Mortgage-loan"
+              className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
+            >
+              Mortgage Loan
             </Link>
           </div>
         </div>
@@ -257,9 +270,9 @@ const Header = () => {
           Contact
         </Link>
         {user ? (
-          <div className="relative user-profile-dropdown">
+          <div className="relative user-profile-dropdown" ref={logoutDropdownRef}>
             <div
-              onClick={() => setShowLogout(!showLogout)}
+              onClick={() => toggleDropdown(setShowLogout)}
               className="flex gap-2 border bg-yellow-300 border-gray-300 rounded-full py-1 px-3 shadow-md shadow-gray-400 items-center cursor-pointer hover:scale-105 transition-transform duration-300"
             >
               <div className="text-blue-900 rounded-full border overflow-hidden">

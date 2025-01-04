@@ -49,7 +49,7 @@ export default function PersonalLoan() {
                 {...fadeInUp}
                 className="font-bold text-[26px] sm:text-[48px] lg:text-[50px] leading-[44px] sm:leading-[60px] lg:leading-[55px]"
               >
-                Make Your Dreams a Reality With Ease
+                Why Personal Loans are Your Best Financial Ally
               </motion.h2>
 
               {/* Mobile View GIF */}
@@ -66,28 +66,21 @@ export default function PersonalLoan() {
                 {...fadeInUp}
                 className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
               >
-                Owning your dream is not just a goal, it’s about achieving the freedom and joy that come with it. Our AI-driven consultation simplifies the process, eliminating stress. Whether it's personal needs or ambitions, we’re here to assist.
+              Life is unpredictable. A sudden medical emergency or an unplanned milestone like a wedding can demand immediate financial resources. Personal loans offer a quick, hassle-free way to meet such needs, making them a trusted financial ally.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
                 className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
               >
-                Our services include flexible repayment options, competitive rates, and fast approval. We handle the complexities so you can focus on achieving your goals.
+              A personal loan is an unsecured loan from banks or NBFCs, requiring no collateral. Its versatility makes it ideal for addressing various financial needs
               </motion.p>
-
-              <motion.h2
-                {...fadeInUp}
-                className="text-xl lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
-              >
-                And yes, incentives await you too.
-              </motion.h2>
 
               <motion.h2
                 {...fadeInUp}
                 className="text-xl lg:text-[20px] lg:leading-7"
               >
-                Take the first step toward your dreams. Ready to make it happen?
+                Personal loans can provide a financial lifeline when you need it most. With INCENTUM’s expertise, you’ll receive unmatched service and tailored solutions.
               </motion.h2>
 
               <motion.div {...slideInLeft}>
