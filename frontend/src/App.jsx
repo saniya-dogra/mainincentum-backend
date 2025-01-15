@@ -21,8 +21,8 @@ import UserApplications from './Pages/dashboard/UserApplications';
 import FormTwo from './Pages/Forms/FormTwo';
 import FormOne from './Pages/Forms/FormOne';
 import FormThree from './Pages/Forms/FormThree';
-// import AboutUs from './Pages/Others/Aboutus';
-// import ContactUs from './Pages/Others/ContactUS';
+ import AboutUs from './Pages/Others/Aboutus';
+ import ContactUs from './Pages/Others/ContactUS';
 function App() {
   return (
         <UserContextProvider>
@@ -48,13 +48,12 @@ function App() {
         <Route path='/dashboard' element={<HomeDashboard/>}/>
         <Route path='/client-application' element={<ClientApplication/>}/>
         <Route path='/user-applications' element={<UserApplications/>}/>
-        {/* <Route path='/about-us' element={<AboutUs/>}/> */}
-        {/* <Route path='/contact-us' element={<ContactUs/>}/> */}
+         <Route path='/about-us' element={<AboutUs/>}/> 
+         <Route path='/contact-us' element={<ContactUs/>}/> 
         </Route>
       </Routes>
       {/* </HomeOneContextProvider> */}
       </UserContextProvider>
-   
   );
 }
 
