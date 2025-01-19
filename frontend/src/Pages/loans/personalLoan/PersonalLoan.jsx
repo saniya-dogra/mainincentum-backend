@@ -64,14 +64,14 @@ export default function PersonalLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
               Life is unpredictable. A sudden medical emergency or an unplanned milestone like a wedding can demand immediate financial resources. Personal loans offer a quick, hassle-free way to meet such needs, making them a trusted financial ally.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
               A personal loan is an unsecured loan from banks or NBFCs, requiring no collateral. Its versatility makes it ideal for addressing various financial needs
               </motion.p>

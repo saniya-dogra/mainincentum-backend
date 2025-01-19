@@ -64,14 +64,14 @@ export default function BusinessLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
               At INCENTUM, we are dedicated to providing businesses with the financial resources they need to grow and thrive. Whether you are looking to expand your operations, invest in equipment, or manage working capital, our Business Loan Services are designed to offer you unmatched benefits and flexibility.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 With INCENTUM, funding your business is now easier, faster, and more rewarding. Contact us to know more about our business loan offerings, eligibility, and incentives.
               </motion.p>

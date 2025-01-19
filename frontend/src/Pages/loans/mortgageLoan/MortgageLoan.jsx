@@ -64,14 +64,14 @@ export default function MortgageLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
               Mortgage loans are an essential financial tool for unlocking the value of your equity in existing property. They offer a cost-effective way to fund major expenses, consolidate debt, or invest in new opportunities, all while leveraging your property’s value.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
              A mortgage loan is a secured loan where you pledge a property-residential, commercial, or land as collateral to borrow money. The loan amount is determined by the property’s value and your repayment capacity, making it a popular option for long-term financing.
               </motion.p>

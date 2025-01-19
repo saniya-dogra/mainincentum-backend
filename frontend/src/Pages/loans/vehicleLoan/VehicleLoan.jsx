@@ -61,7 +61,7 @@ export default function VehicleLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
                 We know owning your dream car isn't just about the ride, it's
                 about the freedom and joy that comes with it. Our AI-driven
@@ -70,7 +70,7 @@ export default function VehicleLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[17px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 We bring you every feature of a car loan offered by Indian financial
                 institutions. Flexible repayment options, competitive rates, and quick

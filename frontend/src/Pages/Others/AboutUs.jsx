@@ -7,7 +7,7 @@ const AboutUs = () => {
       <section className="flex flex-col items-center text-center py-16 px-6">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">About Us</h1>
         <p className="text-lg md:text-2xl text-black max-w-4xl">
-          Welcome to <span className="text-blue-500 font-semibold">INCENTUM</span>, where financial innovation meets customer-centric excellence. 
+          Welcome to <span className="text-blue-700 font-semibold">INCENTUM</span>, where financial innovation meets customer-centric excellence. 
           We are more than a financial consultancy—we are your trusted partner in navigating the intricate world of loans, investments, and property acquisitions.        </p>
       </section>
 
@@ -69,7 +69,7 @@ const AboutUs = () => {
               <div className="flex justify-center items-center mb-4">
                 <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
                   <img
-                    src="https://img.icons8.com/ios-filled/50/ffffff/hand-heart.png"
+                    src="https://img.icons8.com/?size=100&id=62903&format=png&color=FFFFFF"
                     alt="AI Icon"
                     className="w-10 h-10"
                   />
@@ -140,8 +140,8 @@ const AboutUs = () => {
               alt="Advice"
               className="rounded-md shadow-md w-full transform transition-transform duration-300 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-blue-500 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <h3 className="text-white text-lg font-bold">Advice</h3>
+            <div className="absolute inset-0 bg-blue-400 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <h3 className="text-white p-8 text-lg font-bold">We are redefining the financial landscape by giving you control over your choices. We offer the best for you</h3>
             </div>
           </div>
 
@@ -152,8 +152,8 @@ const AboutUs = () => {
               alt="Create"
               className="rounded-md shadow-md w-full transform transition-transform duration-300 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-blue-500 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <h3 className="text-white text-lg font-bold">Create</h3>
+            <div className="absolute inset-0 bg-blue-400 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <h3 className="text-white text-lg p-8 font-bold">Innovation is at the heart of everything we do. We craft exceptional real estate products that stand out in the market. By combining creativity with data-driven insights, we develop properties that not only meet but exceed the expectations of today’s discerning buyers. Our goal is to create appreciating assets that generate substantial wealth for our clients.</h3>
             </div>
           </div>
 
@@ -164,82 +164,115 @@ const AboutUs = () => {
               alt="Nurture"
               className="rounded-md shadow-md w-full transform transition-transform duration-300 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-blue-500 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <h3 className="text-white text-lg font-bold">Nurture</h3>
+            <div className="absolute inset-0 bg-blue-400 bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <h3 className="text-white text-lg p-8 font-bold">We are here to change the way you loan. We aim to bring the lenders to you. We take pride in acting as financial matchmakers, fostering mutual success for all stakeholders.  
+             Whether you're a customer looking for the best financial product, a bank seeking quality leads, or a builder aiming to enhance property sales, INCENTUM is your partner in growth.
+             </h3>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Why Choose Us Section */}
-      <section className="py-14 px-6">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold">Why Choose Us?</h2>
-          <p className="text-black text-lg md:text-xl mt-4">
-            Here are a few reasons why millions trust{" "}
-            <span className="text-blue-600 font-semibold">INCENTUM</span>.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">
-              Innovative Technology
-            </h3>
-            <p className="text-black mt-2">
-              Cutting-edge tools to simplify your banking experience.
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">
-              Transparent Processes
-            </h3>
-            <p className="text-black mt-2">
-              Full visibility into every transaction and process.
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">
-              Quick Approvals
-            </h3>
-            <p className="text-black mt-2">Apply and get approved in no time.</p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">24/7 Support</h3>
-            <p className="text-black mt-2">
-              Our team is here to help you anytime, anywhere.
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">
-              Secure Solutions
-            </h3>
-            <p className="text-black mt-2">
-              Your data and transactions are safe with us.
-            </p>
-          </div>
-          <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-semibold">
-              Customer First
-            </h3>
-            <p className="text-black mt-2">
-              Your satisfaction is our priority.
-            </p>
-          </div>
-        </div>
-      </section>
+        {/* Why Choose Us Section */}
+  <section className="py-14 px-6 bg-gray-50">
+  <div className="text-center mb-12">
+    <h2 className="text-4xl md:text-5xl font-extrabold text-gray-800">Why Choose Us?</h2>
+    <p className="text-gray-600 text-lg md:text-xl mt-4 max-w-3xl mx-auto">
+      Millions trust <span className="text-blue-600 font-semibold">INCENTUM</span> for these reasons. Experience the difference today.
+    </p>
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
+    {/* Card 1 */}
+    <div className=" shadow-lg rounded-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/innovative.jpg"
+        alt="Innovative Technology Icon"
+        className=" rounded-lg  mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">Innovative Technology</h3>
+      <p className="text-gray-600 mt-2">
+        Cutting-edge tools to simplify your banking experience.
+      </p>
+    </div>
+
+    {/* Card 2 */}
+    <div className=" shadow-lg rounded-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/abstract.jpg"
+        alt="Transparent Processes Icon"
+        className=" rounded-lg mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">Transparent Processes</h3>
+      <p className="text-gray-600 mt-2">
+        Full visibility into every transaction and process.
+      </p>
+    </div>
+
+    {/* Card 3 */}
+    <div className=" shadow-lg rounded-lg p-9 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/Quick_Approvals.jpg"
+        alt="Quick Approvals Icon"
+        className=" rounded-lg mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">Quick Approvals</h3>
+      <p className="text-gray-600 mt-2">Apply and get approved in no time.</p>
+    </div>
+
+    {/* Card 4 */}
+    <div className=" shadow-lg rounded-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/call.jpg"
+        alt="24/7 Support Icon"
+        className="rounded-lg mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">24/7 Support</h3>
+      <p className="text-gray-600 mt-2">
+        Our team is here to help you anytime, anywhere.
+      </p>
+    </div>
+
+    {/* Card 5 */}
+    <div className=" shadow-lg rounded-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/safe.jpg"
+        alt="Secure Solutions Icon"
+        className="rounded-lg mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">Secure Solutions</h3>
+      <p className="text-gray-600 mt-2">
+        Your data and transactions are safe with us.
+      </p>
+    </div>
+
+    {/* Card 6 */}
+    <div className=" shadow-lg rounded-lg p-6 flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-300">
+      <img
+        src="/office.jpg"
+        alt="Customer First Icon"
+        className="rounded-lg mb-4"
+      />
+      <h3 className="text-2xl font-semibold text-gray-800">Customer First</h3>
+      <p className="text-gray-600 mt-2">
+        Your satisfaction is our priority.
+      </p>
+    </div>
+  </div>
+</section>
+
 
       {/* Call to Action */}
       <section className="py-14 px-6 text-center">
         <h2 className="text-2xl md:text-4xl font-bold mb-4">
-          With India's young population driving the demand for homes, cars, and
-          financial independence
+          With India's young population driving the demand for <br />
+           homes, cars, and financial independence
         </h2>
         <p className="text-black text-lg md:text-xl mb-8">
-          <span className="text-blue-300 font-semibold">INCENTUM</span> is here
-          to make those dreams a reality. Experience the future of finance,
+          <span className="text-blue-700 font-semibold">INCENTUM</span> is here
+          to make those dreams a reality. Experience the future of finance, <br />
           where every decision is informed, rewarding, and hassle-free.
         </p>
-        <button className="bg-blue-400 text-white px-8 py-3 rounded-lg hover:bg-blue-500 transition">
+        <button className="bg-blue-500 text-white px-8 py-3 rounded-lg hover:bg-blue-600 transition">
           Get Started
         </button>
       </section>
