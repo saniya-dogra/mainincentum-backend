@@ -15,7 +15,7 @@ export default function Dropdown({
   };
 
   const toggleDropdown = (e) => {
-    e.preventDefault();  // Prevent event from propagating to form submission
+    e.preventDefault(); // Prevent default form submission
     setOpenDropdown(isOpen ? null : id); // Toggle dropdown open/close
   };
 
@@ -38,7 +38,7 @@ export default function Dropdown({
       </button>
 
       {isOpen && (
-        <div className="absolute w-full bg-[#D3EEFF] rounded-lg shadow-lg overflow-hidden transition-max-height duration-500 ease-in-out z-10">
+        <div className="absolute w-full bg-[#D3EEFF] rounded-lg shadow-lg overflow-hidden transition-transform duration-300 z-10">
           <ul className="divide-y divide-blue-300">
             {options.length > 0 ? (
               options.map((option, index) => (
