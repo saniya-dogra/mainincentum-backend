@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import rupee from "../../assets/rupee.webp"; // Update the path if needed
+import logo from "../../assets/logo.webp"; // Update the path if needed
 import { UserContext } from "../../contextapi/UserContext";
 
 const Header = () => {
@@ -69,7 +69,7 @@ const Header = () => {
       {/* Logo */}
       <div className="text-white font-bold text-xl flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
         <Link to="/HomePage">
-        <img src={rupee} alt="Rupee Icon" className="w-[150px] h-[60px]" />
+        <img src={logo} alt="Rupee Icon" className="w-[150px] h-[60px]" />
         </Link>
       </div>
 

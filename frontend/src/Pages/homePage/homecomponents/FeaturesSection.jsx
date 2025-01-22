@@ -27,6 +27,7 @@ const FeaturesSection = () => {
                 { id: "car-loan", label: "Car Loan" },
                 { id: "personal-loan", label: "Personal Loan" },
                 { id: "business-loan", label: "Business Loan" },
+                { id: "mortgage-loan", label: "Mortgage Loan" },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -182,6 +183,41 @@ const FeaturesSection = () => {
               <div className="mt-10">
                 <Link
                   to="/business-loan"
+                  className="px-4  py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
+                >
+                  Know More →
+                </Link>
+              </div>
+            </div>
+          </div>
+          {/* Mortgage Loan */}
+          <div
+            id="mortgage-loan"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors"
+          >
+            <div className="p-4 md:w-1/2 flex justify-center">
+              <Link to="/mortgage-loan">
+                <img
+                  src={businessloan}
+                  alt="Business Loan Graph"
+                  className="rounded-lg w-full max-w-md"
+                />
+              </Link>
+            </div>
+            <div className="p-4 md:w-2/3 text-center md:text-left">
+              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+                MORTGAGE LOAN
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
+              Grow Your <span className="text-blue-700"> Business</span> With Our Custom
+                <span className="text-blue-700"> Mortgage Loan</span> Options!
+              </h2>
+              <p className="mt-4 text-sm sm:text-xl text-gray-600">   
+              Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
+              </p>
+              <div className="mt-10">
+                <Link
+                  to="/mortgage-loan"
                   className="px-4  py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
                 >
                   Know More →

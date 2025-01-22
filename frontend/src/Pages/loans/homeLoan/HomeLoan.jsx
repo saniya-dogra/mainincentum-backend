@@ -65,7 +65,7 @@ export default function HomeLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
                 Owning a home is one of life’s most significant milestones—a
                 symbol of security, comfort, and achievement. At INCENTUM, we
@@ -75,7 +75,7 @@ export default function HomeLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[14px] leading-[20px] sm:leading-[25px] lg:leading-[29px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 We partner with leading financial institutions across India to
                 bring you competitive interest rates, flexible repayment
