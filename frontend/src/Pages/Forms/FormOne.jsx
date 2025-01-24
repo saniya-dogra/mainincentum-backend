@@ -53,40 +53,21 @@ export default function PageOne() {
     });
   };
 
-  // Adjust the number of forms
-  const handleNumberOfFormsChange = (num) => {
-    setFormValuesList((prev) => {
-      const updatedForms = Array.from(
-        { length: num },
-        (_, i) =>
-          prev[i] || {
-            full_name: "",
-            father_name: "",
-            mobile_number: "",
-            email_id: "",
-            dob: "",
-            gender: "",
-            qualification: "",
-            employment_type: "",
-            marital_status: "",
-            spouse_employment_type: "",
-            no_of_dependents: "",
-            pan_number: "",
-            residence_type: "",
-            citizenship: "",
-            permanent_state: "",
-            permanent_district: "",
-            permanent_address: "",
-            permanent_pincode: "",
-            present_state: "",
-            present_district: "",
-            present_address: "",
-            present_pincode: "",
-          }
-      );
-      return updatedForms;
-    });
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/form-one`, formValuesList);
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error submitting the form", error);
+      alert("Failed to submit the form");
+    }
   };
+  
+
+
+ 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-50 text-white flex">
      <div className="w-1/4 bg-gradient-to-b from-blue-600 to-blue-100 py-10 pl-16 flex flex-col shadow-lg relative">
@@ -138,18 +119,7 @@ export default function PageOne() {
         <p className="text-gray-800 mb-10">
           Set up your account for your loan application{" "}
         </p>
-        <div className="grid grid-cols-2 w-full gap-6 ml-14 mt-4">
-          <Dropdown
-            options={["1", "2", "3", "4"]}
-            placeholder="Number of Forms"
-            setOpenDropdown={setOpenDropdown}
-            isOpen={openDropdown === "numberOfForms"}
-            id="numberOfForms"
-            value={formValuesList.length.toString()}
-            onSelect={(option) => handleNumberOfFormsChange(Number(option))}
-          />
-        </div>
-        <form>
+        <form onSubmit={handleFormSubmit}>
           {formValuesList.map((formValues, index) => (
             <div key={index} className="mx-12">
               <h1 className="text-xl font-bold mt-8 text-gray-900 mb-5">
