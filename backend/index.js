@@ -6,6 +6,7 @@ const { connectToDatabase } = require("./src/db");
 
 // Routers
 const router = require("./src/routes/user.router");
+const formRouter = require("./src/routes/individualForm.router");
 
 require("events").EventEmitter.defaultMaxListeners = 15; // Increase event listener limit
 
@@ -26,7 +27,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes (Add the /api prefix here to match the frontend's request)
-app.use("/api", router);  // Add the /api prefix
+app.use("/api", router); 
+app.use("/api",formRouter)
 
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
