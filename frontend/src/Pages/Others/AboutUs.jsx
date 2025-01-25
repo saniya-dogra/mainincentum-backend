@@ -16,64 +16,69 @@ const AboutUs = () => {
           We are more than a financial consultancy—we are your trusted partner in navigating the intricate world of loans, investments, and property acquisitions.        </p>
       </section>
 
-      {/* Background and Vision */}
-      <div className="bg-gray-100 py-16 px-6">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-      {/* Background Section */}
-      <div className="flex flex-col space-y-6">
-        <div className="group relative">
-          <h2 className="text-blue-700 text-4xl font-bold">
-            Background
-            <span
-              className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-            ></span>
-          </h2>
-        </div>
-        <div className="flex justify-center">
-        <img
-          src="/about-background.svg"
-          alt="Background Illustration"
-          className="w-3/4 max-w-md rounded-lg shadow-lg"
-        />
+ {/* Background and Vision */}
+<div className="bg-gray-100 py-16 px-6">
+  {/* Background Section */}
+  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    {/* Content on Left */}
+    <div className="flex flex-col space-y-6 order-2 md:order-1">
+      <div className="group relative">
+        <h2 className="text-blue-700 text-4xl font-bold">
+          Background
+          <span
+            className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
+          ></span>
+        </h2>
       </div>
-        <p className="text-gray-700 text-lg leading-relaxed">
-          At INCENTUM, we believe that securing financial solutions should
-          be straightforward, transparent, and rewarding. As pioneers in
-          customer incentivization, we blend cutting-edge technology with
-          expert consultancy to offer tailored financial products that
-          align with your unique needs.
-        </p>
-      </div>
+      <p className="text-gray-700 text-lg leading-relaxed">
+        At INCENTUM, we believe that securing financial solutions should
+        be straightforward, transparent, and rewarding. As pioneers in
+        customer incentivization, we blend cutting-edge technology with
+        expert consultancy to offer tailored financial products that
+        align with your unique needs.
+      </p>
     </div>
+    {/* Image on Right */}
+    <div className="flex justify-center order-1 md:order-2">
+      <img
+        src="/about-background.svg"
+        alt="Background Illustration"
+        className="w-3/4 max-w-md rounded-lg shadow-lg"
+      />
+    </div>
+  </div>
 
-
-        <div className="mt-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Vision Section */}
-          <div className="flex justify-center">
-            <img
-              src="/vision-back.svg"
-              alt="Vision Illustration"
-              className="w-3/4 max-w-md rounded-lg shadow-lg"
-            />
-          </div>
-          <div className="flex flex-col space-y-6">
-          <div className="group relative">
-            <h2 className="text-blue-700 text-4xl font-bold">Our Vision
-            <span
-              className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-            ></span>
-            </h2>
-            </div>
-            <p className="text-gray-700 text-lg leading-relaxed">
-              Our vision is to revolutionize financial accessibility through a
-              dynamic digital platform that bridges customers and financial
-              institutions. By offering a tech-driven, user-friendly ecosystem,
-              we empower individuals to make informed decisions effortlessly
-              while connecting them to the right financial solutions.
-            </p>
-          </div>
-        </div>
+  {/* Vision Section */}
+  <div className="mt-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    {/* Image on Left */}
+    <div className="flex justify-center order-1 md:order-1">
+      <img
+        src="/vision-back.svg"
+        alt="Vision Illustration"
+        className="w-3/4 max-w-md rounded-lg shadow-lg"
+      />
+    </div>
+    {/* Content on Right */}
+    <div className="flex flex-col space-y-6 order-2 md:order-2">
+      <div className="group relative">
+        <h2 className="text-blue-700 text-4xl font-bold">
+          Our Vision
+          <span
+            className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
+          ></span>
+        </h2>
       </div>
+      <p className="text-gray-700 text-lg leading-relaxed">
+        Our vision is to revolutionize financial accessibility through a
+        dynamic digital platform that bridges customers and financial
+        institutions. By offering a tech-driven, user-friendly ecosystem,
+        we empower individuals to make informed decisions effortlessly
+        while connecting them to the right financial solutions.
+      </p>
+    </div>
+  </div>
+</div>
+
 
       {/* Mission, Ambition, and AI Section */}  
      <div className="bg-[#f8fbff] py-16">
