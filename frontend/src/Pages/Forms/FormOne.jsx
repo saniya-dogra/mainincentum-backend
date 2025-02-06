@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import Input from "../../components/form/Input.jsx";
 import Dropdown from "../../components/form/Dropdown.jsx";
 import Button from "../../components/form/Button.jsx";
+import { FaUser } from "react-icons/fa";
+import { FaBookOpen } from "react-icons/fa6";
+import { IoDocuments } from "react-icons/io5";
+
+
 
 export default function PageOne() {
   const [formValuesList, setFormValuesList] = useState([
@@ -65,64 +70,81 @@ export default function PageOne() {
     }
   };
   
-
-
- 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-50 text-white flex">
-     <div className="w-1/4 bg-gradient-to-b from-blue-600 to-blue-100 py-10 pl-16 flex flex-col shadow-lg relative">
-  <h2 className="text-2xl font-bold mt-4 mb-14 text-white">
+    <div className="min-h-screen bg-[#010449] text-gray-900 flex">
+
+  {/* Sidebar */}
+  <div className="w-1/4 py-10 pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
+
+  {/* Sidebar Title */}
+  <h2 className="text-3xl font-extrabold mb-14 text-white tracking-wide">
     Application Process
   </h2>
   <ul className="relative">
-    {/* Vertical Line */}
-    <div className="absolute left-5 top-10 bottom-0 w-1 bg-teal-600 opacity-30"></div>
+    
+    {/* Vertical Timeline Line */}
+    <div className="absolute left-6 top-12 bottom-0 w-1 bg-[#121557]"></div>
 
     {/* Step 1 */}
-    <li className="flex items-center space-x-4 mb-16 cursor-pointer relative group">
-      <div className="z-10 w-10 h-10 flex items-center justify-center bg-teal-400 rounded-full text-black font-bold shadow-md transition-transform transform group-hover:scale-110">
-        1
+    <li className="flex items-center space-x-6 mb-16 cursor-pointer relative group">
+      {/* Step Circle */}
+      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+      <FaUser className="text-white w-6 h-6" />
       </div>
-      <span className="text-lg text-white group-hover:text-gray-900">
+      {/* Step Label */}
+      <span className="text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
         Personal Information
       </span>
     </li>
 
     {/* Step 2 */}
-    <li className="flex items-center space-x-4 mb-16 cursor-pointer relative group">
-      <div className="z-10 w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full text-white shadow-md transition-transform transform group-hover:scale-110">
-        2
+    <li className="flex items-center space-x-6 mb-16 cursor-pointer relative group">
+      {/* Step Circle */}
+      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+        <FaBookOpen className="text-white w-6 h-6" />
       </div>
-      <span className="text-lg text-white group-hover:text-gray-900">
-        Other Details
+      {/* Step Label */}
+      <span className="text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+        Employment status 
       </span>
     </li>
 
     {/* Step 3 */}
-    <li className="flex items-center space-x-4 cursor-pointer relative group">
-      <div className="z-10 w-10 h-10 flex items-center justify-center bg-gray-600 rounded-full text-white shadow-md transition-transform transform group-hover:scale-110">
-        3
+    <li className="flex items-center space-x-6 cursor-pointer relative group">
+      {/* Step Circle */}
+      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+      <IoDocuments  className="text-white w-6 h-6"/>
       </div>
-      <span className="text-lg text-white group-hover:text-gray-900">
-        Confirmation
+      {/* Step Label */}
+      <span className="text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+        Documents
       </span>
     </li>
   </ul>
+{/* Vertical Line on the Right End */}
+<div className="absolute top-[9.5rem] right-0 h-screen w-1 bg-[#121557]">
+  {/* Small Hollow Dots */}
+  <div className="absolute top-[2.12rem] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-[#26cc88] rounded-full"></div>
+  <div className="absolute top-[9.2rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-transparent border-4 border-[#484a7b] rounded-full"></div>
+  <div className="absolute top-[16.2rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-transparent border-4 border-[#484a7b] rounded-full"></div>
 </div>
 
+  </div>
 
       {/* Main Content */}
       <div className="w-3/4 p-10">
-        <h1 className="text-3xl text-gray-800 font-bold mb-6">
+        <h1 className="text-3xl text-white font-bold mb-6">
           Loan Application
         </h1>
-        <p className="text-gray-800 mb-10">
+        <p className="text-white mb-10">
           Set up your account for your loan application{" "}
         </p>
+        {/* Horizontal Line Above Sidebar */}
+        <div className="absolute top-56 left-0 w-full h-1 bg-[#121557]"></div>
         <form onSubmit={handleFormSubmit}>
           {formValuesList.map((formValues, index) => (
             <div key={index} className="mx-12">
-              <h1 className="text-xl font-bold mt-8 text-gray-900 mb-5">
+              <h1 className="text-xl font-bold mt-8 text-white mb-5">
                 Personal Details - {index + 1}
               </h1>
               <div className="mx-8">
@@ -280,7 +302,7 @@ export default function PageOne() {
                   />
                 </div>
               </div>
-              <h1 className="text-xl font-bold mt-2 ml-3 text-gray-900 mb-5">
+              <h1 className="text-xl font-bold mt-2 ml-3 text-white mb-5">
                 Permanent Address Details
               </h1>
               <div className="mx-12">
@@ -313,7 +335,7 @@ export default function PageOne() {
                   />
                 </div>
               </div>
-              <h1 className="text-xl font-bold mt-2 ml-3 text-gray-900 mb-5">
+              <h1 className="text-xl font-bold mt-2 ml-3 text-white mb-5">
                 Present Address Details
               </h1>
               <div className="mx-12">

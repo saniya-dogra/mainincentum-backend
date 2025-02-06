@@ -65,7 +65,7 @@ export default function HomeLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
                 Owning a home is one of life’s most significant milestones—a
                 symbol of security, comfort, and achievement. At INCENTUM, we
@@ -75,7 +75,7 @@ export default function HomeLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 We partner with leading financial institutions across India to
                 bring you competitive interest rates, flexible repayment
@@ -86,14 +86,14 @@ export default function HomeLoan() {
 
               <motion.h2
                 {...fadeInUp}
-                className="text-xl lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
+                className="text-xl p-1 text-white bg-blue-800 font-bold lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
               >
                 And yes, our incentives add an extra reason to celebrate.
               </motion.h2>
 
               <motion.h2
                 {...fadeInUp}
-                className="text-xl lg:text-[20px] lg:leading-7"
+                className="text-xl font-bold lg:text-[20px] lg:leading-7"
               >
                 Take the first step today and transform your dream into an
                 address!

@@ -516,10 +516,7 @@ const FormTwo = () => {
             </div>
           )}
 
-
-
-
-          {/* vehicleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */}
+          {/* vehicleeeeeeeeeeeee */}
           {formValues.loan === "Vehicle Loan" && (
             <div>
               <div className="mt-10 mx-12">

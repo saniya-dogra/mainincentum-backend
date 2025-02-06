@@ -64,24 +64,24 @@ export default function BusinessLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
               At INCENTUM, we are dedicated to providing businesses with the financial resources they need to grow and thrive. Whether you are looking to expand your operations, invest in equipment, or manage working capital, our Business Loan Services are designed to offer you unmatched benefits and flexibility.
               </motion.p>
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 With INCENTUM, funding your business is now easier, faster, and more rewarding. Contact us to know more about our business loan offerings, eligibility, and incentives.
               </motion.p>
 
               <motion.h2
                 {...fadeInUp}
-                className="text-xl lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
+                className="text-xl p-1 text-white bg-blue-800 font-bold lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
               >
-                Ready to take your business to new heights?
-              </motion.h2>
+                And yes, our incentives add an extra reason to celebrate.
+                </motion.h2>
 
               <motion.div {...slideInLeft}>
                 <Link to="/business-details-BusinessLoan">
@@ -107,7 +107,6 @@ export default function BusinessLoan() {
           </div>
         </div>
 
-        {/* Footer Section */}
         <div className="landingfooter">
           <motion.div {...fadeInUp}>
             <LoanNav />

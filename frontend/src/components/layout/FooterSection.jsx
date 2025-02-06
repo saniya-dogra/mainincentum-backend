@@ -28,41 +28,55 @@ const Footer = () => {
         <div className="col-span-3 grid grid-cols-2 md:grid-cols-4 gap-6">
           {/* Company Section */}
           <div>
-            <h3 className="text-lg md:text-xl font-bold uppercase">Company</h3>
-            <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <Link to = "/about-us" >
-              <li>About</li>
-              </Link>
-              <Link to = "/contact-us" >
-              <li> Contact </li>
-              </Link>
-              <li>Affiliates</li>
-              <li>Careers</li>
-              <li>Reviews</li>
-            </ul>
-          </div>
+      <h3 className="text-lg md:text-xl font-bold uppercase">Company</h3>
+      <ul className="mt-4 space-y-2 text-sm md:text-base">
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about-us">About</Link>
+        </li>
+        <li>
+          <Link to="/contact-us">Contact</Link>
+        </li>
+        <li>
+          FAQs
+        </li>
+      </ul>
+    </div>
+
 
           {/* Products Section */}
           <div>
-            <h3 className="text-lg md:text-xl font-bold uppercase">Products</h3>
-            <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <li>Buy</li>
-              <li>Sell</li>
-              <li>Swap</li>
-              <li>Receive</li>
-              <li>Gateway</li>
-            </ul>
-          </div>
+        <h3 className="text-lg md:text-xl font-bold uppercase">Services</h3>
+        <ul className="mt-4 space-y-2 text-sm md:text-base">
+          <li>
+            <Link to="/home-loan">Home Loan</Link>
+          </li>
+          <li>
+            <Link to="/vehicle-loan">Vehicle Loan</Link>
+          </li>
+          <li>
+            <Link to="/personal-loan">Personal Loan</Link>
+          </li>
+          <li>
+            <Link to="/business-loan">Business Loan</Link>
+          </li>
+          <li>
+            <Link to="/mortgage-loan">Mortgage Loan</Link>
+          </li>
+        </ul>
+      </div>
 
-          {/* Learn Section */}
+
+          {/* user res */}
           <div>
-            <h3 className="text-lg md:text-xl font-bold uppercase">Learn</h3>
+            <h3 className="text-lg md:text-xl font-bold uppercase">Resources</h3>
             <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <li>Blog</li>
+              <li>Emi Calculator</li>
+              <li>Apply for a loan </li>
+              <li>Track application status</li>
               <li>Support</li>
-              <li>Pricing</li>
-              <li>Community</li>
-              <li>Status</li>
             </ul>
           </div>
 
@@ -70,10 +84,9 @@ const Footer = () => {
           <div>
             <h3 className="text-lg md:text-xl font-bold uppercase">Legal</h3>
             <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <li>AML Policy</li>
+              <li>Disclaimer</li>
               <li>Privacy Policy</li>
               <li>Terms of Service</li>
-              <li>Cookie Policy</li>
             </ul>
           </div>
         </div>

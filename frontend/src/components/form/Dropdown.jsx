@@ -21,9 +21,10 @@ export default function Dropdown({
 
   return (
     <div className="relative w-full">
+      {/* Dropdown Button */}
       <button
-        className={`w-full border border-blue-400 mb-4 bg-[#D3EEFF] text-[16px] py-[11px] pl-6 rounded-xl shadow-md font-medium text-start focus:outline-none hover:bg-blue-200 transition-all duration-300 ${
-          value ? "text-black" : "text-gray-400"
+        className={`w-full border border-[#16195E] bg-[#010449] text-black text-[16px] py-[11px] mb-4 pl-6 rounded-xl shadow-md font-medium text-start focus:outline-none hover:border-[#5793A4] hover:bg-[#1a1c5d] transition-all duration-300 ${
+          value ? "text-white" : "text-gray-400"
         }`}
         onClick={toggleDropdown}
       >
@@ -37,15 +38,16 @@ export default function Dropdown({
         </span>
       </button>
 
+      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute w-full bg-[#D3EEFF] rounded-lg shadow-lg overflow-hidden transition-transform duration-300 z-10">
-          <ul className="divide-y divide-blue-300">
+        <div className="absolute w-full bg-[#010449] border border-[#16195E] rounded-lg shadow-lg overflow-hidden transition-transform duration-300 z-10">
+          <ul className="divide-y divide-[#1a1c5d]">
             {options.length > 0 ? (
               options.map((option, index) => (
                 <li
                   key={index}
                   onClick={() => handleOptionClick(option)}
-                  className="py-3 px-6 text-gray-700 cursor-pointer hover:bg-blue-300 hover:text-blue-900 transition-all duration-200"
+                  className="py-3 px-6 text-white cursor-pointer hover:bg-[#5793A4] hover:text-[#010449] transition-all duration-200"
                 >
                   {option}
                 </li>

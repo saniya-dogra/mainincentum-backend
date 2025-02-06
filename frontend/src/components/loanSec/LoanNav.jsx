@@ -15,8 +15,8 @@ export default function LoanNav() {
 
 
   return (
-    <div className=" justify-center border navborder hidden lg:block font-bold max-w-full w-[62%] mx-auto rounded-full py-2 px-2 mt-[30px] no-underline ">
-    <ul className="flex flex-wrap justify-center text-gray-500  lg:gap-6  xl:gap-6 text-lg lg:text-xl xl:text-[23px] py-1 xl:p-1">
+    <div className=" justify-center border navborder hidden lg:block font-bold max-w-full w-[58%] mx-auto rounded-full py-2 px-2 mt-[30px] no-underline ">
+    <ul className="flex flex-wrap justify-center text-gray-400 ml-7 lg:gap-8  xl:gap-8 text-lg lg:text-xl xl:text-[23px] py-1 xl:p-1">
       <li>
         <a href="#eligibility" onClick={(e)=>{
           e.preventDefault();
@@ -51,12 +51,7 @@ export default function LoanNav() {
         </a>
       </li>
       <li>
-        <a href="#Others" onClick={(e)=>{
-          e.preventDefault();
-          handleSectionClick("Others")
-        }}  className={`${activeSection==="Others"? "text-white":""} hover:text-white `}>
-          Others
-        </a>
+        
       </li>
     </ul>
   </div>

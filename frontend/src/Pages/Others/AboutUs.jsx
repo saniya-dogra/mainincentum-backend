@@ -1,34 +1,72 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 
 const AboutUs = () => {
+  const [visibleSections, setVisibleSections] = useState({});
+  const refs = {
+    about: useRef(null),
+    background: useRef(null),
+    vision: useRef(null),
+    journey: useRef(null),
+    corePhilosophy: useRef(null),
+    whyChooseUs: useRef(null),
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => ({ ...prev, [entry.target.id]: true }));
+          }
+        });
+      },
+      { threshold: 0.8 }
+    );
+
+    Object.values(refs).forEach((ref) => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    return () => {
+      Object.values(refs).forEach((ref) => {
+        if (ref.current) observer.unobserve(ref.current);
+      });
+    };
+  }, []);
+
   return (
     <div className="bg-gray-100 text-black min-h-screen">
       {/* Hero Section */}
       <section className="flex flex-col items-center text-center py-16 px-6">
-      <div className="relative group">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">About Us</h1>
-        <span
-          className="absolute left-1/2 transform -translate-x-1/2 bottom-[-2px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-        ></span>
-      </div>
+        <div className="relative" id="about" ref={refs.about}>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">About Us</h1>
+          {/* Animated Underline */}
+          <span
+            className={`absolute left-1/2 transform -translate-x-1/2 bottom-[-2px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+              visibleSections.about ? "w-full" : "w-0"
+            }`}>
+          </span>
+        </div>
         <p className="text-lg md:text-2xl mt-2 text-black max-w-4xl">
-          Welcome to <span className="text-blue-700 font-semibold">INCENTUM</span>, where financial innovation meets customer-centric excellence. 
-          We are more than a financial consultancy—we are your trusted partner in navigating the intricate world of loans, investments, and property acquisitions.        </p>
+          Welcome to <span className="text-blue-700 font-semibold">INCENTUM</span>, where financial innovation meets
+          customer-centric excellence. We are more than a financial consultancy—we are your trusted partner in
+          navigating the intricate world of loans, investments, and property acquisitions.
+        </p>
       </section>
 
- {/* Background and Vision */}
-<div className="bg-gray-100 py-16 px-6">
-  {/* Background Section */}
-  <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    {/* Content on Left */}
-    <div className="flex flex-col space-y-6 order-2 md:order-1">
-      <div className="group relative">
-        <h2 className="text-blue-700 text-4xl font-bold">
-          Background
-          <span
-            className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-          ></span>
-        </h2>
+      {/* Background Section */}
+      <div className="bg-gray-100 py-16 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="flex flex-col space-y-6 order-2 md:order-1">
+            <div className="relative" id="background" ref={refs.background}>
+              <h2 className="text-blue-700 text-4xl font-bold">Background</h2>
+              {/* Animated Underline */}
+              <span
+                className={`absolute left-0 bottom-[-6px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+                  visibleSections.background ? "w-full" : "w-0"
+                }`}>
+              </span>
       </div>
       <p className="text-gray-700 text-lg leading-relaxed">
         At INCENTUM, we believe that securing financial solutions should
@@ -50,50 +88,51 @@ const AboutUs = () => {
 
   {/* Vision Section */}
   <div className="mt-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    {/* Image on Left */}
-    <div className="flex justify-center order-1 md:order-1">
-      <img
-        src="/vision-back.svg"
-        alt="Vision Illustration"
-        className="w-3/4 max-w-md rounded-lg shadow-lg"
-      />
+  {/* Image on Left */}
+  <div className="flex justify-center order-1 md:order-1">
+    <img
+      src="/vision-back.svg"
+      alt="Vision Illustration"
+      className="w-3/4 max-w-md rounded-lg shadow-lg"
+    />
+  </div>
+  
+  {/* Content on Right */}
+  <div className="flex flex-col space-y-6 order-2 md:order-2">
+    <div className="relative" id="vision" ref={refs.vision}>
+      <h2 className="text-blue-700 text-4xl font-bold">Our Vision</h2>
+      {/* Animated Underline */}
+      <span
+        className={`absolute left-0 bottom-[-6px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+          visibleSections.vision ? "w-full" : "w-0"
+        }`}
+      ></span>
     </div>
-    {/* Content on Right */}
-    <div className="flex flex-col space-y-6 order-2 md:order-2">
-      <div className="group relative">
-        <h2 className="text-blue-700 text-4xl font-bold">
-          Our Vision
-          <span
-            className="absolute left-0 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-          ></span>
-        </h2>
-      </div>
-      <p className="text-gray-700 text-lg leading-relaxed">
-        Our vision is to revolutionize financial accessibility through a
-        dynamic digital platform that bridges customers and financial
-        institutions. By offering a tech-driven, user-friendly ecosystem,
-        we empower individuals to make informed decisions effortlessly
-        while connecting them to the right financial solutions.
-      </p>
-    </div>
+    
+    <p className="text-gray-700 text-lg leading-relaxed">
+      Our vision is to revolutionize financial accessibility through a
+      dynamic digital platform that bridges customers and financial
+      institutions. By offering a tech-driven, user-friendly ecosystem,
+      we empower individuals to make informed decisions effortlessly
+      while connecting them to the right financial solutions.
+    </p>
   </div>
 </div>
 
-
+</div>
       {/* Mission, Ambition, and AI Section */}  
-     <div className="bg-[#f8fbff] py-16">
+      <div className="bg-[#f8fbff] py-16">
   <div className="max-w-7xl mx-auto px-6">
-    <div className="relative group flex justify-center">
-      <h2 className="text-5xl font-bold text-center text-blue-700 mb-12 relative">
+    <div className="relative flex justify-center" id="journey" ref={refs.journey}>
+      <h2 className="text-5xl font-bold text-center text-blue-700 mb-10 relative">
         Defining Our Journey
         <span
-          className="absolute left-1/2 transform -translate-x-1/2 bottom-[-8px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-        ></span>
-      </h2>
+        className={`absolute left-1/2 transform -translate-x-1/2 bottom-[-9px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+          visibleSections.journey ? "w-full" : "w-0"
+        }`}
+      ></span>
+      </h2>]  
     </div>
-
-
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* AI Section */}
             <div className="bg-white shadow-lg rounded-lg p-6 text-center transform hover:scale-105 transition duration-300">
@@ -159,13 +198,17 @@ const AboutUs = () => {
 
       {/* Core Philosophy Section */}
       <div className="py-12 px-6">
-      <div className="relative group flex justify-center">
-        <h2 className="text-center text-5xl text-blue-700 font-bold mb-12 relative">
-          Core Philosophy
-          <span
-            className="absolute left-1/2 transform -translate-x-1/2 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-          ></span>
-        </h2>
+    <div className="relative flex justify-center" id="corePhilosophy" ref={refs.corePhilosophy}>
+    <h2 className="text-center text-5xl text-blue-700 font-bold mb-12 relative">
+      Core Philosophy
+      {/* Animated Underline */}
+    <span
+      className={`absolute left-1/2 transform -translate-x-1/2 bottom-[-8px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+        visibleSections.corePhilosophy ? "w-full" : "w-0"
+      }`}
+    ></span>
+    </h2>
+    
       </div>
 
 
@@ -212,15 +255,19 @@ const AboutUs = () => {
 
         {/* Why Choose Us Section */}
         <section className="py-14 px-6 bg-gray-50">
-  <div className="text-center mb-12 relative group">
-    <h2 className="text-4xl md:text-5xl font-bold text-gray-800 inline-block relative">
+  <div className="text-center mb-12 relative" id="whyChooseUs" ref={refs.whyChooseUs}>
+    <h2 className="text-4xl md:text-5xl font-bold text-blue-700 inline-block relative">
       Why Choose Us?
-      <span
-        className="absolute left-1/2 transform -translate-x-1/2 bottom-[-6px] w-0 h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full group-hover:w-full transition-all duration-500 ease-in-out"
-      ></span>
+      {/* Animated Underline */}
+    <span
+      className={`absolute left-1/2 transform -translate-x-1/2 bottom-[-8px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+        visibleSections.whyChooseUs ? "w-full" : "w-0"
+      }`}
+    ></span>
     </h2>
     <p className="text-gray-600 text-lg md:text-xl mt-4 max-w-3xl mx-auto">
       Millions trust <span className="text-blue-700 font-semibold">INCENTUM</span> for these reasons. Experience the difference today.
+    
     </p>
   </div>
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
@@ -314,9 +361,12 @@ const AboutUs = () => {
           to make those dreams a reality. Experience the future of finance, <br />
           where every decision is informed, rewarding, and hassle-free.
         </p>
-        <button className="bg-blue-700 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition">
-          Get Started
-        </button>
+            <Link
+              to="/Signup-Page"
+              className="bg-blue-700 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition"
+            >
+              Get Started
+            </Link>
       </section>
     </div>
   );

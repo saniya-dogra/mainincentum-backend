@@ -61,7 +61,7 @@ export default function VehicleLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800 mt-4 lg:mt-3"
               >
                 We know owning your dream car isn't just about the ride, it's
                 about the freedom and joy that comes with it. Our AI-driven
@@ -70,17 +70,17 @@ export default function VehicleLoan() {
 
               <motion.p
                 {...fadeInUp}
-                className="text-md sm:text-lg lg:text-[20px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
+                className="text-md sm:text-lg lg:text-[18px] leading-[24px] sm:leading-[28px] lg:leading-[32px] text-gray-800"
               >
                 We bring you every feature of a car loan offered by Indian financial
                 institutions. Flexible repayment options, competitive rates, and quick
-                approvals—our goal is to simplify the process so you can enjoy the
+                approvals — our goal is to simplify the process so you can enjoy the
                 journey ahead.
               </motion.p>
 
               <motion.h2
                 {...fadeInUp}
-                className="text-xl lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
+                className="text-xl p-1 text-white bg-blue-800 font-bold lg:text-[22px] mt-4 lg:mt-6 lg:leading-7"
               >
                 And yes, we will incentivize you too.
               </motion.h2>

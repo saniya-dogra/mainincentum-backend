@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
@@ -16,12 +16,19 @@ const Header = () => {
 
   const { user, setUser, ready } = useContext(UserContext);
   const navigate = useNavigate();
+  const servicesDropdownRef = useRef(null);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (event.target.closest(".user-profile-dropdown") === null) {
         setShowLogout(false);
       }
+
+        if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target)) {
+            setIsServicesDropdownOpen(false);
+        }
+
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,12 +71,20 @@ const Header = () => {
     }
   };
 
+  const handleServiceClick = (path) => {
+    navigate(path);
+    setIsServicesDropdownOpen(false); // Close the dropdown
+    if(isMobileMenuOpen){
+      toggleMobileMenu()
+    }
+  };
+
   return (
-    <header className="bg-primary py-2 px-6 flex justify-between items-center relative">
+    <header className="bg-primary py-2 px-9 flex justify-between items-center relative">
       {/* Logo */}
       <div className="text-white font-bold text-xl flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
         <Link to="/HomePage">
-        <img src={logo} alt="Rupee Icon" className="w-[150px] h-[60px]" />
+        <img src={logo} alt="Rupee Icon" className="w-[130px] h-[60px]" />
         </Link>
       </div>
 
@@ -110,7 +125,7 @@ const Header = () => {
         >
           About
         </Link>
-        <div className="relative w-full">
+        <div className="relative w-full" ref={servicesDropdownRef}>
           <button
             className="text-white flex items-center w-full justify-between hover:text-auButtomColor transition cursor-pointer"
             onClick={toggleServicesDropdown}
@@ -130,30 +145,37 @@ const Header = () => {
             <Link
               to="/home-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => handleServiceClick("/home-loan")}
             >
               Home Loan
             </Link>
             <Link
               to="/vehicle-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => handleServiceClick("/vehicle-loan")}
             >
               Vehicle Loan
             </Link>
             <Link
               to="/personal-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => handleServiceClick("/personal-loan")}
             >
               Personal Loan
             </Link>
             <Link
               to="/business-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
-              onClick={toggleMobileMenu}
+              onClick={() => handleServiceClick("/business-loan")}
             >
               Business Loan
+            </Link>
+            <Link
+              to="/mortgage-loan"
+              className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
+              onClick={() => handleServiceClick("/mortgage-loan")}
+            >
+              Mortage Loan
             </Link>
           </div>
         </div>
@@ -206,7 +228,7 @@ const Header = () => {
         >
           About
         </Link>
-        <div className="relative">
+        <div className="relative" ref={servicesDropdownRef}>
           <button
             className="text-white flex items-center hover:text-auButtomColor transition cursor-pointer"
             onClick={toggleServicesDropdown}
@@ -246,6 +268,12 @@ const Header = () => {
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
               Business Loan
+            </Link>
+            <Link
+              to="/mortgage-loan"
+              className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
+            >
+              Mortage Loan
             </Link>
           </div>
         </div>
