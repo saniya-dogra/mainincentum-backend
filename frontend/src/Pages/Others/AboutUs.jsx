@@ -131,7 +131,7 @@ const AboutUs = () => {
           visibleSections.journey ? "w-full" : "w-0"
         }`}
       ></span>
-      </h2>]  
+      </h2> 
     </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* AI Section */}

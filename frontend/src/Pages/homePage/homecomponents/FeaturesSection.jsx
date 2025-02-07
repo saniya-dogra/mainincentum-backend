@@ -31,7 +31,7 @@ const FeaturesSection = () => {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  className={`px-3 sm:px-7 py-2 sm:py-3 rounded-full text-xs sm:text-xl font-semibold ${
+                  className={`px-0 sm:px-7 py-2 sm:py-3 rounded-3xl text-xs sm:text-xl font-semibold ${
                     activeTab === tab.id
                       ? "text-black font-bold bg-gradient-to-r from-[#f5fafe] to-[#ffffff]"
                       : "text-gray-500 hover:text-black"

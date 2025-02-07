@@ -4,11 +4,11 @@ const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const faqs = [
-    { id: 1, question: "How long my application process took", answer: "Around 30 days" },
-    { id: 2, question: "What we like to do & what we don’t like to do", answer: "ETC" },
-    { id: 3, question: "Your charges.", answer: "nil" },
-    { id: 4, question: "CIBIL score Required", answer: "700+" },
-    { id: 5, question: "Salary required", answer: "20000" },
+    { id: 1, question: "How long my application process took?", answer: "Around 30 days" },
+    { id: 2, question: "What we like to do & what we don’t like to do?", answer: "ETC" },
+    { id: 3, question: "Your charges?", answer: "nil" },
+    { id: 4, question: "CIBIL score Required?", answer: "700+" },
+    { id: 5, question: "Salary required?", answer: "20000" },
   ];
 
   const toggleAccordion = (index) => {
@@ -41,7 +41,7 @@ const FAQSection = () => {
                     activeIndex === index ? "rotate-45" : "rotate-0"
                   }`}
                 >
-                  {activeIndex === index ? "−" : "+"}
+                  {activeIndex === index ? "+" : "+"}
                 </span>
               </button>
               {activeIndex === index && (

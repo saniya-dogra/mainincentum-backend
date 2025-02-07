@@ -73,36 +73,15 @@ const ContactJusto = () => {
   <div className="flex-1 p-4 sm:p-6 rounded-lg border-l border-gray-300">
     <h2 className="text-xl sm:text-2xl font-bold text-blue-900 mb-4">INCENTUM</h2>
 
-    {/* Mumbai Office */}
-    <div
-      className="mb-6 cursor-pointer p-4 hover:bg-gray-100 border-b border-gray-300"
-      onClick={() => handleLocationChange("mumbai")}
-    >
-      <h3 className="text-lg sm:text-xl text-blue-900 font-semibold mb-2">Mumbai</h3>
-      <p>
-        <strong>Address:</strong> 8th Floor, EL-Tara Building, Orchard Avenue,
-        Hiranandani Garden, Powai, Mumbai - 400076.
-      </p>
-      <p>
-        <strong>Email:</strong>{" "}
-        <a
-          href="mailto:info@incentum.loans"
-          className="text-blue-700 underline"
-        >
-          info@incentum.loans
-        </a>
-      </p>
-    </div>
-
-    {/* Pune Office */}
+      {/* Pune Office */}
     <div
       className="cursor-pointer p-4 hover:bg-gray-100"
       onClick={() => handleLocationChange("pune")}
     >
       <h3 className="text-lg sm:text-xl text-blue-900 font-semibold mb-2">Pune</h3>
       <p>
-        <strong>Address:</strong> 110 and 111, Nyati Emporius,
-        Pune-Bangalore Highway, Baner, Pune - 411014.
+        <strong>Address:</strong> PC Soft Building,
+        3rd floor, Bhandarkar Road, Pune - 411004.
       </p>
       <p>
         <strong>Email:</strong>{" "}
@@ -114,6 +93,27 @@ const ContactJusto = () => {
         </a>
       </p>
     </div>
+    
+    {/* Jaipur Office */}
+    <div
+      className="mb-6 cursor-pointer p-4 hover:bg-gray-100 border-b border-gray-300"
+      onClick={() => handleLocationChange("Jaipur")}
+    >
+      <h3 className="text-lg sm:text-xl text-blue-900 font-semibold mb-2">Jaipur</h3>
+      <p>
+        <strong>Address:</strong> 28, Shiv Gorax Nagar, Modal Town, Jagatpura,
+        Malviya Nagar, Jaipur - 302017.
+      </p>
+      <p>
+        <strong>Email:</strong>{" "}
+        <a
+          href="mailto:service@incentum.loans"
+          className="text-blue-700 underline"
+        >
+          service@incentum.loans
+        </a>
+      </p>
+    </div>
   </div>
 
   {/* Map Section */}
@@ -121,9 +121,9 @@ const ContactJusto = () => {
     <iframe
       title={`${selectedLocation} Map`}
       src={
-        selectedLocation === "mumbai"
-          ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.866835105398!2d72.90579707601661!3d19.1187511840727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c72cc35ea79d%3A0x2f38c624e83b39a2!2sJusto%20RealFinTech%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1704237934843!5m2!1sen!2sin"
-          : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.2844685205067!2d77.2340199760193!3d28.644886065655375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d192ad56bc79d%3A0x9608987aa2e498b2!2sNyati%20Emporius!5e0!3m2!1sen!2sin!4v1704237989473!5m2!1sen!2sin"
+        selectedLocation === "pune"
+          ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1903.0972829839661!2d73.83847163412351!3d18.517212896202473!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf8f3fffffff%3A0xf99c9c2170f9787e!2sPCSoft%20ERP%20Solutions%20%7CBest%20ERP%20Software%20provider%20in%20pune!5e0!3m2!1sen!2sin!4v1738949831063!5m2!1sen!2sin"
+          : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3559.9798072632957!2d75.82163387881555!3d26.84059455310514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db619daa1134b%3A0x9574fe7d14aa2a5d!2sShiv%20Goraksh%20Nagar%2C%20Model%20Town%2C%20Jagatpura%2C%20Jaipur%2C%20Rajasthan%20302017!5e0!3m2!1sen!2sin!4v1738949997531!5m2!1sen!2sin"
       }
       className="w-full h-[200px] sm:h-[300px] lg:h-[400px] rounded-lg border-0 shadow-lg"
       loading="lazy"
@@ -214,22 +214,25 @@ const ContactJusto = () => {
       </div>
       <div>
         <label
-          htmlFor="whoAreYou"
+          htmlFor="loantype"
           className="block text-sm font-medium text-gray-700 mb-2"
         >
-          Who are you?<span className="text-red-500">*</span>
+          Loan type?<span className="text-red-500">*</span>
         </label>
         <select
-          id="whoAreYou"
-          name="whoAreYou"
-          value={formData.whoAreYou}
+          id="loantype"
+          name="loantype"
+          value={formData.loantype}
           onChange={handleChange}
           required
           className="w-full px-4 py-3 sm:px-6 sm:py-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 shadow-sm transition duration-200 ease-in-out"
         >
           <option value="">Please Select</option>
-          <option value="buyer">Buyer</option>
-          <option value="seller">Seller</option>
+          <option value="buyer">Home Loan</option>
+          <option value="seller">Vehicle Loan</option>
+          <option value="seller">Personal Loan</option>
+          <option value="seller">Business Loan</option>
+          <option value="seller">Mortgage Loan</option>
           <option value="other">Other</option>
         </select>
       </div>

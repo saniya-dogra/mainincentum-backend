@@ -19,30 +19,6 @@
   position: relative;  
    
 }
-
-.bg-imagee {
-  background-image: url('/backgroundimage.webp'); 
-  background-size: cover; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-  height: 100%; 
-  width: 100%; 
-  position: relative; 
-}
-
-
-@media (max-width: 768px) {
-  .bg-imagee {
-    background-size: cover; 
-    background-position: center; 
-    padding-bottom:700px;
-    position: relative; 
-  }
-}
-
-
-
-
 .landingheader{
   background-image: url('/loanheader.webp'); 
   background-size: cover;          
@@ -56,10 +32,6 @@
   overflow: hidden;
 
 }
-
-
-
-
 .landingfooter{
   background-image: url('/loanfooter.webp'); 
   background-size: cover;          
@@ -91,9 +63,6 @@
     -1px -1px 0px 1px #B3FFFF, 
     1px 1px 1px 1px #B3FFFF;  
 }
-
-
-
 
 @media (max-width: 640px){
   .signup{

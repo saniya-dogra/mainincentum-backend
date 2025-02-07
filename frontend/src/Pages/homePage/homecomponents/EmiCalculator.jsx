@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 
+const formatIndianCurrency = (number) => {
+  return new Intl.NumberFormat("en-IN").format(number);
+};
+
 export default function EmiCalculator() {
   const [principle, setPrinciple] = useState(200000);
   const [interest, setInterest] = useState(24);
@@ -11,6 +15,10 @@ export default function EmiCalculator() {
   const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
+    calculateEMI();
+  }, [principle, interest, tenure]);
+
+  const calculateEMI = () => {
     const monthlyRate = interest / 12 / 100;
     const numPayments = tenure * 12;
     const emiValue =
@@ -19,10 +27,25 @@ export default function EmiCalculator() {
     const totalPayment = emiValue * numPayments;
     const totalInterestValue = totalPayment - principle;
 
-    setEmi(emiValue.toFixed(2));
-    setTotalInterest(totalInterestValue.toFixed(2));
-    setTotalAmount(totalPayment.toFixed(2));
-  }, [principle, interest, tenure]);
+    setEmi(Math.round(emiValue));
+    setTotalInterest(Math.round(totalInterestValue));
+    setTotalAmount(Math.round(totalPayment));
+  };
+
+  const handlePrincipleChange = (e) => {
+    const value = e.target.value === ""? 0: parseInt(e.target.value);
+    setPrinciple(value);
+  };
+
+  const handleInterestChange = (e) => {
+    const value = e.target.value === ""? 0: parseFloat(e.target.value);
+    setInterest(value);
+  };
+
+  const handleTenureChange = (e) => {
+    const value = e.target.value === ""? 0: parseInt(e.target.value);
+    setTenure(value);
+  };
 
   const chartData = {
     labels: ["Principal Amount", "Interest Amount"],
@@ -39,7 +62,7 @@ export default function EmiCalculator() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#010080] to-[#0A1536] text-white">
-      <div className="w-full max-w-5xl  backdrop-blur-lg shadow-xl rounded-lg p-8 mt-5 mb-5 md:p-12">
+      <div className="w-full max-w-5xl backdrop-blur-lg shadow-xl rounded-lg p-8 mt-5 mb-5 md:p-12">
         <h1 className="text-4xl font-extrabold text-center text-white mb-8">
           EMI Calculator
         </h1>
@@ -50,15 +73,23 @@ export default function EmiCalculator() {
             <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-md">
               <label className="flex justify-between text-lg font-semibold text-white">
                 Loan Amount
-                <span className="text-green-400">₹ {principle.toLocaleString()}</span>
+                <span className="text-green-400">
+                  ₹ {formatIndianCurrency(principle)}
+                </span>
               </label>
               <input
-                type="range"
-                min="100000"
-                max="100000000"
-                step="50000"
+                type="number"
                 value={principle}
-                onChange={(e) => setPrinciple(parseInt(e.target.value))}
+                onChange={handlePrincipleChange}
+                className="w-full mt-4 bg-gray-700 text-white rounded p-2"
+              />
+              <input
+                type="range"
+                min="10000"
+                max="5000000"
+                step="5000"
+                value={principle}
+                onChange={handlePrincipleChange}
                 className="w-full mt-4 accent-green-400"
               />
             </div>
@@ -70,12 +101,18 @@ export default function EmiCalculator() {
                 <span className="text-green-400">{interest} %</span>
               </label>
               <input
+                type="number"
+                value={interest}
+                onChange={handleInterestChange}
+                className="w-full mt-4 bg-gray-700 text-white rounded p-2"
+              />
+              <input
                 type="range"
                 min="1"
                 max="30"
                 step="0.1"
                 value={interest}
-                onChange={(e) => setInterest(parseFloat(e.target.value))}
+                onChange={handleInterestChange}
                 className="w-full mt-4 accent-green-400"
               />
             </div>
@@ -87,12 +124,18 @@ export default function EmiCalculator() {
                 <span className="text-green-400">{tenure} Yr</span>
               </label>
               <input
+                type="number"
+                value={tenure}
+                onChange={handleTenureChange}
+                className="w-full mt-4 bg-gray-700 text-white rounded p-2"
+              />
+              <input
                 type="range"
                 min="1"
                 max="30"
                 step="1"
                 value={tenure}
-                onChange={(e) => setTenure(parseInt(e.target.value))}
+                onChange={handleTenureChange}
                 className="w-full mt-4 accent-green-400"
               />
             </div>
@@ -104,16 +147,16 @@ export default function EmiCalculator() {
               <h2 className="text-2xl font-bold text-green-400">EMI Details</h2>
               <div className="mt-4 space-y-3">
                 <p className="text-lg font-medium text-white bg-blue ">
-                  Monthly EMI: ₹ {emi.toLocaleString()}
+                  Monthly EMI: ₹ {formatIndianCurrency(emi)}
                 </p>
                 <p className="text-lg font-medium text-white">
-                  Principal: ₹ {principle.toLocaleString()}
+                  Principal: ₹ {formatIndianCurrency(principle)}
                 </p>
                 <p className="text-lg font-medium text-white">
-                  Total Interest: ₹ {totalInterest.toLocaleString()}
+                  Total Interest: ₹ {formatIndianCurrency(totalInterest)}
                 </p>
                 <p className="text-lg font-medium text-white">
-                  Total Amount: ₹ {totalAmount.toLocaleString()}
+                  Total Amount: ₹ {formatIndianCurrency(totalAmount)}
                 </p>
               </div>
             </div>
