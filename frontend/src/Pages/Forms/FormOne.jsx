@@ -7,8 +7,6 @@ import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
 
-
-
 export default function PageOne() {
   const [formValuesList, setFormValuesList] = useState([
     {
@@ -39,7 +37,6 @@ export default function PageOne() {
 
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  // Handle text input changes
   const handleInputChange = (index, e) => {
     const { name, value } = e.target;
     setFormValuesList((prev) => {
@@ -49,7 +46,6 @@ export default function PageOne() {
     });
   };
 
-  // Handle dropdown selection
   const handleOptionSelect = (index, name, option) => {
     setFormValuesList((prev) => {
       const updatedForms = [...prev];
@@ -60,7 +56,6 @@ export default function PageOne() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/form-one`, formValuesList);
       alert(response.data.message);
@@ -69,86 +64,78 @@ export default function PageOne() {
       alert("Failed to submit the form");
     }
   };
-  
+
   return (
-    <div className="min-h-screen bg-[#010449] text-gray-900 flex">
+    <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
+      {/* Horizontal Line */}
+      <div className="absolute mt-20 md:mt-32 w-full h-1 bg-[#9ea0c5e7]"></div>
+      {/* Sidebar */}
+      <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
+        <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center">
+          Application Process
+        </h2>
+        <ul className="relative  mr-10">
+          {/* Vertical Timeline Line */}
+          <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7]"></div>
 
-  {/* Sidebar */}
-  <div className="w-1/4 py-10 pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
+          {/* Step 1: Personal Information */}
+          <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors text-right">
+              Personal Information
+              <div className="text-sm">Browse and Upload</div>
+            </span>
+            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+              <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+            </div>
+          </li>
 
-  {/* Sidebar Title */}
-  <h2 className="text-3xl font-extrabold mb-14 text-white tracking-wide">
-    Application Process
-  </h2>
-  <ul className="relative">
-    
-    {/* Vertical Timeline Line */}
-    <div className="absolute left-6 top-12 bottom-0 w-1 bg-[#121557]"></div>
+          {/* Step 2: Employment Status */}
+          <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors text-right">
+              Employment Status
+              <div className="text-sm">Browse and Upload</div>
+            </span>
+            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+              <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+            </div>
+          </li>
 
-    {/* Step 1 */}
-    <li className="flex items-center space-x-6 mb-16 cursor-pointer relative group">
-      {/* Step Circle */}
-      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-      <FaUser className="text-white w-6 h-6" />
-      </div>
-      {/* Step Label */}
-      <span className="text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
-        Personal Information
-      </span>
-    </li>
+          {/* Step 3: Documents */}
+          <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
+            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors text-right">
+              Documents
+              <div className="text-sm">Browse and Upload</div>
+            </span>
+            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+              <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+            </div>
+          </li>
+        </ul>
 
-    {/* Step 2 */}
-    <li className="flex items-center space-x-6 mb-16 cursor-pointer relative group">
-      {/* Step Circle */}
-      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-        <FaBookOpen className="text-white w-6 h-6" />
-      </div>
-      {/* Step Label */}
-      <span className="text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-        Employment status 
-      </span>
-    </li>
-
-    {/* Step 3 */}
-    <li className="flex items-center space-x-6 cursor-pointer relative group">
-      {/* Step Circle */}
-      <div className="z-10 w-12 h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-      <IoDocuments  className="text-white w-6 h-6"/>
-      </div>
-      {/* Step Label */}
-      <span className="text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-        Documents
-      </span>
-    </li>
-  </ul>
-{/* Vertical Line on the Right End */}
-<div className="absolute top-[9.5rem] right-0 h-screen w-1 bg-[#121557]">
-  {/* Small Hollow Dots */}
-  <div className="absolute top-[2.12rem] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-[#26cc88] rounded-full"></div>
-  <div className="absolute top-[9.2rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-transparent border-4 border-[#484a7b] rounded-full"></div>
-  <div className="absolute top-[16.2rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-transparent border-4 border-[#484a7b] rounded-full"></div>
+        {/* Vertical Line on the Right End */}
+        <div className="hidden lg:block absolute top-[8rem] right-0 h-screen w-1 bg-[#b1b3d7ef]">
+  <div className="absolute top-[3.5rem] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-[#26cc88] rounded-full"></div>
+  <div className="absolute top-[10.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
+  <div className="absolute top-[17.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
 </div>
-
-  </div>
+      </div>
 
       {/* Main Content */}
-      <div className="w-3/4 p-10">
-        <h1 className="text-3xl text-white font-bold mb-6">
+      <div className="w-full lg:w-3/4 p-4 lg:p-10">
+        <h1 className="text-2xl ml-12 lg:text-3xl text-white font-bold mb-3 lg:mb-3">
           Loan Application
         </h1>
-        <p className="text-white mb-10">
-          Set up your account for your loan application{" "}
+        <p className="text-white ml-12 mb-6 lg:mb-11">
+          Set up your account for your loan application
         </p>
-        {/* Horizontal Line Above Sidebar */}
-        <div className="absolute top-56 left-0 w-full h-1 bg-[#121557]"></div>
         <form onSubmit={handleFormSubmit}>
           {formValuesList.map((formValues, index) => (
-            <div key={index} className="mx-12">
-              <h1 className="text-xl font-bold mt-8 text-white mb-5">
+            <div key={index} className="mx-4 lg:mx-12">
+              <h1 className="text-lg lg:text-xl font-bold mt-6 lg:mt-8 text-white mb-4 lg:mb-5">
                 Personal Details - {index + 1}
               </h1>
-              <div className="mx-8">
-                <div className="grid grid-cols-2 w-full gap-6">
+              <div className="mx-2 lg:mx-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4 lg:gap-6">
                   <Input
                     placeholder="Full Name as per Pan card"
                     name="full_name"
@@ -161,8 +148,6 @@ export default function PageOne() {
                     value={formValues.father_name}
                     onChange={(e) => handleInputChange(index, e)}
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Input
                     placeholder="Enter 10-digit mobile number"
                     name="mobile_number"
@@ -175,8 +160,6 @@ export default function PageOne() {
                     value={formValues.email_id}
                     onChange={(e) => handleInputChange(index, e)}
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Input
                     placeholder="DOB"
                     name="dob"
@@ -194,8 +177,6 @@ export default function PageOne() {
                       handleOptionSelect(index, "gender", option)
                     }
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
                     options={[
                       "Post Graduate",
@@ -229,8 +210,6 @@ export default function PageOne() {
                       handleOptionSelect(index, "employment_type", option)
                     }
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
                     options={["Married", "Unmarried", "Other"]}
                     placeholder="Marital Status"
@@ -257,8 +236,6 @@ export default function PageOne() {
                       )
                     }
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
                     options={["0", "1", "2", "3"]}
                     placeholder="No of Dependents"
@@ -276,8 +253,6 @@ export default function PageOne() {
                     value={formValues.pan_number}
                     onChange={(e) => handleInputChange(index, e)}
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Dropdown
                     options={["Owned", "Rented", "Parental", "Others"]}
                     placeholder="Residence Type"
@@ -302,11 +277,11 @@ export default function PageOne() {
                   />
                 </div>
               </div>
-              <h1 className="text-xl font-bold mt-2 ml-3 text-white mb-5">
+              <h1 className="text-lg lg:text-xl font-bold mt-4 lg:mt-2 ml-2 lg:ml-3 text-white mb-4 lg:mb-5">
                 Permanent Address Details
               </h1>
-              <div className="mx-12">
-                <div className="grid grid-cols-2 w-full gap-6">
+              <div className="mx-4 lg:mx-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4 lg:gap-6">
                   <Input
                     placeholder="State"
                     name="permanent_state"
@@ -319,8 +294,6 @@ export default function PageOne() {
                     value={formValues.permanent_district}
                     onChange={(e) => handleInputChange(index, e)}
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Input
                     placeholder="Enter Your Permanent Address"
                     name="permanent_address"
@@ -335,11 +308,11 @@ export default function PageOne() {
                   />
                 </div>
               </div>
-              <h1 className="text-xl font-bold mt-2 ml-3 text-white mb-5">
+              <h1 className="text-lg lg:text-xl font-bold mt-4 lg:mt-2 ml-2 lg:ml-3 text-white mb-4 lg:mb-5">
                 Present Address Details
               </h1>
-              <div className="mx-12">
-                <div className="grid grid-cols-2 w-full gap-6">
+              <div className="mx-4 lg:mx-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4 lg:gap-6">
                   <Input
                     placeholder="State"
                     name="present_state"
@@ -352,8 +325,6 @@ export default function PageOne() {
                     value={formValues.present_district}
                     onChange={(e) => handleInputChange(index, e)}
                   />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
                   <Input
                     placeholder="Enter Your Present Address"
                     name="present_address"
@@ -370,9 +341,9 @@ export default function PageOne() {
               </div>
             </div>
           ))}
-          <div className="mt-8">
+          <div className="mt-6 lg:mt-8">
             <Link to={"/form-details-two"}>
-              <Button type="submit" text="Submit" className="mt-6" />
+              <Button type="submit" text="Submit" className="mt-4 lg:mt-6" />
             </Link>
           </div>
         </form>
