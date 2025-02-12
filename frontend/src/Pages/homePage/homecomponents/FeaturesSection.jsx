@@ -17,14 +17,14 @@ const FeaturesSection = () => {
 
   return (
     <>
-      <div className="bg-[#e5e5e5]">
+      <div className="bg-white">
         {/* Header Navbar */}
         <div className="sticky top-0 z-10">
           <div className="container mx-auto flex justify-center py-2 pt-3 px-4 sm:px-0">
             <div className="flex bg-gradient-to-b from-[#e8f4fd] to-[#dfe1f6] shadow-md rounded-full px-2 py-1 space-x-2 sm:space-x-6 border border-[#14296d]">
               {[
                 { id: "home-loan", label: "Home Loan" },
-                { id: "car-loan", label: "Car Loan" },
+                { id: "car-loan", label: "Vehicle Loan" },
                 { id: "personal-loan", label: "Personal Loan" },
                 { id: "business-loan", label: "Business Loan" },
                 { id: "mortgage-loan", label: "Mortgage Loan" },
@@ -51,7 +51,7 @@ const FeaturesSection = () => {
           {/* Home Loan */}
           <div
             id="home-loan"
-            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors duration-200"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors duration-200"
           >
             <div className="p-4 md:w-1/2 flex justify-center">
               <Link to="/home-loan">
@@ -63,9 +63,9 @@ const FeaturesSection = () => {
               </Link>
             </div>
             <div className="p-4 md:w-2/3 text-center md:text-left">
-              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+              <Link to="/home-loan" className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
                 HOME LOAN
-              </span>
+              </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
                 Find Your Dream <span className="text-blue-700">Home</span> With Our
                 <span className="text-blue-700"> Home Loan</span> Solution
@@ -87,7 +87,7 @@ const FeaturesSection = () => {
           {/* Vehicle Loan */}
           <div
             id="car-loan"
-            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors"
           >
             <div className="p-4 md:w-1/2 flex justify-center">
               <Link to="/vehicle-loan">
@@ -99,9 +99,9 @@ const FeaturesSection = () => {
               </Link>
             </div>
             <div className="p-4 md:w-2/3 text-center md:text-left">
-              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+              <Link to="/vehicle-loan" className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
                 VEHICLE LOAN
-              </span>
+              </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
               Drive Your Dream <span className="text-blue-700">Car </span> with Our Tailored 
                 <span className="text-blue-700"> Vehicle Loan</span> Solution
@@ -123,7 +123,7 @@ const FeaturesSection = () => {
           {/* Personal Loan */}
           <div
             id="personal-loan"
-            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors"
           >
             <div className="p-4 md:w-1/2 flex justify-center">
               <Link to="/personal-loan">
@@ -135,9 +135,9 @@ const FeaturesSection = () => {
               </Link>
             </div>
             <div className="p-4 md:w-2/3 text-center md:text-left">
-              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+              <Link to="/personal-loan" className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
                 PERSONAL LOAN
-              </span>
+              </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
               Fuel Your <span className="text-blue-700">Personal Goals </span> With Our  Flexible <span className="text-blue-700"> Personal Loan</span> Solution!
               </h2>
@@ -158,7 +158,7 @@ const FeaturesSection = () => {
           {/* Business Loan */}
           <div
             id="business-loan"
-            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors"
           >
             <div className="p-4 md:w-1/2 flex justify-center">
               <Link to="/business-loan">
@@ -170,9 +170,9 @@ const FeaturesSection = () => {
               </Link>
             </div>
             <div className="p-4 md:w-2/3 text-center md:text-left">
-              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+              <Link to="/business-loan" className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
                 BUSINESS LOAN
-              </span>
+              </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
               Grow Your <span className="text-blue-700"> Business</span> With Our Custom
                 <span className="text-blue-700"> Business Loan</span> Options!
@@ -193,7 +193,7 @@ const FeaturesSection = () => {
           {/* Mortgage Loan */}
           <div
             id="mortgage-loan"
-            className="flex flex-col md:flex-row items-center justify-center hover:bg-white transition-colors"
+            className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors"
           >
             <div className="p-4 md:w-1/2 flex justify-center">
               <Link to="/mortgage-loan">
@@ -205,9 +205,9 @@ const FeaturesSection = () => {
               </Link>
             </div>
             <div className="p-4 md:w-2/3 text-center md:text-left">
-              <span className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
+              <Link to="/mortgage-loan" className="bg-blue-900 text-white text-sm sm:text-lg px-6 py-3 rounded-full inline-block">
                 MORTGAGE LOAN
-              </span>
+              </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
               Grow Your <span className="text-blue-700"> Business</span> With Our Custom
                 <span className="text-blue-700"> Mortgage Loan</span> Options!

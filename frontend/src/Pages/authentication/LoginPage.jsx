@@ -84,31 +84,30 @@ export default function LoginPage() {
       {/* Left Section */}
       <div className="flex flex-col w-full p-6 xl:p-12">
         <div className="flex flex-col justify-center h-2/3 mx-auto">
-          <h2 className="text-white text-3xl md:text-4xl xl:text-5xl font-bold leading-tight">
+          <h2 className="text-white text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold leading-tight mt-20">
             Welcome <span className="text-blue-300">To The</span>{" "}
             <span className="text-blue-400">Realm Of</span> Modern{" "}
             <span className="text-blue-400">Banking!</span>
           </h2>
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             <div>
-              <h2 className="text-2xl font-bold text-white">1Million+</h2>
-              <p className="text-white text-lg">Registered Businesses</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">2000+</h2>
+              <p className="text-white text-base sm:text-lg">Registered Users</p>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">$1Billion+</h2>
-              <p className="text-white text-lg">Monthly Payments Value</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">₹ 5,00,00,000+</h2>
+              <p className="text-white text-base sm:text-lg">Amount Disbursed</p>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">1Million+</h2>
-              <p className="text-white text-lg">Daily Transactions</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">₹ 10,00,000+</h2>
+              <p className="text-white text-base sm:text-lg">Incentives Provided</p>
             </div>
           </div>
         </div>
       </div>
-
       {/* Right Section */}
       <div className="flex items-center justify-center p-6 bg-opacity-80">
-        <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg">
+        <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg -mt-12">
           <h2 className="text-gray-200 text-3xl font-bold mb-4">Login</h2>
           <p className="text-gray-400 text-lg mb-4">Glad you're back!</p>
           <form onSubmit={handleSubmit}>

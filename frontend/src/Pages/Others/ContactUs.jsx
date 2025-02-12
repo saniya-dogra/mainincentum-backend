@@ -9,7 +9,7 @@ const ContactJusto = () => {
     comment: "",
   });
 
-  const [selectedLocation, setSelectedLocation] = useState("mumbai");
+  const [selectedLocation, setSelectedLocation] = useState("pune");
   const [visibleSections, setVisibleSections] = useState({});
   const headerRef = useRef(null);
   const helpRef = useRef(null);
