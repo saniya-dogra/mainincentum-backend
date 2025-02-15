@@ -208,54 +208,60 @@ const FormThree = () => {
 
       {/* Sidebar */}
       <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
-        <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
-          Application Process
-        </h2>
-        <ul className="relative mr-10">
-          {/* Vertical Timeline Line */}
-          <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
+  <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
+    Application Process
+  </h2>
+  <ul className="relative mr-10">
+    {/* Vertical Timeline Line */}
+    <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
 
-          {/* Step 1: Personal Information */}
-          <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors text-right mt-4">
-              Personal Information
-              <div className="text-sm">Browse and Upload</div>
-            </span>
-            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 mt-4 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-              <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-            </div>
-          </li>
-
-          {/* Step 2: Employment Status */}
-          <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors text-right">
-              Employment Status
-              <div className="text-sm">Browse and Upload</div>
-            </span>
-            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-              <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-            </div>
-          </li>
-
-          {/* Step 3: Documents */}
-          <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
-            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors text-right">
-              Documents
-              <div className="text-sm">Browse and Upload</div>
-            </span>
-            <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-              <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-            </div>
-          </li>
-        </ul>
-
-        {/* Vertical Line on the Right End */}
-        <div className="hidden lg:block absolute top-[8rem] right-0 h-screen w-1 bg-[#b1b3d7ef]">
-          <div className="absolute top-[3.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
-          <div className="absolute top-[10.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
-          <div className="absolute top-[17.5rem] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-[#26cc88] rounded-full"></div>
-        </div>
+    {/* Step 1: Personal Information */}
+    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+      <div className="text-right">
+        <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+          Personal Information
+        </span>
+        <div className="text-sm text-gray-400">Browse and Upload</div>
       </div>
+      <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+        <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+      </div>
+    </li>
+
+    {/* Step 2: Employment Status */}
+    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+      <div className="text-right">
+        <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+          Employment Status
+        </span>
+        <div className="text-sm text-gray-400">Browse and Upload</div>
+      </div>
+      <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+        <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+      </div>
+    </li>
+
+    {/* Step 3: Documents */}
+    <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
+      <div className="text-right">
+        <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
+          Documents
+        </span>
+        <div className="text-sm text-gray-400">Browse and Upload</div>
+      </div>
+      <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+        <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+      </div>
+    </li>
+  </ul>
+
+  {/* Vertical Line on the Right End */}
+  <div className="hidden lg:block absolute top-[8rem] right-0 h-screen w-1 bg-[#b1b3d7ef]">
+    <div className="absolute top-[3.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
+    <div className="absolute top-[10.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
+    <div className="absolute top-[17.5rem] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-[#26cc88] rounded-full"></div>
+  </div>
+</div>
 
       {/* Main Content */}
       <div className="w-full lg:w-3/4 p-4 sm:p-6 lg:p-8 xl:p-10 -mt-2">
