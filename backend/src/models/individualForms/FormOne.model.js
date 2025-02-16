@@ -1,84 +1,44 @@
 const mongoose = require("mongoose");
 
-const formOneSchema = new mongoose.Schema({
-  full_name: { 
-    type: String, 
-    required: true
-  },
-  father_name: {
-    type: String 
-  },
-  email_id: {
+const formSchema = new mongoose.Schema({
+  full_name: { type: String },
+  father_name: { type: String },
+  mobile_number: { type: String, match: /^[0-9]{10}$/ },
+  email_id: { type: String, unique: true, match: /\S+@\S+\.\S+/ },
+  dob: { type: String },
+  gender: { type: String, enum: ["Male", "Female", "Other"] },
+  qualification: {
     type: String,
-    required: [true, "Email is required"],
-    unique: [true, "Email must be unique"],
-    lowercase: true,
-    trim: true,
-    match: [/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/, "Please enter a valid email address"], 
+    enum: ["Post Graduate", "Graduate", "Higher Secondary", "Secondary", "Others"],
   },
-  mobile_number: {
+  employment_type: {
     type: String,
-    required: [true, "Phone number is required"],
-    match: [/^\d{10}$/, "Phone number must be 10 digits"],  
+    enum: ["Salaried", "Self Employed", "Professional", "Unemployed"],
   },
-  dob: {
-    type: Date, 
-  },
-  gender: {
-    type: String, 
-  },
-  qualification: { 
-    type: String, 
-  },
-  employment_type: { 
-    type: String, 
-  },
-  marital_status: {
+  marital_status: { type: String, enum: ["Married", "Unmarried", "Other"] },
+  spouse_employment_type: { type: String, enum: ["Earning", "Home Maker"] },
+  no_of_dependents: { type: Number, min: 0, max: 3 },
+  pan_number: { type: String, required: true, match: /[A-Z]{5}[0-9]{4}[A-Z]{1}/ },
+  residence_type: {
     type: String,
+    enum: ["Owned", "Rented", "Parental", "Others"],
   },
-  spouse_employment_type: { 
-    type: String, 
-  },
-  no_of_dependents: {
-    type: Number,  
-  },
-  pan_number: {
-    type: String,
-  },
-  residence_type: { 
-    type: String,
-  },
-  citizenship: { 
-    type: String, 
-  },
-  permanent_state: {
-    type: String,
-  },
-  permanent_district: { 
-    type: String, 
-  },
-  permanent_address: { 
-    type: String, 
-  },
-  permanent_pincode: { 
-    type: String, 
-  },
-  present_state: {
-    type: String,
-  },
-  present_district: {
-    type: String, 
+  citizenship: { type: String, enum: ["Resident Indian", "Non-Resident Indian"] },
+  
+  permanent_address: {
+    state: { type: String },
+    district: { type: String },
+    address: { type: String },
+    pincode: { type: String, match: /^[0-9]{6}$/ },
   },
   present_address: {
-    type: String,
+    state: { type: String },
+    district: { type: String },
+    address: { type: String },
+    pincode: { type: String, match: /^[0-9]{6}$/ },
   },
-  present_pincode: { 
-    type: String, 
-  },
-}, {
-  timestamps: true  
 });
 
-const FormOne = mongoose.model("FormOne", formOneSchema);
+const FormOne = mongoose.model("FormOne", formSchema);
 
-module.exports = {FormOne};
+module.exports = FormOne;

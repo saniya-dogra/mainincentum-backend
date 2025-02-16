@@ -1,8 +1,11 @@
-const { FormOne } = require("../models/individualForms/FormOne.model");
+// controllers/formOne.js
+const FormOne  = require("../models/individualForms/FormOne.model");
+const FormTwo  = require("../models/individualForms/FormTwo.model");
 const { asyncHandler } = require("../utils/asyncHandler");
 
 const formOne = asyncHandler(async (req, res) => {
   try {
+    // Destructure the data from req.body
     const {
       full_name,
       father_name,
@@ -28,8 +31,10 @@ const formOne = asyncHandler(async (req, res) => {
       present_pincode,
     } = req.body;
 
+    // Log incoming request body (optional)
     console.log("Incoming request body:", req.body);
-    // Creating a new instance of the FormOne model
+
+    // Creating new FormOne data
     const formOneData = new FormOne({
       full_name,
       father_name,
@@ -55,16 +60,95 @@ const formOne = asyncHandler(async (req, res) => {
       present_pincode,
     });
 
+    // Save data to the database
     await formOneData.save();
 
+    // Send response
     res.status(201).json({
       message: "Form data submitted successfully!",
       data: formOneData,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in form submission:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
 
-module.exports = { formOne };
+const getFormById = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const formOneData = await FormOne.findById(id);
+
+    if (!formOneData) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    res.status(200).json({
+      message: "Form data retrieved successfully!",
+      data: formOneData,
+    });
+  } catch (error) {
+    console.error("Error in retrieving form data:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
+
+
+const formTwo = asyncHandler(async (req, res) => {  
+  try {  
+      const { loanType, ...details } = req.body;  
+      const loanData = { loanType };  
+
+      switch (loanType) {  
+          case "Home Loan":  
+              loanData.homeDetails = details;  
+              break;  
+          case "Vehicle Loan":  
+              loanData.vehicleDetails = details;  
+              break;  
+          case "Business Loan":  
+              loanData.businessDetails = details;  
+              break;  
+          case "Personal Loan":  
+              loanData.personalDetails = details;  
+              break;  
+          case "Mortgage Loan":  
+              loanData.mortgageDetails = details;  
+              break;  
+          default:  
+              throw new Error("Invalid loan type");  
+      }  
+
+      const newFormTwo = new FormTwo(loanData);  
+      await newFormTwo.save();  
+      res.status(201).json({  
+          message: "Loan application submitted successfully",  
+          loan: newFormTwo  
+      });  
+  } catch (error) {  
+      res.status(500).json({ message: "Error processing loan application", error: error.message });  
+  }  
+});  
+
+const getFormTwoById = asyncHandler(async (req, res) => {  
+  try {  
+      const loan = await FormTwo.findById(req.params.id);  
+      if (!loan) {  
+          return res.status(404).json({ message: "Loan application not found" });  
+      }  
+      res.status(200).json(loan);  
+  } catch (error) {  
+      res.status(500).json({ message: "Error fetching loan application", error: error.message });  
+  }  
+});  
+
+
+module.exports = { formOne, getFormById,formTwo,getFormTwoById };
+
+
+
+
+
+

@@ -28,16 +28,17 @@ app.use(cookieParser());
 
 // Routes (Add the /api prefix here to match the frontend's request)
 app.use("/api", router); 
-app.use("/api",formRouter)
+app.use("/api/form",formRouter)
 
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
+
 });
 
 connectToDatabase();
 
 // Start the server
-const PORT = process.env.PORT || 8080; // Make sure your backend is listening on port 8080
+const PORT = process.env.PORT || 8000; // Make sure your backend is listening on port 8080
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
