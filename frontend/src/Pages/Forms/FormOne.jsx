@@ -231,7 +231,7 @@ export default function PageOne() {
                   />
                   <Dropdown
                     options={["Earning", "Home Maker"]}
-                    placeholder="Spouse Employment Type"
+                    placeholder="Spouse Employment Type ( If Married )"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === `spouseEmploymentType-${index}`}
                     id={`spouseEmploymentType-${index}`}
@@ -274,7 +274,7 @@ export default function PageOne() {
                   />
                   <Dropdown
                     options={["Resident Indian", "Non-Resident Indian"]}
-                    placeholder="citizenship"
+                    placeholder="Citizenship"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === "citizenship"}
                     id="citizenship"

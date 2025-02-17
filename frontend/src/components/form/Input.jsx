@@ -15,3 +15,6 @@ export default function Input({ placeholder, name, value, onChange }) {
     </div>
   );
 }
+
+
+
