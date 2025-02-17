@@ -223,7 +223,6 @@ const formSchema = new mongoose.Schema({
           return this.loanType === "Mortgage Loan";  
       },  
     },  
-    // Add similarly for Business Loan, Personal Loan, and Mortgage Loan  
 });  
   
 module.exports = mongoose.model("FormTwo", formSchema);  
