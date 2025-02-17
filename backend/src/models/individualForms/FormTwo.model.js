@@ -10,7 +10,7 @@ const formSchema = new mongoose.Schema({
         type: new mongoose.Schema({  
             employmentType: {  
                 type: String,  
-                enum: ["Salaried", "Self-Employed / Professional"],  
+                enum: ["Salaried", "Self-Employed"],  
                 required: function () {  
                     return this.parent().loanType === "Home Loan";  
                 },  
@@ -57,7 +57,7 @@ const formSchema = new mongoose.Schema({
         type: new mongoose.Schema({  
             employmentType: {  
                 type: String,  
-                enum: ["Salaried", "Self-Employed / Professional"],  
+                enum: ["Salaried", "Self-Employed"],  
                 required: function () {  
                     return this.parent().loanType === "Vehicle Loan";  
                 },  
@@ -136,7 +136,7 @@ const formSchema = new mongoose.Schema({
       type: new mongoose.Schema({  
           employmentType: {  
               type: String,  
-              enum: ["Salaried", "Self-Employed / Professional"],  
+              enum: ["Salaried", "Self-Employed"],  
               required: function () {  
                   return this.parent().loanType === "Personal Loan";  
               },  
@@ -180,7 +180,7 @@ const formSchema = new mongoose.Schema({
       type: new mongoose.Schema({  
           employmentType: {  
               type: String,  
-              enum: ["Salaried", "Self-Employed / Professional"],  
+              enum: ["Salaried", "Self-Employed"],  
               required: function () {  
                   return this.parent().loanType === "Mortgage Loan";  
               },  
