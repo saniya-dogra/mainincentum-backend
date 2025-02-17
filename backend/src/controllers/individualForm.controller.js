@@ -5,9 +5,8 @@ const FormTwo  = require("../models/individualForms/FormTwo.model");
 const { asyncHandler } = require("../utils/asyncHandler");
 const fs = require("fs");
 
-const formOne = asyncHandler(async (req, res) => {
+const formOne = async (req, res) => {
   try {
-    // Destructure the data from req.body
     const {
       full_name,
       father_name,
@@ -33,10 +32,11 @@ const formOne = asyncHandler(async (req, res) => {
       present_pincode,
     } = req.body;
 
-    // Log incoming request body (optional)
-    console.log("Incoming request body:", req.body);
+    const existingEmail = await FormOne.findOne({ email_id });
+    if (existingEmail) {
+      return res.status(400).json({ error: "Email already exists. Please use a different email." });
+    }
 
-    // Creating new FormOne data
     const formOneData = new FormOne({
       full_name,
       father_name,
@@ -62,19 +62,22 @@ const formOne = asyncHandler(async (req, res) => {
       present_pincode,
     });
 
-    // Save data to the database
-    await formOneData.save();
+    const savedData = await formOneData.save();
 
-    // Send response
     res.status(201).json({
       message: "Form data submitted successfully!",
-      data: formOneData,
+      data: savedData,
     });
   } catch (error) {
     console.error("Error in form submission:", error);
+    if (error.code === 11000) {
+      return res.status(400).json({ error: "Duplicate email detected. Please use a different email." });
+    }
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
-});
+};
+
+
 
 const getFormById = asyncHandler(async (req, res) => {
   try {

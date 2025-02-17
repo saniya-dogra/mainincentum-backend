@@ -16,8 +16,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://incentum.ai",
-    "https://www.incentum.ai"
+    // "https://incentum.ai",
+    // "https://www.incentum.ai"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],

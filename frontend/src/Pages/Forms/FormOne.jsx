@@ -1,41 +1,44 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/form/Input.jsx";
 import Dropdown from "../../components/form/Dropdown.jsx";
 import Button from "../../components/form/Button.jsx";
 import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
+import axios from "axios"
 
 export default function PageOne() {
   const [formValuesList, setFormValuesList] = useState([
     {
       full_name: "",
-    father_name: "",
-    mobile_number: "",
-    email_id: "",
-    dob: "",
-    gender: "",
-    qualification: "",
-    employment_type: "",
-    marital_status: "",
-    spouse_employment_type: "",
-    no_of_dependents: "",
-    pan_number: "",
-    residence_type: "",
-    citizenship: "",
-    permanent_state: "",
-    permanent_district: "",
-    permanent_address: "",
-    permanent_pincode: "",
-    present_state: "",
-    present_district: "",
-    present_address: "",
-    present_pincode: "",
+      father_name: "",
+      mobile_number: "",
+      email_id: "",
+      dob: "",
+      gender: "",
+      qualification: "",
+      employment_type: "",
+      marital_status: "",
+      spouse_employment_type: "",
+      no_of_dependents: "",
+      pan_number: "",
+      residence_type: "",
+      citizenship: "",
+      permanent_state: "",
+      permanent_district: "",
+      permanent_address: "",
+      permanent_pincode: "",
+      present_state: "",
+      present_district: "",
+      present_address: "",
+      present_pincode: "",
     },
   ]);
 
+
   const [openDropdown, setOpenDropdown] = useState(null);
+    const navigate = useNavigate()
 
   const handleInputChange = (index, e) => {
     const { name, value } = e.target;
@@ -57,13 +60,18 @@ export default function PageOne() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/form-one`, formValuesList);
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/form-one`,
+        formValuesList[0] // Send the first object in the array
+      );
       alert(response.data.message);
+      navigate("/form-details-two");
     } catch (error) {
       console.error("Error submitting the form", error);
       alert("Failed to submit the form");
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
@@ -342,9 +350,9 @@ export default function PageOne() {
             </div>
           ))}
           <div className="mt-6 lg:mt-8">
-            <Link to={"/form-details-two"}>
+            {/* <Link to={"/form-details-two"}> */}
               <Button type="submit" text="Submit" className="mt-4 lg:mt-6" />
-            </Link>
+            {/* </Link> */}
           </div>
         </form>
       </div>
