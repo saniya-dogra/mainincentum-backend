@@ -99,6 +99,160 @@ const FormTwo = () => {
     return "#";
   };
 
+
+
+  const handleSubmit = async () => {
+      const formData = {
+          loanType: loanType, // For example: 'Home Loan'
+          homeDetails: {
+              employmentType: employmentType,
+              salariedDetails: {
+                  organizationName: salariedOrganizationName,
+                  organizationType: salariedOrganizationType,
+                  workExperience: salariedWorkExperience,
+                  workExperienceDuration: salariedWorkExperienceDuration,
+                  designations: salariedDesignations,
+                  placeOfPosting: salariedPlaceOfPosting,
+                  monthlySalary: salariedMonthlySalary,
+                  bankInSalaryAccount: salariedBankInSalaryAccount,
+              },
+              selfEmployedDetails: {
+                  nameOfFirm: selfEmployedNameOfFirm,
+                  typeOfFirm: selfEmployedTypeOfFirm,
+                  firmRegistrationDate: selfEmployedFirmRegistrationDate,
+                  designations: selfEmployedDesignations,
+                  yearsInBusiness: selfEmployedYearsInBusiness,
+                  yearsOfITRFiling: selfEmployedYearsOfITRFiling,
+              },
+              loanAmountRequired: loanAmountRequired,
+              propertyFinalized: propertyFinalized,
+              propertyAddress: propertyAddress,
+              agreementExecuted: agreementExecuted,
+              agreementValue: agreementValue,
+              preferredBank: preferredBank,
+          },
+          vehicleDetails: {
+              employmentType: employmentType,
+              salariedDetails: {
+                  organizationName: salariedOrganizationName,
+                  organizationType: salariedOrganizationType,
+                  workExperience: salariedWorkExperience,
+                  workExperienceDuration: salariedWorkExperienceDuration,
+                  designations: salariedDesignations,
+                  placeOfPosting: salariedPlaceOfPosting,
+                  monthlySalary: salariedMonthlySalary,
+                  bankInSalaryAccount: salariedBankInSalaryAccount,
+              },
+              selfEmployedDetails: {
+                  nameOfFirm: selfEmployedNameOfFirm,
+                  typeOfFirm: selfEmployedTypeOfFirm,
+                  firmRegistrationDate: selfEmployedFirmRegistrationDate,
+                  designations: selfEmployedDesignations,
+                  yearsInBusiness: selfEmployedYearsInBusiness,
+                  yearsOfITRFiling: selfEmployedYearsOfITRFiling,
+              },
+              vehicleDetails: vehicleDetails, // Add vehicle details like model, dealer, delivery date
+              loanDetails: loanDetails, // Add loan details like vehicle price, loan amount
+          },
+          businessDetails: {
+              applicationFirm: {
+                  nameOfFirm: applicationFirmNameOfFirm,
+                  typeOfFirm: applicationFirmTypeOfFirm,
+                  firmRegistrationDate: applicationFirmFirmRegistrationDate,
+                  nameOfDirector: applicationFirmNameOfDirector,
+                  yearsInBusiness: applicationFirmYearsInBusiness,
+                  typeOfBusiness: applicationFirmTypeOfBusiness,
+              },
+              propertyFinalized: propertyFinalized,
+              propertyAddress: propertyAddress,
+              agreementExecuted: agreementExecuted,
+              agreementValue: agreementValue,
+              loanAmountRequired: loanAmountRequired,
+              preferredBank: preferredBank,
+          },
+          personalDetails: {
+              employmentType: employmentType,
+              salariedDetails: {
+                  organizationName: salariedOrganizationName,
+                  organizationType: salariedOrganizationType,
+                  workExperience: salariedWorkExperience,
+                  workExperienceDuration: salariedWorkExperienceDuration,
+                  designations: salariedDesignations,
+                  placeOfPosting: salariedPlaceOfPosting,
+                  monthlySalary: salariedMonthlySalary,
+                  bankInSalaryAccount: salariedBankInSalaryAccount,
+              },
+              selfEmployedDetails: {
+                  nameOfFirm: selfEmployedNameOfFirm,
+                  typeOfFirm: selfEmployedTypeOfFirm,
+                  firmRegistrationDate: selfEmployedFirmRegistrationDate,
+                  designations: selfEmployedDesignations,
+                  yearsInBusiness: selfEmployedYearsInBusiness,
+                  yearsOfITRFiling: selfEmployedYearsOfITRFiling,
+              },
+              loanAmountRequired: loanAmountRequired,
+              preferredBank: preferredBank,
+          },
+          mortgageDetails: {
+              employmentType: employmentType,
+              salariedDetails: {
+                  organizationName: salariedOrganizationName,
+                  organizationType: salariedOrganizationType,
+                  workExperience: salariedWorkExperience,
+                  workExperienceDuration: salariedWorkExperienceDuration,
+                  designations: salariedDesignations,
+                  placeOfPosting: salariedPlaceOfPosting,
+                  monthlySalary: salariedMonthlySalary,
+                  bankInSalaryAccount: salariedBankInSalaryAccount,
+              },
+              selfEmployedDetails: {
+                  nameOfFirm: selfEmployedNameOfFirm,
+                  typeOfFirm: selfEmployedTypeOfFirm,
+                  firmRegistrationDate: selfEmployedFirmRegistrationDate,
+                  designations: selfEmployedDesignations,
+                  yearsInBusiness: selfEmployedYearsInBusiness,
+                  yearsOfITRFiling: selfEmployedYearsOfITRFiling,
+              },
+              propertyFinalized: propertyFinalized,
+              propertyAddress: propertyAddress,
+              agreementExecuted: agreementExecuted,
+              agreementValue: agreementValue,
+              loanAmountRequired: loanAmountRequired,
+              preferredBank: preferredBank,
+          },
+      };
+  
+      try {
+          const response = await axios.post(
+              `${import.meta.env.VITE_API_URL}/form-two`,
+              formData,
+              {
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+              }
+          );
+  
+          if (response.status === 200) {
+            alert("Loan application submitted successfully");
+
+            // Get the navigation path dynamically and navigate
+            const navigationPath = getNavigationPath();
+            if (navigationPath !== "#") {
+                navigate(navigationPath); // Redirect after submission
+            } else {
+                alert("Invalid loan type or user type.");
+            }
+        } else {
+            alert("Error: " + response.data.message);
+        }
+      } catch (error) {
+          alert("Error submitting the form: " + error.message);
+      }
+  };
+  
+
+
   return (
     <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
       {/* Horizontal Line */}
@@ -162,7 +316,7 @@ const FormTwo = () => {
         <p className="text-white ml-12 mb-8 lg:mb-11">
           Set up your account for your loan application
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mx-4 lg:mx-12 mt-4">
             <div className="grid grid-cols-2 w-full">
               <Dropdown
@@ -1360,14 +1514,13 @@ const FormTwo = () => {
 
             {/* Submit Button */}
             <div>
-              <Link to={getNavigationPath()}>
+             
                 <Button
                   type="submit"
                   text="Submit"
                   className="mt-6"
-                  disabled={getNavigationPath() === "#"}
                 />
-              </Link>
+    
             </div>
           </div>
         </form>

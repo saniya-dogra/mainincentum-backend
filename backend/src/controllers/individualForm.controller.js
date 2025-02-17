@@ -101,14 +101,15 @@ const getFormById = asyncHandler(async (req, res) => {
 
 
 
+
+
 const formTwo = async (req, res, next) => {
   try {
+
     const { loanType, ...details } = req.body;
 
     // Create a loan object based on the loan type
-    const loanData = {
-      loanType,
-    };
+    const loanData = { loanType };
 
     // Add loan-specific details based on the loan type
     switch (loanType) {
@@ -131,13 +132,25 @@ const formTwo = async (req, res, next) => {
         throw new Error("Invalid loan type");
     }
 
+    // Save the loan application to the database
     const loan = new FormTwo(loanData);
     await loan.save();
-    res.status(201).json({ message: "Loan application submitted successfully", loan });
+
+    // Send response with all loan data
+    res.status(201).json({
+      message: "Loan application submitted successfully",
+      loan: {
+        _id: loan._id,
+        loanType: loan.loanType,
+        details: loanData, // Include all loan-specific details
+      }
+    });
   } catch (error) {
-    next(error);
+    console.error(error); // Log error for debugging
+    next(error); // Pass error to global error handler
   }
 };
+
 
 const getFormTwoById = async (req, res) => {
   try {

@@ -76,16 +76,16 @@ const FormThree = () => {
   ];
 
   const homeSelfEmployedDocuments = [
-    "PAN Card",
-    "Aadhar Card",
-    "Firm Registration Certificate (Shop Act/ Udyog Aadhar/ GST Certificate/ Article of Association/ Memorandum of Association, Certificate for Incorporation/Licenses/Others)",
-    "GSTR Last Year",
-    "Last 6/12 Month Current Account Statement",
-    "Last 12 Month Savings Bank Account Statement",
-    "Existing Loan Account Statement",
-    "2/3 years ITR and Computation",
-    "2/3 years Balance Sheets",
-    "NOC / Loan Closure Statements for loan closing in 1 year",
+      "PAN Card",
+      "Aadhar Card",
+      "Firm Registration Certificate (Shop Act/ Udyog Aadhar/ GST Certificate/ Article of Association/ Memorandum of Association, Certificate for Incorporation/Licenses/Others)",
+      "GSTR Last Year",
+      "Last 6/12 Month Current Account Statement",
+      "Last 12 Month Savings Bank Account Statement",
+      "Existing Loan Account Statement",
+      "2/3 years ITR and Computation",
+      "2/3 years Balance Sheets",
+      "NOC / Loan Closure Statements for loan closing in 1 year",
   ];
 
   const vehicleSalariedDocuments = [
@@ -136,9 +136,9 @@ const FormThree = () => {
     "Last 6/12 Month Current Account Statement",
     "Last 12 Month Savings Bank Account Statement",
     "Existing Loan Account Statement",
-    "ITR and Computation",
-    "Balance Sheets",
-    "Loan Closure Statements",
+    "2/3 Year ITR and Computation",
+    "2/3 Year Balance Sheets",
+    "NOC/ Loan Closure Statements for Loan closed in 1 year",
   ];
 
   const businessDocuments = [
@@ -173,14 +173,14 @@ const FormThree = () => {
   const mortgageSelfEmployedDocuments = [
     "PAN Card",
     "Aadhar Card",
-    "Firm Registration Certificate",
+    "Firm Registration Certificate (Shop Act/ Udyog Aadhar/ GST Certificate/ Article of Association/ Memorandum of Association, Certificate for Incorporation/Licenses/Others)",
     "GSTR Last Year",
     "Last 6/12 Month Current Account Statement",
     "Last 12 Month Savings Bank Account Statement",
     "Existing Loan Account Statement",
-    "ITR and Computation",
-    "Balance Sheets",
-    "Loan Closure Statements",
+    "2/3 years ITR and Computation",
+    "2/3 years Balance Sheets",
+    "NOC / Loan Closure Statements for loan closing in 1 year",
   ];
 
   const getDocumentList = () => {
