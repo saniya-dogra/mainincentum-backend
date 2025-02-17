@@ -12,33 +12,42 @@ require("events").EventEmitter.defaultMaxListeners = 15; // Increase event liste
 
 const app = express();
 
-// Middleware
+// ✅ Middleware Order Fix
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://incentum.ai",         // Deployed frontend URL
-    "https://www.incentum.ai"      // Handle with or without `www`
+    "https://incentum.ai",
+    "https://www.incentum.ai"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // Allows cookies to be sent
+  credentials: true,
 }));
+
+// ✅ Body Parsing BEFORE Routes
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ✅ Cookie Parser
 app.use(cookieParser());
 
-// Routes (Add the /api prefix here to match the frontend's request)
-app.use("/api", router); 
-app.use("/api/form",formRouter)
+// ✅ Static Files for Multer
+app.use("/uploads", express.static("uploads"));
 
+// ✅ Routes
+app.use("/api", router);
+app.use("/api/form", formRouter);
+
+// ✅ API Test Route
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
-
 });
 
+// ✅ Connect to Database
 connectToDatabase();
 
-// Start the server
-const PORT = process.env.PORT || 8000; // Make sure your backend is listening on port 8080
+// ✅ Start Server
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

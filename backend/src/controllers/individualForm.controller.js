@@ -1,7 +1,9 @@
 // controllers/formOne.js
 const FormOne  = require("../models/individualForms/FormOne.model");
+const Document = require("../models/individualForms/FormThree.model");
 const FormTwo  = require("../models/individualForms/FormTwo.model");
 const { asyncHandler } = require("../utils/asyncHandler");
+const fs = require("fs");
 
 const formOne = asyncHandler(async (req, res) => {
   try {
@@ -146,4 +148,54 @@ const getFormTwoById = async (req, res) => {
   }
 };
 
-module.exports = { formOne, getFormById,formTwo,getFormTwoById };
+
+const uploadDocument = async (req, res, next) => {
+  try {
+      console.log("Request Headers:", req.headers);
+      console.log("Received Body:", req.body);
+      console.log("Received Files:", req.files);
+
+      // Check if files are present
+      if (!req.files) {
+          console.log("No files were uploaded."); // Debugging
+          return res.status(400).json({ message: "No files were uploaded." });
+      }
+
+      const { panCard, aadhaarCard, employeeId } = req.files;
+
+      // Check if all required files are present
+      if (!panCard || !aadhaarCard || !employeeId) {
+          console.log("Missing files:", { panCard, aadhaarCard, employeeId }); // Debugging
+          return res.status(400).json({ message: "All files (panCard, aadhaarCard, employeeId) are required!" });
+      }
+
+      // Validate file types
+      const allowedTypes = ["application/pdf"];
+      if (
+          !allowedTypes.includes(panCard[0].mimetype) ||
+          !allowedTypes.includes(aadhaarCard[0].mimetype) ||
+          !allowedTypes.includes(employeeId[0].mimetype)
+      ) {
+          // Delete uploaded files if validation fails
+          [panCard[0], aadhaarCard[0], employeeId[0]].forEach((file) => {
+              fs.unlinkSync(file.path);
+          });
+          return res.status(400).json({ message: "Only PDF files are allowed!" });
+      }
+
+      // Save file details to the database
+      const newDocument = new Document({
+          panCard: panCard[0].filename,
+          aadhaarCard: aadhaarCard[0].filename,
+          employeeId: employeeId[0].filename,
+      });
+
+      await newDocument.save();
+      res.status(201).json({ message: "Documents uploaded successfully", document: newDocument });
+  } catch (error) {
+      console.error("Error uploading documents:", error);
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+module.exports = { formOne, getFormById, formTwo, getFormTwoById, uploadDocument };
