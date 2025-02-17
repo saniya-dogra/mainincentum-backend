@@ -17,8 +17,8 @@ const FormTwo = () => {
     organisation_name: "",
     designation_salaried: "",
     organisation_type: "",
-    work_experience: "",
-    work_experience_duration: "",
+    currentOrganizationExperience: "",
+    previousOrganizationExperience: "",
     monthly_salary: "",
     place_of_posting: "",
     salary_bank_name: "",
@@ -248,42 +248,20 @@ const FormTwo = () => {
                         }
                       />
                     </div>
-
-                    {/* Other fields */}
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={[
-                          "Current Organisation",
-                          "Previous Organisation",
-                        ]}
-                        placeholder="Work Experience"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "workExperience"}
-                        id="workExperience"
-                        value={formValues.work_experience}
-                        onSelect={(option) =>
-                          handleOptionSelect("work_experience", option)
-                        }
+                      <Input
+                        placeholder="Experience in Current Organization"
+                        name="currentOrganizationExperience"
+                        value={formValues.currentOrganizationExperience}
+                        onChange={handleInputChange}
                       />
-                      <Dropdown
-                        options={[
-                          "1 year",
-                          "2 year",
-                          "3 year",
-                          "4 year",
-                          "5 year",
-                          "6 year",
-                        ]}
-                        placeholder="Work Experience Duration"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "workExperienceDuration"}
-                        id="workExperienceDuration"
-                        value={formValues.work_experience_duration}
-                        onSelect={(option) =>
-                          handleOptionSelect("work_experience_duration", option)
-                        }
+                      <Input
+                        placeholder="Experience in Previous Organization "
+                        name="previousOrganizationExperience"
+                        value={formValues.previousOrganizationExperience}
+                        onChange={handleInputChange}
                       />
-                    </div>
+                  </div>
 
                     <div className="grid grid-cols-2 w-full gap-6">
                       <Input
@@ -346,27 +324,11 @@ const FormTwo = () => {
                     </div>
 
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={[
-                          "1 year",
-                          "2 year",
-                          "3 year",
-                          "4 year",
-                          "5 year",
-                          "5 year",
-                          "6 year",
-                          "7 year",
-                          "8 year",
-                          "9 year",
-                        ]}
+                    <Input
                         placeholder="Firm Registration / Incorporation Date"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "firmRegistrationDate"}
-                        id="firmRegistrationDate"
+                        name="incorporation_date"
                         value={formValues.incorporation_date}
-                        onSelect={(option) =>
-                          handleOptionSelect("incorporation_date", option)
-                        }
+                        onChange={handleInputChange}
                       />
                       <Dropdown
                         options={[
@@ -388,49 +350,17 @@ const FormTwo = () => {
                     </div>
 
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={[
-                          "1 year",
-                          "2 year",
-                          "3 year",
-                          "4 year",
-                          "5 year",
-                          "5 year",
-                          "6 year",
-                          "7 year",
-                          "8 year",
-                          "9 year",
-                        ]}
+                    <Input
                         placeholder="Years in Line of Business (VINTAGE)"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "lineOfBusiness"}
-                        id="lineOfBusiness"
+                        name="years_in_business"
                         value={formValues.years_in_business}
-                        onSelect={(option) =>
-                          handleOptionSelect("years_in_business", option)
-                        }
+                        onChange={handleInputChange}
                       />
-                      <Dropdown
-                        options={[
-                          "1 year",
-                          "2 year",
-                          "3 year",
-                          "4 year",
-                          "5 year",
-                          "5 year",
-                          "6 year",
-                          "7 year",
-                          "8 year",
-                          "9 year",
-                        ]}
+                      <Input
                         placeholder="Years of ITR Filing (VINTAGE)"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "itrFiling"}
-                        id="itrFiling"
+                        name="years_of_itr_filing"
                         value={formValues.years_of_itr_filing}
-                        onSelect={(option) =>
-                          handleOptionSelect("years_of_itr_filing", option)
-                        }
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -613,29 +543,19 @@ const FormTwo = () => {
                       />
                     </div>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={[
-                          "Current Organisation",
-                          "Previous Organisation",
-                        ]}
-                        placeholder="Work Experience"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "workExperience"}
-                        id="workExperience"
-                        onSelect={handleOptionSelect}
+                      <Input
+                        placeholder="Experience in Current Organization"
+                        name="currentOrganizationExperience"
+                        value={formValues.currentOrganizationExperience}
+                        onChange={handleInputChange}
                       />
-                      <Dropdown
-                        options={Array.from(
-                          { length: 10 },
-                          (_, i) => `${i + 1} years`
-                        )}
-                        placeholder="Work Experience Duration"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "workExperienceDuration"}
-                        id="workExperienceDuration"
-                        onSelect={handleOptionSelect}
+                      <Input
+                        placeholder="Experience in Previous Organization "
+                        name="previousOrganizationExperience"
+                        value={formValues.previousOrganizationExperience}
+                        onChange={handleInputChange}
                       />
-                    </div>
+                  </div>
                     <div className="grid grid-cols-2 w-full gap-6">
                       <Input placeholder="Designation" />
                       <Input placeholder="Place of Posting" />
@@ -667,16 +587,11 @@ const FormTwo = () => {
                       />
                     </div>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={Array.from(
-                          { length: 9 },
-                          (_, i) => `${i + 1} years`
-                        )}
+                    <Input
                         placeholder="Firm Registration / Incorporation Date"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "firmRegistrationDate"}
-                        id="firmRegistrationDate"
-                        onSelect={handleOptionSelect}
+                        name="incorporation_date"
+                        value={formValues.incorporation_date}
+                        onChange={handleInputChange}
                       />
                       <Dropdown
                         options={[
@@ -694,27 +609,17 @@ const FormTwo = () => {
                       />
                     </div>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Dropdown
-                        options={Array.from(
-                          { length: 9 },
-                          (_, i) => `${i + 1} years`
-                        )}
+                    <Input
                         placeholder="Years in Line of Business (VINTAGE)"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "lineOfBusiness"}
-                        id="lineOfBusiness"
-                        onSelect={handleOptionSelect}
+                        name="years_in_business"
+                        value={formValues.years_in_business}
+                        onChange={handleInputChange}
                       />
-                      <Dropdown
-                        options={Array.from(
-                          { length: 9 },
-                          (_, i) => `${i + 1} years`
-                        )}
+                      <Input
                         placeholder="Years of ITR Filing (VINTAGE)"
-                        setOpenDropdown={setOpenDropdown}
-                        isOpen={openDropdown === "itrFiling"}
-                        id="itrFiling"
-                        onSelect={handleOptionSelect}
+                        name="years_of_itr_filing"
+                        value={formValues.years_of_itr_filing}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -832,39 +737,19 @@ const FormTwo = () => {
 
                      {/* Other fields */}
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "Current Organisation",
-                           "Previous Organisation",
-                         ]}
-                         placeholder="Work Experience"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "workExperience"}
-                         id="workExperience"
-                         value={formValues.work_experience}
-                         onSelect={(option) =>
-                           handleOptionSelect("work_experience", option)
-                         }
-                       />
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "6 year",
-                         ]}
-                         placeholder="Work Experience Duration"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "workExperienceDuration"}
-                         id="workExperienceDuration"
-                         value={formValues.work_experience_duration}
-                         onSelect={(option) =>
-                           handleOptionSelect("work_experience_duration", option)
-                         }
-                       />
-                     </div>
+                      <Input
+                        placeholder="Experience in Current Organization"
+                        name="currentOrganizationExperience"
+                        value={formValues.currentOrganizationExperience}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        placeholder="Experience in Previous Organization "
+                        name="previousOrganizationExperience"
+                        value={formValues.previousOrganizationExperience}
+                        onChange={handleInputChange}
+                      />
+                  </div>
 
                      <div className="grid grid-cols-2 w-full gap-6">
                        <Input
@@ -927,28 +812,12 @@ const FormTwo = () => {
                      </div>
 
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Firm Registration / Incorporation Date"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "firmRegistrationDate"}
-                         id="firmRegistrationDate"
-                         value={formValues.incorporation_date}
-                         onSelect={(option) =>
-                           handleOptionSelect("incorporation_date", option)
-                         }
-                       />
+                     <Input
+                        placeholder="Firm Registration / Incorporation Date"
+                        name="incorporation_date"
+                        value={formValues.incorporation_date}
+                        onChange={handleInputChange}
+                      />
                        <Dropdown
                          options={[
                            "Proprietor",
@@ -967,53 +836,20 @@ const FormTwo = () => {
                          }
                        />
                      </div>
-
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Years in Line of Business (VINTAGE)"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "lineOfBusiness"}
-                         id="lineOfBusiness"
-                         value={formValues.years_in_business}
-                         onSelect={(option) =>
-                           handleOptionSelect("years_in_business", option)
-                         }
-                       />
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Years of ITR Filing (VINTAGE)"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "itrFiling"}
-                         id="itrFiling"
-                         value={formValues.years_of_itr_filing}
-                         onSelect={(option) =>
-                           handleOptionSelect("years_of_itr_filing", option)
-                         }
-                       />
-                     </div>
+                    <Input
+                        placeholder="Years in Line of Business (VINTAGE)"
+                        name="years_in_business"
+                        value={formValues.years_in_business}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        placeholder="Years of ITR Filing (VINTAGE)"
+                        name="years_of_itr_filing"
+                        value={formValues.years_of_itr_filing}
+                        onChange={handleInputChange}
+                      />
+                    </div>
                    </div>
                  )}
                </div>
@@ -1073,28 +909,13 @@ const FormTwo = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 w-full gap-6 mt-6">
-                    <Dropdown
-                      options={[
-                        "1 year",
-                        "2 years",
-                        "3 years",
-                        "4 years",
-                        "5 years",
-                        "6 years",
-                        "7 years",
-                        "8 years",
-                        "9 years+",
-                      ]}
-                      placeholder="Firm Registration / Incorporation Date"
-                      setOpenDropdown={setOpenDropdown}
-                      isOpen={openDropdown === "firmRegistrationDate"}
-                      id="firmRegistrationDate"
-                      value={formValues.incorporation_date}
-                      onSelect={(option) =>
-                        handleOptionSelect("incorporation_date", option)
-                      }
-                    />
+                  <div className="grid grid-cols-2 w-full gap-6 ">
+                  <Input
+                        placeholder="Firm Registration / Incorporation Date"
+                        name="incorporation_date"
+                        value={formValues.incorporation_date}
+                        onChange={handleInputChange}
+                      />
                     <Input
                       placeholder="Name of Director"
                       name="Name_of_Directors"
@@ -1103,45 +924,20 @@ const FormTwo = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 w-full gap-6 mt-6">
-                    <Dropdown
-                      options={[
-                        "1 year",
-                        "2 years",
-                        "3 years",
-                        "4 years",
-                        "5 years",
-                        "6 years",
-                        "7 years",
-                        "8 years",
-                        "9 years+",
-                      ]}
-                      placeholder="Years in Line of Business (VINTAGE)"
-                      setOpenDropdown={setOpenDropdown}
-                      isOpen={openDropdown === "lineOfBusiness"}
-                      id="lineOfBusiness"
-                      value={formValues.years_in_business}
-                      onSelect={(option) =>
-                        handleOptionSelect("years_in_business", option)
-                      }
-                    />
-                    <Dropdown
-                      options={[
-                        "Manufacturing",
-                        "Trade",
-                        "Service Sector",
-                        "Others",
-                      ]}
-                      placeholder="Type of Business"
-                      setOpenDropdown={setOpenDropdown}
-                      isOpen={openDropdown === "typeofbusiness"}
-                      id="typeofbusiness"
-                      value={formValues.type_of_business}
-                      onSelect={(option) =>
-                        handleOptionSelect("type_of_business", option)
-                      }
-                    />
-                  </div>
+                  <div className="grid grid-cols-2 w-full gap-6">
+                    <Input
+                        placeholder="Years in Line of Business (VINTAGE)"
+                        name="years_in_business"
+                        value={formValues.years_in_business}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        placeholder="Years of ITR Filing (VINTAGE)"
+                        name="years_of_itr_filing"
+                        value={formValues.years_of_itr_filing}
+                        onChange={handleInputChange}
+                      />
+                    </div>
                 </div>
 
                 {/* Property Finalised */}
@@ -1327,39 +1123,19 @@ const FormTwo = () => {
 
                      {/* Other fields */}
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "Current Organisation",
-                           "Previous Organisation",
-                         ]}
-                         placeholder="Work Experience"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "workExperience"}
-                         id="workExperience"
-                         value={formValues.work_experience}
-                         onSelect={(option) =>
-                           handleOptionSelect("work_experience", option)
-                         }
-                       />
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                         ]}
-                         placeholder="Work Experience Duration"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "workExperienceDuration"}
-                         id="workExperienceDuration"
-                         value={formValues.work_experience_duration}
-                         onSelect={(option) =>
-                           handleOptionSelect("work_experience_duration", option)
-                         }
-                       />
-                     </div>
+                      <Input
+                        placeholder="Experience in Current Organization"
+                        name="currentOrganizationExperience"
+                        value={formValues.currentOrganizationExperience}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        placeholder="Experience in Previous Organization "
+                        name="previousOrganizationExperience"
+                        value={formValues.previousOrganizationExperience}
+                        onChange={handleInputChange}
+                      />
+                  </div>
 
                      <div className="grid grid-cols-2 w-full gap-6">
                        <Input
@@ -1422,28 +1198,12 @@ const FormTwo = () => {
                      </div>
 
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Firm Registration / Incorporation Date"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "firmRegistrationDate"}
-                         id="firmRegistrationDate"
-                         value={formValues.incorporation_date}
-                         onSelect={(option) =>
-                           handleOptionSelect("incorporation_date", option)
-                         }
-                       />
+                     <Input
+                        placeholder="Firm Registration / Incorporation Date"
+                        name="incorporation_date"
+                        value={formValues.incorporation_date}
+                        onChange={handleInputChange}
+                      />
                        <Dropdown
                          options={[
                            "Proprietor",
@@ -1464,51 +1224,19 @@ const FormTwo = () => {
                      </div>
 
                      <div className="grid grid-cols-2 w-full gap-6">
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Years in Line of Business (VINTAGE)"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "lineOfBusiness"}
-                         id="lineOfBusiness"
-                         value={formValues.years_in_business}
-                         onSelect={(option) =>
-                           handleOptionSelect("years_in_business", option)
-                         }
-                       />
-                       <Dropdown
-                         options={[
-                           "1 year",
-                           "2 year",
-                           "3 year",
-                           "4 year",
-                           "5 year",
-                           "5 year",
-                           "6 year",
-                           "7 year",
-                           "8 year",
-                           "9 year",
-                         ]}
-                         placeholder="Years of ITR Filing (VINTAGE)"
-                         setOpenDropdown={setOpenDropdown}
-                         isOpen={openDropdown === "itrFiling"}
-                         id="itrFiling"
-                         value={formValues.years_of_itr_filing}
-                         onSelect={(option) =>
-                           handleOptionSelect("years_of_itr_filing", option)
-                         }
-                       />
-                     </div>
+                    <Input
+                        placeholder="Years in Line of Business (VINTAGE)"
+                        name="years_in_business"
+                        value={formValues.years_in_business}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        placeholder="Years of ITR Filing (VINTAGE)"
+                        name="years_of_itr_filing"
+                        value={formValues.years_of_itr_filing}
+                        onChange={handleInputChange}
+                      />
+                    </div>
                    </div>
                  )}
                </div>

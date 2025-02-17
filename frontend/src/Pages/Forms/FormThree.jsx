@@ -49,10 +49,12 @@ const FormThree = () => {
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p className="text-blue-500 text-sm sm:text-base">Drop the files here...</p>
+          <p className="text-blue-500 text-sm sm:text-base">
+            Drop the files here...
+          </p>
         ) : (
           <p className="text-gray-500 text-sm sm:text-base">
-            Drag and drop files here or {" "}
+            Drag and drop files here or{" "}
             <span className="text-blue-500 underline">Select files</span>
           </p>
         )}
@@ -290,9 +292,15 @@ const FormThree = () => {
                 <table className="w-full border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-gray-100">
-                      <th className="border border-gray-300 p-2 sm:p-4 text-left">#</th>
-                      <th className="border border-gray-300 p-2 sm:p-4 text-left">Document Name</th>
-                      <th className="border border-gray-300 p-2 sm:p-4 text-left">Upload Documents</th>
+                      <th className="border border-gray-300 p-2 sm:p-4 text-left">
+                        #
+                      </th>
+                      <th className="border border-gray-300 p-2 sm:p-4 text-left">
+                        Document Name
+                      </th>
+                      <th className="border border-gray-300 p-2 sm:p-4 text-left">
+                        Upload Documents
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -300,8 +308,12 @@ const FormThree = () => {
                       const name = doc.toLowerCase().replace(/\s+/g, "_");
                       return (
                         <tr key={index} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 p-2 sm:p-4 text-center">{index + 1}</td>
-                          <td className="border border-gray-300 p-2 sm:p-4">{doc}</td>
+                          <td className="border border-gray-300 p-2 sm:p-4 text-center">
+                            {index + 1}
+                          </td>
+                          <td className="border border-gray-300 p-2 sm:p-4">
+                            {doc}
+                          </td>
                           <td className="border border-gray-300 p-2 sm:p-4">
                             <FileUploader name={name} />
                           </td>
@@ -311,11 +323,21 @@ const FormThree = () => {
                   </tbody>
                 </table>
               </div>
-
-              <div className="mt-6 sm:mt-8">
-                <Link to="/next-step">
-                  <Button1 type="button" text="Submit" />
-                </Link>
+              <div className="mt-6 sm:mt-8 flex justify-center">
+                <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 sm:gap-6 w-full max-w-[90%] sm:max-w-[70%] md:max-w-[60%] lg:max-w-[50%]">
+                  <Link
+                    to="/form-details-four-coapplicant"
+                    className="w-full sm:w-auto flex justify-center"
+                  >
+                    <Button1 button="Add Coapplicant +" />
+                  </Link>
+                  <Link
+                    to="/next-step"
+                    className="w-full sm:w-auto flex justify-center"
+                  >
+                    <Button1 button="Submit" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
