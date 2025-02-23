@@ -1,119 +1,29 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
 
-const loanApplicationSchema = new Schema({
-  panCard: {
-    type: String,
-    required: false, // No required validation, as the field may not always be present
-    ref: 'PDF', // Assuming you have a PDF model to store the files
-  },
-  aadharCard: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  employerIdCard: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  joiningLetter: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  Last12MonthSalaryAccountStatement: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  loanAccountStatement: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  salarySlip: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  form16: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  itrComputation: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  gstr: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  currentAccountStatement: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  savingsBankAccountStatement: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  balanceSheets: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  nocLoanClosureStatements: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  drivingLicense: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  firmRegistration: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  businessAccountStatement: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  otherRelevantDocuments: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  kyc: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  certificateForIncorporation: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  articleOfAssociation: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
-  memorandumOfAssociation: {
-    type: String,
-    required: false,
-    ref: 'PDF',
-  },
+const loanDocumentsSchema = new mongoose.Schema({
+  panCard: { type: String },
+  aadharCard: { type: String },
+  employerIDCard: { type: String },
+  joiningConfirmationExperienceLetter: { type: String },
+  last12MonthSalaryAccountStatement: { type: String },
+  existingLoanAccountStatement: { type: String },
+  latest6MonthSalarySlip: { type: String },
+  form16PartABAnd26AS: { type: String },
+  itrAndComputation: { type: String },
+  firmRegistrationCertificate: { type: String },
+  gstrLastYear: { type: String },
+  last6Or12MonthCurrentAccountStatement: { type: String },
+  balanceSheets: { type: String },
+  nocLoanCloseStatements:{type:String},
+  drivingLicense: { type: String },
+  kycProprietorPartnersDirectors: { type: String },
+  certificateForIncorporation: { type: String },
+  articleOfAssociation: { type: String },
+  memorandumOfAssociation: { type: String },
+  businessAccountStatement: { type: String },
+  otherRelevantDocuments: { type: String }
 }, { timestamps: true });
 
-const LoanApplication = mongoose.model('LoanApplication', loanApplicationSchema);
+const LoanDocuments = mongoose.model("LoanDocuments", loanDocumentsSchema);
 
-module.exports = LoanApplication;
+module.exports = LoanDocuments;
