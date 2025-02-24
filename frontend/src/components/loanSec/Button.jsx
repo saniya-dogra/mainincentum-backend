@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function Button() {
   return (
     <div className="flex flex-wrap gap-4 lg:gap-8 mt-4 my-2 lg:my-6">
-      <Link to={'/form-detail-one'}>
+      <Link to={'/co-applicant-form-detail-one'}>
         <button
           className="flex text-black text-lg sm:text-xl border-[2px] sm:border-[3px] border-blue-800 hover:bg-yellow-300 hover:border-yellow-300 hover:scale-105 hover:shadow-lg transform transition-all duration-300 px-4 sm:px-2 py-2 sm:py-1 rounded-xl items-center">
           Apply with Co-applicant

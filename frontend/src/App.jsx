@@ -24,6 +24,7 @@ import FormThree from './Pages/Forms/FormThree';
  import AboutUs from './Pages/Others/Aboutus';
  import ContactUs from './Pages/Others/ContactUS';
 import FormFourCoapplicant from './Pages/Forms/FormFourCoapplicant';
+import Coformone from './Pages/Forms/Coformone';
 function App() {
   return (
         <UserContextProvider>
@@ -52,6 +53,8 @@ function App() {
         <Route path='/user-applications' element={<UserApplications/>}/>
          <Route path='/about-us' element={<AboutUs/>}/> 
          <Route path='/contact-us' element={<ContactUs/>}/> 
+         <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
+
         </Route>
       </Routes>
       {/* </HomeOneContextProvider> */}

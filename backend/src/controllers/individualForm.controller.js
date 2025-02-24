@@ -1,8 +1,7 @@
-// controllers/formOne.js
-const FormOne  = require("../models/individualForms/FormOne.model");
-const Document = require("../models/individualForms/FormThree.model");
-const FormTwo  = require("../models/individualForms/FormTwo.model");
-const { asyncHandler } = require("../utils/asyncHandler");
+const FormOne = require("../models/individualForms/FormOne.model");
+const Document = require("../models/individualForms/FormThree.model"); // You are requiring this, but not using.
+const FormTwo = require("../models/individualForms/FormTwo.model");
+const { asyncHandler } = require("../utils/asyncHandler"); // You are requiring this but not using it.
 const fs = require("fs");
 
 const formOne = async (req, res) => {
@@ -79,7 +78,7 @@ const formOne = async (req, res) => {
 
 
 
-const getFormById = asyncHandler(async (req, res) => {
+const getFormById = asyncHandler(async (req, res) => {  //Correctly using asyncHandler
   try {
     const { id } = req.params;
 
@@ -103,53 +102,23 @@ const getFormById = asyncHandler(async (req, res) => {
 
 
 
-const formTwo = async (req, res, next) => {
+const formTwo = asyncHandler(async (req, res) => { // Using asyncHandler here.
   try {
+    console.log("Received request body:", req.body); // Log the raw request body
 
-    const { loanType, ...details } = req.body;
+    const loan = new FormTwo(req.body);  // Directly use req.body
+    const savedLoan = await loan.save();    // Use .save()
 
-    // Create a loan object based on the loan type
-    const loanData = { loanType };
-
-    // Add loan-specific details based on the loan type
-    switch (loanType) {
-      case "Home Loan":
-        loanData.homeDetails = details;
-        break;
-      case "Vehicle Loan":
-        loanData.vehicleDetails = details;
-        break;
-      case "Business Loan":
-        loanData.businessDetails = details;
-        break;
-      case "Personal Loan":
-        loanData.personalDetails = details;
-        break;
-      case "Mortgage Loan":
-        loanData.mortgageDetails = details;
-        break;
-      default:
-        throw new Error("Invalid loan type");
-    }
-
-    // Save the loan application to the database
-    const loan = new FormTwo(loanData);
-    await loan.save();
-
-    // Send response with all loan data
     res.status(201).json({
       message: "Loan application submitted successfully",
-      loan: {
-        _id: loan._id,
-        loanType: loan.loanType,
-        details: loanData, // Include all loan-specific details
-      }
+      loan: savedLoan, // Return the entire saved document
     });
   } catch (error) {
-    console.error(error); // Log error for debugging
-    next(error); // Pass error to global error handler
+      console.error("Error saving form data:", error); // More descriptive error
+      res.status(400).json({ message: "Error saving form data", error: error.message }); // Send error details
   }
-};
+});
+
 
 
 const getFormTwoById = async (req, res) => {
@@ -168,7 +137,7 @@ const getFormTwoById = async (req, res) => {
 const uploadDocument = async (req, res, next) => {
   try {
       console.log("Request Headers:", req.headers);
-      console.log("Received Body:", req.body);
+      console.log("Received Body:", req.body);  // Though you shouldn't have a body with file uploads
       console.log("Received Files:", req.files);
 
       // Check if files are present
