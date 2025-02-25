@@ -143,60 +143,40 @@ const updateFormOne = asyncHandler(async(req,res)=>{
   }
 });
 
-const deleteFormOne = asyncHandler(async(req,res)=>{
+
+const deleteFormOne = asyncHandler(async (req, res) => {
   try {
-    const {id} = req.params;
-    const deleteFormOne = await FormOne.findByIdAndDelete(id);
-    if(!deleteFormOne){
-      return res.status(404).json({message:"Form not found"});
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "ID parameter is required" });
     }
-    res.status(200).json({message:"Form deleted successfully"});
+
+    const deletedForm = await FormOne.findByIdAndDelete(id);
+
+    if (!deletedForm) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    res.status(200).json({ message: "Form deleted successfully", data: deletedForm });
   } catch (error) {
     console.error("Error in deleting form data:", error);
-    res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
-})
+});
 
 
 
 
 
 
-const formTwo = async (req, res, next) => {
+const formTwo = asyncHandler(async (req, res) => { // Using asyncHandler here.
   try {
-    const { loanType, ...details } = req.body;
+    console.log("Received request body:", req.body); // Log the raw request body
 
-    // Create a loan object based on the loan type
-    const loanData = { loanType };
+    const loan = new FormTwo(req.body);  // Directly use req.body
+    const savedLoan = await loan.save();    // Use .save()
 
-    // Add loan-specific details based on the loan type
-    switch (loanType) {
-      case "Home Loan":
-        loanData.homeDetails = details;
-        break;
-      case "Vehicle Loan":
-        loanData.vehicleDetails = details;
-        break;
-      case "Business Loan":
-        loanData.businessDetails = details;
-        break;
-      case "Personal Loan":
-        loanData.personalDetails = details;
-        break;
-      case "Mortgage Loan":
-        loanData.mortgageDetails = details;
-        break;
-      default:
-        throw new Error("Invalid loan type");
-    }
-
-    // Save the loan application to the database
-    const loan = new FormTwo(loanData);
-    await loan.save();
-
-    // Send response with all loan data
     res.status(201).json({
       message: "Loan application submitted successfully",
       loan: {
@@ -204,12 +184,15 @@ const formTwo = async (req, res, next) => {
         loanType: loan.loanType,
         details: loanData, // Include all loan-specific details
       },
+      loan: savedLoan, // Return the entire saved document
     });
   } catch (error) {
-    console.error(error); // Log error for debugging
-    next(error); // Pass error to global error handler
+      console.error("Error saving form data:", error); // More descriptive error
+      res.status(400).json({ message: "Error saving form data", error: error.message }); // Send error details
   }
-};
+});
+
+
 
 const getFormTwoById = async (req, res) => {
   try {
@@ -227,6 +210,9 @@ const getFormTwoById = async (req, res) => {
       });
   }
 };
+
+
+
 
 const uploadLoanDocuments = async (req, res) => {
   try {
