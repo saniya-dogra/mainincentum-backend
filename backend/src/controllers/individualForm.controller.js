@@ -1,7 +1,8 @@
-const FormOne = require("../models/individualForms/FormOne.model");
-const Document = require("../models/individualForms/FormThree.model"); // You are requiring this, but not using.
-const FormTwo = require("../models/individualForms/FormTwo.model");
-const { asyncHandler } = require("../utils/asyncHandler"); // You are requiring this but not using it.
+// controllers/formOne.js
+const FormOne  = require("../models/individualForms/FormOne.model");
+const FormTwo  = require("../models/individualForms/FormTwo.model");
+const LoanDocuments  = require("../models/individualForms/FormThree.model");
+const { asyncHandler } = require("../utils/asyncHandler");
 const fs = require("fs");
 
 const formOne = async (req, res) => {
@@ -134,53 +135,53 @@ const getFormTwoById = async (req, res) => {
 };
 
 
-const uploadDocument = async (req, res, next) => {
+
+
+const uploadLoanDocuments = async (req, res) => {
   try {
-      console.log("Request Headers:", req.headers);
-      console.log("Received Body:", req.body);  // Though you shouldn't have a body with file uploads
-      console.log("Received Files:", req.files);
+    console.log("Request Body:", req.body); 
+    console.log("Request Files:", req.files); 
+   
+    if (!req.files || Object.keys(req.files).length === 0) {
+      console.log("No files were uploaded."); 
+      return res.status(400).json({ message: "No files were uploaded." });
+    }
 
-      // Check if files are present
-      if (!req.files) {
-          console.log("No files were uploaded."); // Debugging
-          return res.status(400).json({ message: "No files were uploaded." });
-      }
 
-      const { panCard, aadhaarCard, employeeId } = req.files;
+    const documentData = {};
+    for (const [fieldName, fileArray] of Object.entries(req.files)) {
+      documentData[fieldName] = fileArray[0].filename; 
+    }
 
-      // Check if all required files are present
-      if (!panCard || !aadhaarCard || !employeeId) {
-          console.log("Missing files:", { panCard, aadhaarCard, employeeId }); // Debugging
-          return res.status(400).json({ message: "All files (panCard, aadhaarCard, employeeId) are required!" });
-      }
 
-      // Validate file types
-      const allowedTypes = ["application/pdf"];
-      if (
-          !allowedTypes.includes(panCard[0].mimetype) ||
-          !allowedTypes.includes(aadhaarCard[0].mimetype) ||
-          !allowedTypes.includes(employeeId[0].mimetype)
-      ) {
-          // Delete uploaded files if validation fails
-          [panCard[0], aadhaarCard[0], employeeId[0]].forEach((file) => {
-              fs.unlinkSync(file.path);
-          });
-          return res.status(400).json({ message: "Only PDF files are allowed!" });
-      }
+    const newLoanDocument = new LoanDocuments(documentData);
+    await newLoanDocument.save();
 
-      // Save file details to the database
-      const newDocument = new Document({
-          panCard: panCard[0].filename,
-          aadhaarCard: aadhaarCard[0].filename,
-          employeeId: employeeId[0].filename,
-      });
-
-      await newDocument.save();
-      res.status(201).json({ message: "Documents uploaded successfully", document: newDocument });
+    res.status(201).json({ message: "Loan documents uploaded successfully", data: newLoanDocument });
   } catch (error) {
-      console.error("Error uploading documents:", error);
-      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    console.error("Error uploading loan documents:", error);
+
+
+    if (req.files) {
+      Object.values(req.files).forEach((fileArray) => {
+        fileArray.forEach((file) => {
+          fs.unlinkSync(file.path);
+        });
+      });
+    }
+
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-module.exports = { formOne, getFormById, formTwo, getFormTwoById, uploadDocument };
+const getAllLoanDocuments = async (req, res) => {
+  try {
+    const documents = await LoanDocuments.find();
+    res.status(200).json(documents);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching loan documents", error: error.message });
+  }
+};
+
+
+module.exports = { formOne, getFormById, formTwo, getFormTwoById, uploadLoanDocuments ,getAllLoanDocuments};

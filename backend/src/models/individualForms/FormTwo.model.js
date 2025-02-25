@@ -8,8 +8,8 @@ const formSchema = new mongoose.Schema({
     },
     user_type: { 
       type: String,
-      enum: ["Salaried", "Self-Employed"], 
-      required: true, 
+      enum: ["Salaried", "Self-Employed",], 
+       required: true, 
     },
     homeDetails: {
         type: new mongoose.Schema({
@@ -198,7 +198,10 @@ const formSchema = new mongoose.Schema({
         }, { _id: false }),
     },
 
-}, { timestamps: true }); // Good practice: add timestamps
+}, { timestamps: true }); 
 
 
 module.exports = mongoose.model("FormTwo", formSchema);
+
+
+

@@ -1797,7 +1797,7 @@ const FormTwo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let user_type = formValues.loan === "Business Loan" ? "Business" : formValues.user_type;
+    let user_type = formValues.loan === "Business Loan" ? "Self-Employed" : formValues.user_type;
 
     
 
@@ -1830,7 +1830,7 @@ const FormTwo = () => {
           propertyFinalized: formValues.property_finalised,
           propertyAddress: formValues.property_address,
           agreementExecuted: formValues.agreement_executed,
-          agreementValue: formValues.agreement_mou_value,  // Corrected name
+          agreementValue: formValues.agreement_mou_value,  
           preferredBank: formValues.preferred_banks,
         },
       }),
