@@ -267,7 +267,7 @@ const FormThree = () => {
   </div>
 </div>
 
-      {/* Main Content */}
+      {/* Main Content */}3wscc 
       <div className="w-full lg:w-3/4 p-4 sm:p-6 lg:p-8 xl:p-10 -mt-2">
         <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-bold mb-3 lg:mb-3 ml-4 sm:ml-8 lg:ml-12">
           Loan Application

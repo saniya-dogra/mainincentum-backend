@@ -8,7 +8,7 @@ export const createFormOne = createAsyncThunk(
     async (data, { rejectWithValue }) => {
       try {
         console.log("Sending data:", data); // Log the payload
-        const response = await axios.post(`${API_URL}/form-one`, data);
+        const response = await axios.post(`${API_URL}/form/form-one`, data);
         console.log("Response:", response.data); // Log the response
         return response.data;
       } catch (error) {
@@ -23,7 +23,7 @@ export const fetchFormOne = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/form-one`
+        `${import.meta.env.VITE_API_URL}/form/form-one`
       );
       return response.data;
     } catch (error) {
@@ -38,7 +38,7 @@ export const fetchFormOneByID = createAsyncThunk(
     async (id, { rejectWithValue }) => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/form-one/${id}`
+          `${import.meta.env.VITE_API_URL}/form/form-one/${id}`
         );
         console.log("API Response:", response.data); // Log the response
         return response.data;
