@@ -6,7 +6,9 @@ import Button from "../../components/form/Button.jsx";
 import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
-import axios from "axios"
+
+import { useDispatch } from "react-redux";
+import { createFormOne } from "../../store/formOneSlice.js";
 
 export default function PageOne() {
   const [formValuesList, setFormValuesList] = useState([
@@ -36,6 +38,8 @@ export default function PageOne() {
     },
   ]);
 
+  const dispatch = useDispatch()
+
 
   const [openDropdown, setOpenDropdown] = useState(null);
     const navigate = useNavigate()
@@ -59,19 +63,19 @@ export default function PageOne() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/form-one`,
-        formValuesList[0] // Send the first object in the array
-      );
-      alert(response.data.message);
-      navigate("/form-details-two");
-    } catch (error) {
-      console.error("Error submitting the form", error);
-      alert("Failed to submit the form");
-    }
+  
+    dispatch(createFormOne(formValuesList[0]))
+      .unwrap() 
+      .then(() => {
+        alert("Form Submitted Successfully");
+        navigate("/form-details-two");
+      })
+      .catch((err) => {
+        console.error("Form Submission Error:", err);
+        alert("Form Submission Failed");
+      });
   };
-
+  
 
   return (
     <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
