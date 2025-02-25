@@ -1,11 +1,11 @@
 // controllers/formOne.js
-const FormOne  = require("../models/individualForms/FormOne.model");
-const FormTwo  = require("../models/individualForms/FormTwo.model");
-const LoanDocuments  = require("../models/individualForms/FormThree.model");
+const FormOne = require("../models/individualForms/FormOne.model");
+const FormTwo = require("../models/individualForms/FormTwo.model");
+const LoanDocuments = require("../models/individualForms/FormThree.model");
 const { asyncHandler } = require("../utils/asyncHandler");
 const fs = require("fs");
 
-const formOne = async (req, res) => {
+const createFormOne = async (req, res) => {
   try {
     const {
       full_name,
@@ -34,7 +34,9 @@ const formOne = async (req, res) => {
 
     const existingEmail = await FormOne.findOne({ email_id });
     if (existingEmail) {
-      return res.status(400).json({ error: "Email already exists. Please use a different email." });
+      return res
+        .status(400)
+        .json({ error: "Email already exists. Please use a different email." });
     }
 
     const formOneData = new FormOne({
@@ -71,15 +73,19 @@ const formOne = async (req, res) => {
   } catch (error) {
     console.error("Error in form submission:", error);
     if (error.code === 11000) {
-      return res.status(400).json({ error: "Duplicate email detected. Please use a different email." });
+      return res
+        .status(400)
+        .json({
+          error: "Duplicate email detected. Please use a different email.",
+        });
     }
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-
-
-const getFormById = asyncHandler(async (req, res) => {  //Correctly using asyncHandler
+const getFormOneById = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -95,9 +101,70 @@ const getFormById = asyncHandler(async (req, res) => {  //Correctly using asyncH
     });
   } catch (error) {
     console.error("Error in retrieving form data:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
+const getFormOneData = asyncHandler(async (req, res) => {
+  try {
+    const formOneData = await FormOne.find();
+    if (!formOneData) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+    res.status(200).json({
+      message: "Form data retrieved successfully!",
+      data: formOneData,
+    });
+  } catch (error) {
+    console.error("Error in retrieving form data:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
+const updateFormOne = asyncHandler(async(req,res)=>{
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "ID parameter is required" });
+  }
+    const updateForm = await FormOne.findByIdAndUpdate(id,req.body,{new:true});
+    if(!updateForm){
+      return res.status(404).json({message:"Form not found"});
+    }
+
+    res.status(200).json({message:"Form updated successfully",data:updateForm});
+  } catch (error) {
+    console.error("Error in updating form data:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
+
+
+const deleteFormOne = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: "ID parameter is required" });
+    }
+
+    const deletedForm = await FormOne.findByIdAndDelete(id);
+
+    if (!deletedForm) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    res.status(200).json({ message: "Form deleted successfully", data: deletedForm });
+  } catch (error) {
+    console.error("Error in deleting form data:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+});
+
 
 
 
@@ -112,6 +179,11 @@ const formTwo = asyncHandler(async (req, res) => { // Using asyncHandler here.
 
     res.status(201).json({
       message: "Loan application submitted successfully",
+      loan: {
+        _id: loan._id,
+        loanType: loan.loanType,
+        details: loanData, // Include all loan-specific details
+      },
       loan: savedLoan, // Return the entire saved document
     });
   } catch (error) {
@@ -130,7 +202,12 @@ const getFormTwoById = async (req, res) => {
     }
     res.status(200).json(loan);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching loan application", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Error fetching loan application",
+        error: error.message,
+      });
   }
 };
 
@@ -139,28 +216,30 @@ const getFormTwoById = async (req, res) => {
 
 const uploadLoanDocuments = async (req, res) => {
   try {
-    console.log("Request Body:", req.body); 
-    console.log("Request Files:", req.files); 
-   
+    console.log("Request Body:", req.body);
+    console.log("Request Files:", req.files);
+
     if (!req.files || Object.keys(req.files).length === 0) {
-      console.log("No files were uploaded."); 
+      console.log("No files were uploaded.");
       return res.status(400).json({ message: "No files were uploaded." });
     }
 
-
     const documentData = {};
     for (const [fieldName, fileArray] of Object.entries(req.files)) {
-      documentData[fieldName] = fileArray[0].filename; 
+      documentData[fieldName] = fileArray[0].filename;
     }
-
 
     const newLoanDocument = new LoanDocuments(documentData);
     await newLoanDocument.save();
 
-    res.status(201).json({ message: "Loan documents uploaded successfully", data: newLoanDocument });
+    res
+      .status(201)
+      .json({
+        message: "Loan documents uploaded successfully",
+        data: newLoanDocument,
+      });
   } catch (error) {
     console.error("Error uploading loan documents:", error);
-
 
     if (req.files) {
       Object.values(req.files).forEach((fileArray) => {
@@ -170,7 +249,9 @@ const uploadLoanDocuments = async (req, res) => {
       });
     }
 
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 
@@ -179,9 +260,20 @@ const getAllLoanDocuments = async (req, res) => {
     const documents = await LoanDocuments.find();
     res.status(200).json(documents);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching loan documents", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching loan documents", error: error.message });
   }
 };
 
-
-module.exports = { formOne, getFormById, formTwo, getFormTwoById, uploadLoanDocuments ,getAllLoanDocuments};
+module.exports = {
+  createFormOne,
+  getFormOneById,
+  getFormOneData,
+  updateFormOne,
+  deleteFormOne,
+  formTwo,
+  getFormTwoById,
+  uploadLoanDocuments,
+  getAllLoanDocuments,
+};

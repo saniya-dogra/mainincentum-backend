@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchFormOneByID } from "../../store/formOneSlice";
 
 
 const UserApplications = () => {
     const [showDropdown, setShowDropdown] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("Application Status");
+  const dispatch = useDispatch();
+  const {id} = useParams()
+  const {formData, loading,error} = useSelector((state)=>state.form)
+  console.log("Redux State:", { formData, loading, error });
+
+  useEffect(()=>{
+    if(id){
+      console.log("Dispatching fetchFormOneByID with ID:", id); 
+      dispatch(fetchFormOneByID(id))
+    }else {
+      console.error("ID is undefined"); // Log an error if ID is missing
+    }
+  },[dispatch, id])
+  
 
   const handleStatusChange = (status) => {
     setSelectedStatus(status);
     setShowDropdown(false); 
   };
+
+  if(loading){
+    return <h1>Loading...</h1>
+  }
+
+  if(error){
+    return <h1>Error: {error.message}</h1> 
+  }
+
+  if(!formData){
+    return <h1>No data found</h1>
+  }
 
       return (
         <div className="min-h-screen bg-gray-50 p-4">
@@ -24,7 +53,7 @@ const UserApplications = () => {
                     alt="Profile"
                     className="w-20 h-20 rounded-full mb-2"
                   />
-                  <h3 className="text-lg font-semibold">Aimee Liu</h3>
+                  <h3 className="text-lg font-semibold">{formData.full_name}</h3>
                 </div>
     
                 {/* Sidebar Menu */}
