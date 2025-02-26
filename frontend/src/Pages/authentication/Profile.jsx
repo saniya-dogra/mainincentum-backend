@@ -3,32 +3,7 @@ import { UserContext } from "../../contextapi/UserContext";
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
-  const loanApplications = [
-    {
-      id: 1,
-      type: "HOME LOAN",
-      amount: "₹ 9,00,000",
-      date: "4th Aug 2020 at 6:30pm",
-      status: "In Progress",
-      icon: "🏠",
-    },
-    {
-      id: 2,
-      type: "CAR LOAN",
-      amount: "₹ 4,50,000",
-      date: "10th Sep 2021 at 5:45pm",
-      status: "In Progress",
-      icon: "🚗",
-    },
-    {
-      id: 3,
-      type: "EDUCATION LOAN",
-      amount: "₹ 2,00,000",
-      date: "12th Jan 2022 at 3:15pm",
-      status: "In Progress",
-      icon: "🎓",
-    },
-  ];
+ 
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white">
