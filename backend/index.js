@@ -8,37 +8,39 @@ const { connectToDatabase } = require("./src/db");
 const router = require("./src/routes/user.router");
 const formRouter = require("./src/routes/individualForm.router");
 
-require("events").EventEmitter.defaultMaxListeners = 15; // Increase event listener limit
+// No longer needed with current setup.  Multer handles this internally.
+// require("events").EventEmitter.defaultMaxListeners = 15; // Increase event listener limit
 
 const app = express();
+const port = process.env.PORT || 5000; //Better to use a const, won't change
 
 // ✅ Middleware Order Fix
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-    // "https://incentum.ai",
-    // "https://www.incentum.ai"
+    "http://localhost:5173",  // Your frontend URL.  Keep this.
+    // "https://incentum.ai",    // Add your production URL here when you deploy
+    // "https://www.incentum.ai" // Add if you have a www subdomain.
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],  // Correct
+  allowedHeaders: ["Content-Type", "Authorization"], // Correct
+  credentials: true, // Correct
 }));
 
 // ✅ Body Parsing BEFORE Routes
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // For parsing application/json
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 // ✅ Cookie Parser
 app.use(cookieParser());
 
-// ✅ Static Files for Multer
-app.use("/uploads", express.static("uploads"));
+// ✅ Static Files for Multer  -- Make uploads folder accessible. IMPORTANT!
+app.use('/uploads', express.static('uploads'));
 
-// ✅ Routes
-app.use("/api", router);
-app.use("/api/form", formRouter);
+// ✅ Routes - good practice to prefix API routes
+app.use("/api", router);       // User routes (authentication, etc.)
+app.use("/api/form", formRouter);  // Form routes
 
-// ✅ API Test Route
+// ✅ API Test Route (Good for debugging)
 app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' });
 });
@@ -47,7 +49,7 @@ app.get('/api', (req, res) => {
 connectToDatabase();
 
 // ✅ Start Server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

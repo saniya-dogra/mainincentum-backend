@@ -1,3 +1,4 @@
+// backend/src/models/individualForms/FormThree.model.js
 const mongoose = require("mongoose");
 
 const loanDocumentsSchema = new mongoose.Schema({
@@ -27,6 +28,3 @@ const loanDocumentsSchema = new mongoose.Schema({
 const LoanDocuments = mongoose.model("LoanDocuments", loanDocumentsSchema);
 
 module.exports = LoanDocuments;
-
-
-
