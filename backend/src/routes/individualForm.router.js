@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const {  createFormOne, getFormOneById, getFormOneData, updateFormOne, deleteFormOne , } = require("../controllers/individualForm.controller");
+const {  createFormOne, getFormOneById, getFormOneData, updateFormOne, deleteFormOne, createFormTwo, getFormTwoData, getFormTwoById, UpdateFormTwo, deleteFormTwo , } = require("../controllers/individualForm.controller");
 const upload = require("../utils/FileUploaded");
 
 const formRouter = Router();
@@ -12,9 +12,11 @@ formRouter.route("/form-one/:id").delete(deleteFormOne);
 
 
 
-// formRouter.route("/form-two").post(formTwo); 
-// formRouter.route("/form-two/:id").get(getFormTwoById); 
-
+ formRouter.route("/form-two").post(createFormTwo); 
+ formRouter.route("/form-two").get(getFormTwoData); 
+ formRouter.route("/form-two/:id").get(getFormTwoById); 
+ formRouter.route("/form-two/:id").put(UpdateFormTwo); 
+ formRouter.route("/form-two/:id").delete(deleteFormTwo); 
 
 
 
