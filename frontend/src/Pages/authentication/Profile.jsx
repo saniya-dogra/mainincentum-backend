@@ -116,7 +116,7 @@ const Dashboard = () => {
         </h2>
 
         {/* Loan Applications */}
-        <div className="bg-white p-4 rounded-lg shadow-xl">
+        {/* <div className="bg-white p-4 rounded-lg shadow-xl">
           {loanApplications.map((loan) => (
             <div
               key={loan.id}
@@ -139,7 +139,7 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
