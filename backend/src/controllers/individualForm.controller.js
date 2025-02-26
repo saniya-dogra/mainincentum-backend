@@ -230,7 +230,7 @@ const UpdateFormTwo = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     // Validate MongoDB ObjectId
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {  
       return res.status(400).json({ message: "Invalid or missing ID parameter" });
     }
 
@@ -341,6 +341,7 @@ module.exports = {
   getFormTwoData,
   getFormTwoById,
   UpdateFormTwo,
-  deleteFormTwo
+  deleteFormTwo,
+  uploadLoanDocuments,
 
 };
