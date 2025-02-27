@@ -17,9 +17,9 @@ const port = process.env.PORT || 5000; //Better to use a const, won't change
 // ✅ Middleware Order Fix
 app.use(cors({
   origin: [
-    "http://localhost:5173",  // Your frontend URL.  Keep this.
-    // "https://incentum.ai",    // Add your production URL here when you deploy
-    // "https://www.incentum.ai" // Add if you have a www subdomain.
+    // "http://localhost:5173",  // Your frontend URL.  Keep this.
+     "https://incentum.ai",    // Add your production URL here when you deploy
+     "https://www.incentum.ai" // Add if you have a www subdomain.
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],  // Correct
   allowedHeaders: ["Content-Type", "Authorization"], // Correct

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const formSchema = new mongoose.Schema({
+const personalDetailsSchema  = new mongoose.Schema({
   full_name: { type: String },
   father_name: { type: String },
   mobile_number: { type: String, match: /^[0-9]{10}$/ },
@@ -36,6 +36,4 @@ const formSchema = new mongoose.Schema({
   present_pincode: { type: String, match: /^[0-9]{6}$/ },
 });
 
-const FormOne = mongoose.model("FormOne", formSchema);
 
-module.exports = FormOne;
