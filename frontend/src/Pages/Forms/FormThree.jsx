@@ -213,48 +213,47 @@ const FormThree = () => {
     return (
         <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
             <div className="absolute mt-20 md:mt-32 w-full h-1 bg-[#9ea0c5e7]"></div>
-
             {/* Sidebar */}
             <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
-                <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
-                    Application Process
-                </h2>
-                <ul className="relative mr-10">
-                    <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
-                    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-                        <div className="text-right">
-                            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-                                Personal Information
-                            </span>
-                            <div className="text-sm text-gray-400">Browse and Upload</div>
-                        </div>
-                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-                            <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-                        </div>
-                    </li>
-                    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-                        <div className="text-right">
-                            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-                                Employment Status
-                            </span>
-                            <div className="text-sm text-gray-400">Browse and Upload</div>
-                        </div>
-                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-                            <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-                        </div>
-                    </li>
-                    <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
-                        <div className="text-right">
-                            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
-                                Documents
-                            </span>
-                            <div className="text-sm text-gray-400">Browse and Upload</div>
-                        </div>
-                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-                            <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-                        </div>
-                    </li>
-                </ul>
+            <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
+    Application<br />Process
+</h2>
+                <ul className="relative mr-10 hidden lg:block">
+    <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
+    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+        <div className="text-right">
+            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+                Personal Information
+            </span>
+            <div className="text-sm text-gray-400">Browse and Upload</div>
+        </div>
+        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+            <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+        </div>
+    </li>
+    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+        <div className="text-right">
+            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+                Employment Status
+            </span>
+            <div className="text-sm text-gray-400">Browse and Upload</div>
+        </div>
+        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+            <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+        </div>
+    </li>
+    <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
+        <div className="text-right">
+            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
+                Documents
+            </span>
+            <div className="text-sm text-gray-400">Browse and Upload</div>
+        </div>
+        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+            <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+        </div>
+    </li>
+</ul>
                 <div className="hidden lg:block absolute top-[8rem] right-0 h-screen w-1 bg-[#b1b3d7ef]">
                     <div className="absolute top-[3.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
                     <div className="absolute top-[10.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
@@ -333,16 +332,6 @@ const FormThree = () => {
                                     </table>
                                 </div>
                                 {uploadError && <p className="text-red-500 mt-4">{uploadError}</p>}
-                                {/* <div className="mt-6 sm:mt-8 flex justify-center">
-                                    <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 sm:gap-6 w-full max-w-[90%] sm:max-w-[70%] md:max-w-[60%] lg:max-w-[50%]">
-                                        <Link to="/form-details-four-coapplicant" className="w-full sm:w-auto flex justify-center">
-                                            <button type="button" className="bg-[#4CAF50] hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Coapplicant +</button>
-                                        </Link>
-                                        <button type="submit" className="w-full sm:w-auto bg-[#4CAF50] hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                            Submit
-                                        </button>
-                                    </div>
-                                </div> */}
                                 <div className="mt-6 sm:mt-8 flex justify-center">
                                     <div className="flex flex-col sm:flex-row justify-center sm:justify-center items-center gap-4 sm:gap-6 w-full max-w-[90%] sm:max-w-[70%] md:max-w-[60%] lg:max-w-[50%]">
                                         <button

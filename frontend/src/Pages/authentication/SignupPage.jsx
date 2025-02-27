@@ -74,7 +74,7 @@ export default function SignupPage() {
 
     try {
       // Make the API call to register the user
-      await axios.post(`${import.meta.env.VITE_API_URL}/register`, formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/user/register`, formData);
       // Show success toast
       toast.success("Registration successful!", {
         position: "top-center",
