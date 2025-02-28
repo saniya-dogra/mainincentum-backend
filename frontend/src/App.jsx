@@ -21,7 +21,7 @@ import UserApplications from './Pages/dashboard/UserApplications';
 import FormTwo from './Pages/Forms/FormTwo';
 import FormOne from './Pages/Forms/FormOne';
 import FormThree from './Pages/Forms/FormThree';
- import AboutUs from './Pages/Others/Aboutus';
+ import AboutUs from './Pages/Others/AboutUs';
  import ContactUs from './Pages/Others/ContactUS';
 import FormFourCoapplicant from './Pages/Forms/FormFourCoapplicant';
 import Coformone from './Pages/Forms/Coformone';
