@@ -308,7 +308,8 @@ const uploadLoanDocuments = async (req, res) => {
         const newLoanDocument = new LoanDocuments(documentData);
         await newLoanDocument.save();
 
-        res.status(201).json({ message: "Loan documents uploaded successfully", data: newLoanDocument });
+        // Send a 200 OK response with the expected message
+        res.status(200).json({ message: "File uploaded successfully", data: newLoanDocument });
     } catch (error) {
         console.error("Error uploading loan documents:", error);
 

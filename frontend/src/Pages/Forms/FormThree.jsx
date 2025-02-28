@@ -77,7 +77,7 @@ const FormThree = () => {
         e.preventDefault();
         setUploadError(null);
         setUploadSuccess(false);
-
+    
         // Check if any file exceeds 3 MB
         const hasErrors = Object.values(fileErrors).some((error) => error !== null);
         if (hasErrors) {
@@ -87,38 +87,54 @@ const FormThree = () => {
             });
             return;
         }
-
+    
         const formData = new FormData();
         for (const key in files) {
             if (files[key]) {
                 formData.append(key, files[key]);
             }
         }
-
+    
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/form/form-three`,
                 formData,
                 { withCredentials: true }
             );
-            console.log("File upload successful:", response.data);
-            setUploadSuccess(true);
-            toast.success("Form submitted successfully!", {
-                position: "top-center",
-                autoClose: 2000,
-                onClose: () => {
-                    navigate("/application-submitted-successfully");
-                },
-            });
+    
+            // Log the server response for debugging
+            console.log("Server Response:", response);
+    
+            // Check if the response indicates success
+            if (response.status === 200 && response.data.message === "File uploaded successfully") {
+                setUploadSuccess(true);
+                toast.success("Form submitted successfully!", {
+                    position: "top-center",
+                    autoClose: 2000,
+                    onClose: () => {
+                        navigate("/application-submitted-successfully");
+                    },
+                });
+            } else {
+                // Handle unexpected response
+                throw new Error("Unexpected response from server");
+            }
         } catch (error) {
             console.error("File upload error:", error.response || error);
+    
+            // Log detailed error information
             if (error.response) {
+                console.error("Server Error Data:", error.response.data);
+                console.error("Server Error Status:", error.response.status);
                 setUploadError(error.response.data.message || `Server Error: ${error.response.status}`);
             } else if (error.request) {
+                console.error("No response received from server");
                 setUploadError("No response received from the server.");
             } else {
+                console.error("Request setup error:", error.message);
                 setUploadError("Error setting up the request: " + error.message);
             }
+    
             toast.error("Form submission failed. Please try again.", {
                 position: "top-center",
                 autoClose: 2000,

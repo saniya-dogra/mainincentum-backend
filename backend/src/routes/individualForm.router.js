@@ -2,8 +2,7 @@ const { Router } = require("express");
 const {  createFormOne, getFormOneById, getFormOneData, updateFormOne, deleteFormOne, createFormTwo, getFormTwoData, getFormTwoById, UpdateFormTwo, deleteFormTwo, uploadLoanDocuments , } = require("../controllers/individualForm.controller");
 // const  uploadLoanDocuments  = require('../controllers/individualForm.controller');
 const upload = require("../utils/FileUploaded");
-// const formController = require('../controllers/individualForm.controller'); // Correct path to your controller
-
+// const formController = require('../controllers/individualForm.controller'); 
 const formRouter = Router();
 
 formRouter.route("/form-one").post(createFormOne); 
