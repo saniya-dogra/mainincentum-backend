@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import homeloan from '../../../assets/homeloan.webp';
 import vehicleloan from '../../../assets/vehicleloan.webp';
 import personalloan from '../../../assets/personalloan.webp';
 import businessloan from '../../../assets/businessloan.webp';
-import incentmbenfi from '../../../assets/incentmbenfi.webp';
 
 const FeaturesSection = () => {
   const [activeTab, setActiveTab] = useState("home-loan");
@@ -14,6 +13,34 @@ const FeaturesSection = () => {
     section.scrollIntoView({ behavior: "smooth" });
     setActiveTab(id);
   };
+
+  // Carousel Logic
+  const carouselImages = ["/slimage1.jpg", "/slimage2.jpg", "/slimage3.jpg", "/slimage2.jpg"];
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const totalSlides = carouselImages.length;
+  const extendedCarouselImages = [...carouselImages, ...carouselImages]; // Duplicate for infinite effect
+
+  // Responsive Slide Count
+  const getSlidesPerView = () => {
+    if (window.innerWidth < 640) return 1; // Mobile
+    if (window.innerWidth < 1024) return 2; // Tablet
+    return 3; // PC
+  };
+
+  const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
+
+  useEffect(() => {
+    const handleResize = () => setSlidesPerView(getSlidesPerView());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCarouselIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -44,10 +71,8 @@ const FeaturesSection = () => {
             </div>
           </div>
         </div>
-
-
         {/* Loan Sections */}
-        <div className="container mx-auto  space-y-10">
+        <div className="container mx-auto space-y-10">
           {/* Home Loan */}
           <div
             id="home-loan"
@@ -71,7 +96,7 @@ const FeaturesSection = () => {
                 <span className="text-blue-700"> Home Loan</span> Solution
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-              Owning a home should be a joyous experience, not a source of stress. We understand that purchasing a home is one of the most significant financial decisions you'll ever make. That's why we've developed advanced home loan solutions that give you access to competitive interest rate...
+                Owning a home should be a joyous experience, not a source of stress. We understand that purchasing a home is one of the most significant financial decisions you'll ever make. That's why we've developed advanced home loan solutions that give you access to competitive interest rate...
               </p>
               <div className="mt-10">
                 <Link
@@ -103,11 +128,11 @@ const FeaturesSection = () => {
                 VEHICLE LOAN
               </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-              Drive Your Dream <span className="text-blue-700">Car </span> with Our Tailored 
+                Drive Your Dream <span className="text-blue-700">Car </span> with Our Tailored
                 <span className="text-blue-700"> Vehicle Loan</span> Solution
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-              The journey toward owning your dream car should be filled with something other than roadblocks. Our advanced vehicle loan options are designed to take you from application to approval quickly and effortlessly. Whether you're looking for a sleek sports car, a family-friendly SUV...
+                The journey toward owning your dream car should be filled with something other than roadblocks. Our advanced vehicle loan options are designed to take you from application to approval quickly and effortlessly. Whether you're looking for a sleek sports car, a family-friendly SUV...
               </p>
               <div className="mt-10">
                 <Link
@@ -139,10 +164,10 @@ const FeaturesSection = () => {
                 PERSONAL LOAN
               </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-              Fuel Your <span className="text-blue-700">Personal Goals </span> With Our  Flexible <span className="text-blue-700"> Personal Loan</span> Solution!
+                Fuel Your <span className="text-blue-700">Personal Goals </span> With Our Flexible <span className="text-blue-700"> Personal Loan</span> Solution!
               </h2>
               <p className="mt-4 text-sm sm:text-xl text-gray-600">
-              Life is full of unexpected moments, and having access to quick, hassle-free funding can make all the difference. Whether you're renovating your home, covering medical expenses, or financing a personal project, our personal loan solutions are tailored to meet your individual needs...
+                Life is full of unexpected moments, and having access to quick, hassle-free funding can make all the difference. Whether you're renovating your home, covering medical expenses, or financing a personal project, our personal loan solutions are tailored to meet your individual needs...
               </p>
               <div className="mt-10">
                 <Link
@@ -174,22 +199,23 @@ const FeaturesSection = () => {
                 BUSINESS LOAN
               </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-              Grow Your <span className="text-blue-700"> Business</span> With Our Custom
+                Grow Your <span className="text-blue-700"> Business</span> With Our Custom
                 <span className="text-blue-700"> Business Loan</span> Options!
               </h2>
-              <p className="mt-4 text-sm sm:text-xl text-gray-600">   
-              Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
+              <p className="mt-4 text-sm sm:text-xl text-gray-600">
+                Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
               </p>
               <div className="mt-10">
                 <Link
                   to="/business-loan"
-                  className="px-4  py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
                 >
                   Know More →
                 </Link>
               </div>
             </div>
           </div>
+
           {/* Mortgage Loan */}
           <div
             id="mortgage-loan"
@@ -209,16 +235,16 @@ const FeaturesSection = () => {
                 MORTGAGE LOAN
               </Link>
               <h2 className="text-2xl sm:text-4xl font-bold text-gray-800 mt-4">
-              Grow Your <span className="text-blue-700"> Business</span> With Our Custom
+                Grow Your <span className="text-blue-700"> Business</span> With Our Custom
                 <span className="text-blue-700"> Mortgage Loan</span> Options!
               </h2>
-              <p className="mt-4 text-sm sm:text-xl text-gray-600">   
-              Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
+              <p className="mt-4 text-sm sm:text-xl text-gray-600">
+                Running a successful business requires careful planning and timely investments. Whether you're expanding your current operations or starting a brand-new venture, having access to reliable funding is essential. Our business loan options provide the financial support you need to grow sustainably,
               </p>
               <div className="mt-10">
                 <Link
                   to="/mortgage-loan"
-                  className="px-4  py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
+                  className="px-4 py-2 sm:px-6 sm:py-3 bg-white text-black rounded-xl border border-black hover:bg-yellow-300 transition"
                 >
                   Know More →
                 </Link>
@@ -226,15 +252,28 @@ const FeaturesSection = () => {
             </div>
           </div>
         </div>
-
-        <div className="py-4 px-4 max-w-7xl mx-auto">
-          <img
-            src={incentmbenfi}
-            alt="Benefits Graph"
-            className="rounded-lg w-full"
-          /> 
-        </div>
       </div>
+      {/* Carousel Section */}
+      <div className="relative w-full max-w-[900px] mx-auto overflow-hidden mt-8">
+          <div
+            className="flex transition-transform duration-700 ease-in-out gap-0"
+            style={{ transform: `translateX(-${carouselIndex * (100 / slidesPerView)}%)` }}
+          >
+            {extendedCarouselImages.map((img, i) => (
+              <div
+                key={i}
+                className={`flex-shrink-0 flex items-center justify-center`}
+                style={{ width: `${100 / slidesPerView}%` }}
+              >
+                <img
+                  src={img}
+                  alt={`Slide ${i}`}
+                  className="w-full h-auto max-h-[400px] object-contain"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
     </>
   );
 };

@@ -17,7 +17,7 @@ const port = process.env.PORT || 5000; //Better to use a const, won't change
 // ✅ Middleware Order Fix
 app.use(cors({
   origin: [
-    // "http://localhost:5173",  // Your frontend URL.  Keep this.
+     //"http://localhost:5173",  // Your frontend URL.  Keep this.
      "https://incentum.ai",    // Add your production URL here when you deploy
      "https://www.incentum.ai" // Add if you have a www subdomain.
   ],
@@ -37,7 +37,7 @@ app.use(cookieParser());
 app.use('/uploads', express.static('uploads'));
 
 // ✅ Routes - good practice to prefix API routes
-app.use("/api", router);       // User routes (authentication, etc.)
+app.use("/api/users", router);       // User routes (authentication, etc.)
 app.use("/api/form", formRouter);  // Form routes
 
 // ✅ API Test Route (Good for debugging)

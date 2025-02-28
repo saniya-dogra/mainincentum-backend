@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoDocuments } from "react-icons/io5";
 import { FaUser, FaBookOpen } from "react-icons/fa";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FormThree = () => {
     const location = useLocation();
@@ -13,6 +15,7 @@ const FormThree = () => {
     const [files, setFiles] = useState({});
     const [uploadError, setUploadError] = useState(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [fileErrors, setFileErrors] = useState({}); // To track file size errors
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -25,26 +28,46 @@ const FormThree = () => {
     const FileUploader = ({ name }) => {
         const { getRootProps, getInputProps, isDragActive } = useDropzone({
             onDrop: (acceptedFiles) => {
-                setFiles((prevFiles) => ({
-                    ...prevFiles,
-                    [name]: acceptedFiles[0] || null,
-                }));
+                const file = acceptedFiles[0];
+                if (file.size > 3 * 1024 * 1024) { // 3 MB limit
+                    setFileErrors((prevErrors) => ({
+                        ...prevErrors,
+                        [name]: "File size exceeds 3 MB. Please reduce the size.",
+                    }));
+                } else {
+                    setFileErrors((prevErrors) => ({
+                        ...prevErrors,
+                        [name]: null, // Clear error if file is valid
+                    }));
+                    setFiles((prevFiles) => ({
+                        ...prevFiles,
+                        [name]: file,
+                    }));
+                }
             },
             accept: { 'application/pdf': ['.pdf'] },
         });
 
         return (
-            <div
-                {...getRootProps()}
-                className="border-2 border-dashed border-blue-400 rounded-md p-2 sm:p-4 text-center cursor-pointer hover:bg-blue-50 transition"
-            >
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                    <p className="text-blue-500 text-sm sm:text-base">Drop the files here...</p>
-                ) : (
-                    <p className="text-gray-500 text-sm sm:text-base">
-                        Drag and drop files here or <span className="text-blue-500 underline">Select files</span>
-                    </p>
+            <div>
+                <div
+                    {...getRootProps()}
+                    className="border-2 border-dashed border-blue-400 rounded-md p-2 sm:p-4 text-center cursor-pointer hover:bg-blue-50 transition"
+                >
+                    <input {...getInputProps()} />
+                    {isDragActive ? (
+                        <p className="text-blue-500 text-sm sm:text-base">Drop the files here...</p>
+                    ) : (
+                        <p className="text-gray-500 text-sm sm:text-base">
+                            Drag and drop files here or <span className="text-blue-500 underline">Select files</span>
+                        </p>
+                    )}
+                </div>
+                {fileErrors[name] && (
+                    <p className="text-red-500 text-sm mt-1">{fileErrors[name]}</p>
+                )}
+                {files[name] && !fileErrors[name] && (
+                    <p className="text-sm text-green-600 mt-1">{files[name].name} uploaded</p>
                 )}
             </div>
         );
@@ -55,6 +78,16 @@ const FormThree = () => {
         setUploadError(null);
         setUploadSuccess(false);
 
+        // Check if any file exceeds 3 MB
+        const hasErrors = Object.values(fileErrors).some((error) => error !== null);
+        if (hasErrors) {
+            toast.error("Please ensure all files are below 3 MB.", {
+                position: "top-center",
+                autoClose: 2000,
+            });
+            return;
+        }
+
         const formData = new FormData();
         for (const key in files) {
             if (files[key]) {
@@ -64,13 +97,19 @@ const FormThree = () => {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/form-three`,
+                `${import.meta.env.VITE_API_URL}/form/form-three`,
                 formData,
                 { withCredentials: true }
             );
             console.log("File upload successful:", response.data);
             setUploadSuccess(true);
-            navigate("/next-step");
+            toast.success("Form submitted successfully!", {
+                position: "top-center",
+                autoClose: 2000,
+                onClose: () => {
+                    navigate("/application-submitted-successfully");
+                },
+            });
         } catch (error) {
             console.error("File upload error:", error.response || error);
             if (error.response) {
@@ -80,6 +119,10 @@ const FormThree = () => {
             } else {
                 setUploadError("Error setting up the request: " + error.message);
             }
+            toast.error("Form submission failed. Please try again.", {
+                position: "top-center",
+                autoClose: 2000,
+            });
         }
     };
 
@@ -212,48 +255,48 @@ const FormThree = () => {
 
     return (
         <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
-            <div className="absolute mt-20 md:mt-32 w-full h-1 bg-[#9ea0c5e7]"></div>
+            <div className="absolute mt-24 md:mt-32 w-full h-1 bg-[#9ea0c5e7]"></div>
             {/* Sidebar */}
             <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
-            <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
-    Application<br />Process
-</h2>
+                <h2 className="text-2xl lg:text-3xl font-bold lg:mb-14 text-white tracking-wide text-center -mt-3">
+                    Application<br />Process
+                </h2>
                 <ul className="relative mr-10 hidden lg:block">
-    <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
-    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-        <div className="text-right">
-            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-                Personal Information
-            </span>
-            <div className="text-sm text-gray-400">Browse and Upload</div>
-        </div>
-        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-            <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-        </div>
-    </li>
-    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
-        <div className="text-right">
-            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
-                Employment Status
-            </span>
-            <div className="text-sm text-gray-400">Browse and Upload</div>
-        </div>
-        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-            <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-        </div>
-    </li>
-    <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
-        <div className="text-right">
-            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
-                Documents
-            </span>
-            <div className="text-sm text-gray-400">Browse and Upload</div>
-        </div>
-        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
-            <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
-        </div>
-    </li>
-</ul>
+                    <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
+                    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+                        <div className="text-right">
+                            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+                                Personal Information
+                            </span>
+                            <div className="text-sm text-gray-400">Browse and Upload</div>
+                        </div>
+                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-black font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+                            <FaUser className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+                        </div>
+                    </li>
+                    <li className="flex items-center justify-end space-x-6 mb-12 lg:mb-16 cursor-pointer relative group">
+                        <div className="text-right">
+                            <span className="text-lg lg:text-xl font-medium text-white group-hover:text-[#26cc88] transition-colors">
+                                Employment Status
+                            </span>
+                            <div className="text-sm text-gray-400">Browse and Upload</div>
+                        </div>
+                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#484a7b] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+                            <FaBookOpen className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+                        </div>
+                    </li>
+                    <li className="flex items-center justify-end space-x-6 cursor-pointer relative group">
+                        <div className="text-right">
+                            <span className="text-lg lg:text-xl font-medium text-[#26cc88] group-hover:text-[#26cc88] transition-colors">
+                                Documents
+                            </span>
+                            <div className="text-sm text-gray-400">Browse and Upload</div>
+                        </div>
+                        <div className="z-10 w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center bg-[#26cc88] rounded-full text-white font-bold shadow-lg transition-transform transform group-hover:scale-110 group-hover:rotate-6">
+                            <IoDocuments className="text-white w-5 h-5 lg:w-6 lg:h-6" />
+                        </div>
+                    </li>
+                </ul>
                 <div className="hidden lg:block absolute top-[8rem] right-0 h-screen w-1 bg-[#b1b3d7ef]">
                     <div className="absolute top-[3.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
                     <div className="absolute top-[10.5rem] left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#484a7b] border-4 border-[#383a69] rounded-full"></div>
@@ -262,14 +305,13 @@ const FormThree = () => {
             </div>
 
             {/* Main Content */}
-            <div className="w-full lg:w-3/4 p-4 sm:p-6 lg:p-8 xl:p-10 -mt-2">
+            <div className="w-full lg:w-3/4  sm:p-6 lg:p-8 xl:p-10 -mt-2">
                 <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-bold mb-3 lg:mb-3 ml-4 sm:ml-8 lg:ml-12">
                     Loan Application
                 </h1>
                 <p className="text-white ml-4 sm:ml-8 lg:ml-12 mb-6 lg:mb-11 text-sm sm:text-base">
                     Upload the required documents to proceed with the loan application.
                 </p>
-
                 {userType && (
                     <form onSubmit={handleSubmit}>
                         <div className="mx-2 sm:mx-4 lg:mx-8 mt-4">
@@ -321,9 +363,6 @@ const FormThree = () => {
                                                         <td className="border border-gray-300 p-2 sm:p-4">{doc}</td>
                                                         <td className="border border-gray-300 p-2 sm:p-4">
                                                             <FileUploader name={name} />
-                                                            {files[name] && (
-                                                                <p className="text-sm text-green-600 mt-1">{files[name].name} uploaded</p>
-                                                            )}
                                                         </td>
                                                     </tr>
                                                 );
@@ -347,6 +386,8 @@ const FormThree = () => {
                     </form>
                 )}
             </div>
+            {/* Toast Container */}
+            <ToastContainer position="top-center" autoClose={2000} />
         </div>
     );
 };

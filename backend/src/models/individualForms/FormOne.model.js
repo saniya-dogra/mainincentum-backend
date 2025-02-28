@@ -6,7 +6,6 @@ const personalDetailsSchema  = new mongoose.Schema({
   mobile_number: { type: String, match: /^[0-9]{10}$/ },
   email_id: {
     type: String,
-    unique: true,
     match: /\S+@\S+\.\S+/,
   },
   dob: { type: String },
@@ -37,3 +36,4 @@ const personalDetailsSchema  = new mongoose.Schema({
 });
 
 
+module.exports = mongoose.model("formone", personalDetailsSchema);

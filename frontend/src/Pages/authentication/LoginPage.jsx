@@ -50,7 +50,7 @@ export default function LoginPage() {
     }
   
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, formData, {
         withCredentials: true,
       });
       console.log("Login response:", response);  // Check if data is being received properly

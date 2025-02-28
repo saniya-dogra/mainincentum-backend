@@ -25,6 +25,11 @@ import FormThree from './Pages/Forms/FormThree';
  import ContactUs from './Pages/Others/ContactUS';
 import FormFourCoapplicant from './Pages/Forms/FormFourCoapplicant';
 import Coformone from './Pages/Forms/Coformone';
+import EmiCalculator from './Pages/homePage/homecomponents/EmiCalculator';
+import Disclaimer from './Pages/Others/Disclaimer';
+import PrivacyPolicy from './Pages/Others/PrivacyPolicy';
+import Terms from './Pages/Others/Terms';
+import Thankyou from './Pages/Forms/Thankyou';
 function App() {
   return (
         <UserContextProvider>
@@ -54,6 +59,11 @@ function App() {
          <Route path='/about-us' element={<AboutUs/>}/> 
          <Route path='/contact-us' element={<ContactUs/>}/> 
          <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
+         <Route path='/emi-calculator' element={<EmiCalculator/>}/> 
+         <Route path='/disclaimer' element={<Disclaimer/>}/> 
+         <Route path='/privacy-policy' element={<PrivacyPolicy/>}/> 
+         <Route path='/terms-of-service' element={<Terms/>}/> 
+         <Route path='/application-submitted-successfully' element={<Thankyou/>}/> 
 
         </Route>
       </Routes>

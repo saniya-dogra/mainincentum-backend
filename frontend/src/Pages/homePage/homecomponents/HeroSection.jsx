@@ -26,16 +26,16 @@ const HeroSection = () => {
       {/* Buttons (If you still need them) */}
       <div className="flex gap-4">
         <Link
-          to="/Login-Page"
-          className="bg-white text-blue-800 font-medium px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
+          to="/form-detail-one"
+          className="bg-white text-blue-800 font-medium px-4 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
         >
-          Log In →
+          Apply Now →
         </Link>
         <Link
-          to="/Signup-Page"
-          className="bg-blue-500 text-white font-medium px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
+          to="/contact-us"
+          className="bg-blue-500 text-white font-medium px-4 py-3 rounded-lg shadow-md hover:bg-blue-600 transition"
         >
-          Sign Up →
+          Contact us →
         </Link>
       </div>
     </div>

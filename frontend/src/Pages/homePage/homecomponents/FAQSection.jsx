@@ -4,11 +4,31 @@ const FAQSection = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const faqs = [
-    { id: 1, question: "How long my application process took?", answer: "Around 30 days" },
-    { id: 2, question: "What we like to do & what we don’t like to do?", answer: "ETC" },
-    { id: 3, question: "Your charges?", answer: "nil" },
-    { id: 4, question: "CIBIL score Required?", answer: "700+" },
-    { id: 5, question: "Salary required?", answer: "20000" },
+    {
+      id: 1,
+      question: "What are the eligibility criteria for a loan?",
+      answer: "To be eligible for a loan, you need a credit score of 700 or higher, stable income for at least 2 years (salaried) or 3 years (self-employed), age between 21 and 60 (65 for self-employed) at loan maturity, and a good repayment capacity.",
+    },
+    {
+      id: 2,
+      question: "What documents are required to apply for a loan?",
+      answer: "You need KYC documents (PAN, Aadhaar, Voter ID, Passport, proof of address), income proof, and other supporting documents.",
+    },
+    {
+      id: 3,
+      question: "How does the loan application process work?",
+      answer: "The process involves consultation, offer shortlisting, document submission, approval, loan sanction, and disbursement, all streamlined for quick and hassle-free processing.",
+    },
+    {
+      id: 4,
+      question: "What are the key features and benefits of your loan solutions?",
+      answer: "Our loan solutions offer customized incentives, high loan-to-value, flexible tenures, competitive interest rates, tax benefits, quick approvals.",
+    },
+    {
+      id: 5,
+      question: "What is the maximum loan amount I can get?",
+      answer: "The maximum loan amount depends on your income, repayment capacity, and CIBIL Score.",
+    },
   ];
 
   const toggleAccordion = (index) => {

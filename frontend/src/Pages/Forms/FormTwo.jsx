@@ -9,6 +9,8 @@ import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 import { createFormTwo } from "../../store/formTwoSlice.js";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FormTwo = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -245,18 +247,30 @@ const FormTwo = () => {
     };
 
     dispatch(createFormTwo(formData))
-    .then(()=>{
-      alert("Loan application submitted successfully");
-      const navigationPath = getNavigationPath();
-      if (navigationPath !== "#") {
-        navigate(navigationPath);
-      } else {
-        alert("Invalid loan type or user type.");
-      }
-    }).catch((error)=>{
-      console.error("Error submitting the form:", error);
-      alert("Error submitting the form. Please try again.");
+    .then(() => {
+      toast.success("Loan application submitted successfully!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          const navigationPath = getNavigationPath();
+          if (navigationPath !== "#") {
+            navigate(navigationPath);
+          } else {
+            toast.error("Invalid loan type or user type.", {
+              position: "top-center",
+              autoClose: 2000,
+            });
+          }
+        },
+      });
     })
+    .catch((error) => {
+      console.error("Error submitting the form:", error);
+      toast.error("Error submitting the form. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    });
 
 
 
@@ -288,8 +302,8 @@ const FormTwo = () => {
     //     console.error("Error submitting the form:", error);
     //     alert("Error submitting the form. Please try again.");
     // }
+  
   };
-
 
 
   return (
@@ -298,10 +312,10 @@ const FormTwo = () => {
       <div className="absolute mt-20 md:mt-32 w-full h-1 bg-[#9ea0e5e7]"></div>
       {/* Sidebar */}
       <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
-        <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
+        <h2 className="text-2xl lg:text-3xl font-bold  lg:mb-14 text-white tracking-wide text-center -mt-3">
           Application Process
         </h2>
-        <ul className="relative mr-10">
+        <ul className="relative mr-10 hidden lg:block">
           {/* Vertical Timeline Line */}
           <div className="absolute right-6 top-12 bottom-0 w-1 bg-[#9ea0c5e7] mb-3"></div>
 
@@ -657,7 +671,11 @@ const FormTwo = () => {
             )}
 
               {/* Preferred Banks */}
+              <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
               <div className=" grid grid-cols-2 w-full gap-6 mt-6">
+                
               <Input
                   placeholder="Loan Amount Required (Rs.)"
                   name="loan_amount_required"
@@ -1110,6 +1128,9 @@ const FormTwo = () => {
                 </div>
 
               {/* Preferred Banks */}
+              <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
               <div className=" grid grid-cols-2 w-full gap-6 mt-6">
               <Input
                   placeholder="Loan Amount Required (Rs.)"
@@ -1323,6 +1344,9 @@ const FormTwo = () => {
               )}
 
                 {/* Preferred Banks */}
+                <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
                 <div className="grid grid-cols-2 w-full gap-6 mt-6">
                 <Input
                     placeholder="Loan Amount Required (Rs.)"
@@ -1631,6 +1655,9 @@ const FormTwo = () => {
               )}
 
                 {/* Preferred Banks */}
+                <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
                 <div className="grid grid-cols-2 w-full gap-6 mt-6">
                 <Input
                     placeholder="Loan Amount Required (Rs.)"
@@ -1662,6 +1689,7 @@ const FormTwo = () => {
           </div>
         </form>
       </div>
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };
