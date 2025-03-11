@@ -155,7 +155,7 @@ function VehicleAccordion({ type, openAccordion, handleAccordionClick }) {
                 ),
             },
             {
-                heading: "What Will Be Tje Repayment period?",
+                heading: "What Will Be The Repayment period?",
                 content: "This ratio measures your ability to manage debts. A lower ratio increases your chances of approval.",
                 icon: (
                   <TbListDetails className="w-7 h-6 lg:w-6  lg:h-6" />

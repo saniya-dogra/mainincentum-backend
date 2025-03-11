@@ -19,10 +19,7 @@ const formSchema = new mongoose.Schema({
             },
             salariedDetails: {
                 organisation_name: String, 
-                organisation_type: {
-                    type: String,
-                    enum: ["Central Govt.", "State Govt.", "Govt. Organisation", "PSU", "Private Limited Company", "Public Limited Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                organisation_type: String,
                 currentOrganizationExperience: String, 
                 previousOrganizationExperience: String, 
                 designation_salaried: String,
@@ -32,15 +29,9 @@ const formSchema = new mongoose.Schema({
             },
             selfEmployedDetails: {
                 company_name: String, 
-                company_type: {
-                    type: String,
-                    enum: ["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                company_type: String,
                 incorporation_date: Number,
-                designation_self: {
-                    type: String,
-                    enum: ["Proprietor", "Partner", "Founder", "Director", "Others"],
-                },
+                designation_self: String,
                 years_in_business: Number,
                 years_of_itr_filing: Number,
             },
@@ -60,10 +51,7 @@ const formSchema = new mongoose.Schema({
             },
             salariedDetails: {
                 organisation_name: String,
-                organisation_type: {
-                    type: String,
-                    enum: ["Central Govt.", "State Govt.", "Govt. Organisation", "PSU", "Private Limited Company", "Public Limited Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                organisation_type: String,
                 currentOrganizationExperience: String,
                 previousOrganizationExperience: String,
                 designation_salaried: String,
@@ -73,15 +61,9 @@ const formSchema = new mongoose.Schema({
             },
             selfEmployedDetails: {
                 company_name: String,
-                company_type: {
-                    type: String,
-                    enum: ["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                company_type: String,
                 incorporation_date: Number,
-                designation_self: {
-                    type: String,
-                    enum: ["Proprietor", "Partner", "Founder", "Director", "Others"],
-                },
+                designation_self: String,
                 years_in_business: Number,
                 years_of_itr_filing: Number,
             },
@@ -99,10 +81,7 @@ const formSchema = new mongoose.Schema({
         type: new mongoose.Schema({
             applicationFirm: {
                 company_name: String,    
-                company_type: {          
-                    type: String,
-                    enum: ["Pvt Ltd Company", "Unlisted Public Limited Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                company_type: String,
                 incorporation_date: Number,
                 nameOfDirector: String,    
                 years_in_business: Number,
@@ -125,10 +104,7 @@ const formSchema = new mongoose.Schema({
             },
             salariedDetails: {
                 organisation_name: String, // Consistent naming
-                organisation_type: {
-                    type: String,
-                    enum: ["Central Govt.", "State Govt.", "Govt. Organisation", "PSU", "Private Limited Company", "Public Limited Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                organisation_type: String,
                 currentOrganizationExperience: String, // Keep as String since it might be "2 years, 6 months"
                 previousOrganizationExperience: String, // Keep as String
                 designation_salaried: String,
@@ -138,15 +114,9 @@ const formSchema = new mongoose.Schema({
             },
             selfEmployedDetails: {
                 company_name: String, // Consistent Naming
-                company_type: {
-                    type: String,
-                    enum: ["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                company_type: String,
                 incorporation_date: Number,
-                designation_self: {
-                    type: String,
-                    enum: ["Proprietor", "Partner", "Founder", "Director", "Others"],
-                },
+                designation_self: String,
                 years_in_business: Number,
                 years_of_itr_filing: Number,
             },
@@ -163,10 +133,7 @@ const formSchema = new mongoose.Schema({
             },
             salariedDetails: {
                 organisation_name: String, // Consistent naming
-                organisation_type: {
-                    type: String,
-                    enum: ["Central Govt.", "State Govt.", "Govt. Organisation", "PSU", "Private Limited Company", "Public Limited Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                organisation_type: String,
                 currentOrganizationExperience: String, // Keep as String since it might be "2 years, 6 months"
                 previousOrganizationExperience: String, // Keep as String
                 designation_salaried: String,
@@ -176,15 +143,9 @@ const formSchema = new mongoose.Schema({
             },
             selfEmployedDetails: {
                 company_name: String, // Consistent Naming
-                company_type: {
-                    type: String,
-                    enum: ["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"],
-                },
+                company_type: String,
                 incorporation_date: Number,
-                designation_self: {
-                    type: String,
-                    enum: ["Proprietor", "Partner", "Founder", "Director", "Others"],
-                },
+                designation_self: String,
                 years_in_business: Number,
                 years_of_itr_filing: Number,
             },

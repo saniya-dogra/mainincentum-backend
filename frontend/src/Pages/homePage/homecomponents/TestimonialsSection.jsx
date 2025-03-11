@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -6,14 +6,40 @@ import "swiper/css/pagination";
 import { Autoplay } from "swiper/modules";
 
 const TrustedClients = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const headingRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.8 }
+    );
+
+    if (headingRef.current) {
+      observer.observe(headingRef.current);
+    }
+
+    return () => {
+      if (headingRef.current) {
+        observer.unobserve(headingRef.current);
+      }
+    };
+  }, []);
+
   const reviews = [
     {
       id: 1,
-      name: "Prince Saini",
+      name: "Kshtij ",
       time: "04 June 2024",
       rating: 5,
       review:
-        "I had a fantastic experience with [Website Name]! The loan application process was straightforward, and their team was incredibly helpful in guiding me through every step. I received my loan approval quickly and at competitive interest rates. The transparency they offer is commendable—no hidden fees or surprises. I highly recommend their services to anyone looking for reliable financial",
+        "I had a fantastic experience with incentum, The loan application process was straightforward, and their team was incredibly helpful in guiding me through every step. I received my loan approval quickly and at competitive interest rates. The transparency they offer is commendable—no hidden fees or surprises. I highly recommend their services to anyone looking for reliable financial",
     },
     {
       id: 2,
@@ -25,7 +51,7 @@ const TrustedClients = () => {
     },
     {
       id: 3,
-      name: "Sophia Martinez",
+      name: "Monika Nair",
       time: "15 May 2024",
       rating: 4,
       review:
@@ -33,20 +59,33 @@ const TrustedClients = () => {
     },
     {
       id: 4,
-      name: "John Doe",
+      name: "Gourav Bhsole",
       time: "10 April 2024",
       rating: 5,
       review:
-        "Exceptional service from start to finish! [Website Name] made what could have been a stressful process very manageable. I was impressed with the user-friendly application process and the quick responses from their team. The interest rates were competitive, and the terms were explained clearly. Highly recommend this platform for anyone looking for financial assistance.",
+        "Exceptional service from start to finish! Incentum made what could have been a stressful process very manageable. I was impressed with the user-friendly application process and the quick responses from their team. The interest rates were competitive, and the terms were explained clearly. Highly recommend this platform for anyone looking for financial assistance.",
     },
   ];
 
   return (
     <section className="py-10 bg-white">
       <div className="container max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl sm:text-5xl font-bold text-center tracking-wide leading-snug bg-gradient-to-r from-black via-blue-500 to-blue-700 text-transparent bg-clip-text drop-shadow-lg mb-5">
-          Our Trusted Clients
-        </h1>
+        {/* Heading with Animated Underline */}
+        <div className="relative text-center mb-8" ref={headingRef}>
+  <div className="inline-block relative">
+    <h1 className="text-3xl sm:text-5xl font-bold tracking-wide leading-snug bg-gradient-to-r from-black via-blue-500 to-blue-700 text-transparent bg-clip-text drop-shadow-lg">
+      Our Trusted Clients
+    </h1>
+    {/* Animated Underline */}
+    <span
+      className={`absolute left-0 bottom-[-8px] h-1 bg-gradient-to-r from-blue-500 to-green-400 rounded-full transition-all duration-1000 ease-in-out ${
+        isVisible ? "w-full" : "w-0"
+      }`}
+    ></span>
+  </div>
+</div>
+
+        {/* Swiper for Reviews */}
         <Swiper
           spaceBetween={20} // Space between slides
           autoplay={{
@@ -83,11 +122,13 @@ const TrustedClients = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className=" text-center md:text-right">
+
+        {/* See All Reviews Link */}
+        {/* <div className="text-center md:text-right mt-6">
           <a href="#" className="text-blue-600 hover:underline">
             See all reviews
           </a>
-        </div>
+        </div> */}
       </div>
     </section>
   );

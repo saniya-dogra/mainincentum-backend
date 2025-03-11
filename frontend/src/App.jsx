@@ -21,10 +21,17 @@ import UserApplications from './Pages/dashboard/UserApplications';
 import FormTwo from './Pages/Forms/FormTwo';
 import FormOne from './Pages/Forms/FormOne';
 import FormThree from './Pages/Forms/FormThree';
- import AboutUs from './Pages/Others/Aboutus';
- import ContactUs from './Pages/Others/ContactUS';
+import AboutUs from './Pages/Others/AboutUs';
+import ContactUs from './Pages/Others/ContactUs';
 import FormFourCoapplicant from './Pages/Forms/FormFourCoapplicant';
 import Coformone from './Pages/Forms/Coformone';
+import EmiCalculator from './Pages/homePage/homecomponents/EmiCalculator';
+import Disclaimer from './Pages/Others/Disclaimer';
+import PrivacyPolicy from './Pages/Others/PrivacyPolicy';
+import Terms from './Pages/Others/Terms';
+import Thankyou from './Pages/Forms/Thankyou';
+import Coformtwo from './Pages/Forms/Coformtwo';
+import Coformthree from './Pages/Forms/Coformthree';
 function App() {
   return (
         <UserContextProvider>
@@ -51,9 +58,16 @@ function App() {
         <Route path='/dashboard' element={<HomeDashboard/>}/>
         <Route path='/client-application' element={<ClientApplication/>}/>
         <Route path='/user-applications' element={<UserApplications/>}/>
-         <Route path='/about-us' element={<AboutUs/>}/> 
-         <Route path='/contact-us' element={<ContactUs/>}/> 
-         <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
+        <Route path='/about-us' element={<AboutUs/>}/> 
+        <Route path='/contact-us' element={<ContactUs/>}/> 
+        <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
+        <Route path='/co-applicant-form-detail-two' element={<Coformtwo/>}/> 
+        <Route path='/co-applicant-form-detail-three' element={<Coformthree/>}/> 
+        <Route path='/emi-calculator' element={<EmiCalculator/>}/> 
+        <Route path='/disclaimer' element={<Disclaimer/>}/> 
+        <Route path='/privacy-policy' element={<PrivacyPolicy/>}/> 
+        <Route path='/terms-of-service' element={<Terms/>}/> 
+        <Route path='/application-submitted-successfully' element={<Thankyou/>}/> 
 
         </Route>
       </Routes>

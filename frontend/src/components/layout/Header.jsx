@@ -51,7 +51,7 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-          `${import.meta.env.VITE_API_URL}/logout`,
+          `${import.meta.env.VITE_API_URL}/users/logout`,
         {},
         { withCredentials: true }
       );
@@ -180,6 +180,13 @@ const Header = () => {
           </div>
         </div>
         <Link
+          to="/emi-calculator"
+          className="text-white hover:text-auButtomColor transition"
+          onClick={toggleMobileMenu}
+        >
+          EMI Calculator
+        </Link>
+        <Link
           to="/contact-us"
           className="text-white hover:text-auButtomColor transition"
           onClick={toggleMobileMenu}
@@ -278,6 +285,12 @@ const Header = () => {
           </div>
         </div>
 
+        <Link
+          to="/emi-calculator"
+          className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"
+        >
+          EMI Calculator
+        </Link>
         <Link
           to="/contact-us"
           className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"

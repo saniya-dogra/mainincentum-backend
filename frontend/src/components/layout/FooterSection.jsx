@@ -73,10 +73,16 @@ const Footer = () => {
           <div>
             <h3 className="text-lg md:text-xl font-bold uppercase">Resources</h3>
             <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <li>Emi Calculator</li>
-              <li>Apply for a loan </li>
+            <li>
+            <Link to="/emi-calculator">Emi Calculator</Link>
+          </li>
+              <li>
+                <Link to="/form-detail-one"> Apply for a loan</Link>
+              </li>
               <li>Track application status</li>
-              <li>Support</li>
+              <li>
+                <Link to="/contact-us"> Support</Link>
+              </li>
             </ul>
           </div>
 
@@ -84,9 +90,15 @@ const Footer = () => {
           <div>
             <h3 className="text-lg md:text-xl font-bold uppercase">Legal</h3>
             <ul className="mt-4 space-y-2 text-sm md:text-base">
-              <li>Disclaimer</li>
-              <li>Privacy Policy</li>
-              <li>Terms of Service</li>
+              <li>
+             <Link to="/disclaimer"> Disclaimer</Link>
+              </li>
+              <li> 
+              <Link to="/privacy-policy"> Privacy Policy </Link>
+              </li>
+              <li> 
+              <Link to="/terms-of-service"> Terms of Service </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -96,7 +108,7 @@ const Footer = () => {
       <div className="border-t border-gray-400 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-sm md:text-base">
         <p className="text-center sm:text-left">Statutory legal information</p>
         <p className="text-center sm:text-right mt-4 sm:mt-0">
-          2024-2025 Incentum | Site Map | Privacy Policy
+          2024-2025 Incentum | Site Map | <Link to="/privacy-policy"> Privacy Policy</Link>
         </p>
       </div>
     </footer>

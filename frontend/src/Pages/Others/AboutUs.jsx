@@ -71,7 +71,7 @@ const AboutUs = () => {
       <p className="text-gray-700 text-lg leading-relaxed">
         At INCENTUM, we believe that securing financial solutions should
         be straightforward, transparent, and rewarding. As pioneers in
-        customer incentivization, we blend cutting-edge technology with
+        customer incentivization, we blends cutting-edge technology with
         expert consultancy to offer tailored financial products that
         align with your unique needs.
       </p>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-const ContactJusto = () => {
+const ContactUs = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -144,7 +144,7 @@ const ContactJusto = () => {
     ></span>
   </h2>
   <p className="text-center text-gray-600 mb-6 sm:mb-8">
-    Contact us today to discuss how we can fuel your continued impact on the real estate market.
+    Contact us today to discuss how we can fuel your continued impact on real estate market.
   </p>
   <form onSubmit={handleSubmit} className="space-y-6">
     {/* Full Name and Email */}
@@ -270,4 +270,4 @@ const ContactJusto = () => {
   );
 };
 
-export default ContactJusto;
+export default ContactUs;

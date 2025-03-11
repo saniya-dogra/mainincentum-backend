@@ -115,14 +115,14 @@ export default function AllInOneChat() {
               <FaPhoneAlt className="text-white text-xl" />
             </a>
             {/* Telegram */}
-            <a
+            {/* <a
               href="https://t.me/8767836233"
               target="_blank"
               rel="noopener noreferrer"
               className="w-16 h-12 bg-blue-400 rounded-xl flex items-center justify-center shadow hover:bg-blue-500 transition-all duration-300 transform hover:scale-110"
             >
               <FaTelegramPlane className="text-white text-xl" />
-            </a>
+            </a> */}
           </div>
         </div>
       )}

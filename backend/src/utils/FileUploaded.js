@@ -22,8 +22,9 @@ const fileFilter = (req, file, cb) => {
 
 // Initialize Multer with the configuration
 const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: { fileSize: 10 * 1024 * 1024 }, // Increase limit to 10MB
-  });
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 3 * 1024 * 1024 }, // Increase limit to 10MB
+});
+
 module.exports = upload;
