@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../../components/form/Input.jsx";
 import Dropdown from "../../components/form/Dropdown.jsx";
@@ -7,8 +7,10 @@ import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
 import axios from "axios";
+import { UserContext } from "../../contextapi/UserContext.jsx";
 
 export default function Coformone() {
+  const {user, ready} = useContext(UserContext);
   const [numberOfApplicants, setNumberOfApplicants] = useState(1);
   const [formValuesList, setFormValuesList] = useState([
     {
@@ -90,56 +92,36 @@ export default function Coformone() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Commented out the backend submission part for testing
-    // try {
-    //   // Transform the data to include unique keys for co-applicants
-    //   const transformedData = formValuesList.map((applicant, index) => {
-    //     const prefix = index === 0 ? "" : `co${index + 1}`;
-    //     const transformedApplicant = {};
-    //     for (const key in applicant) {
-    //       transformedApplicant[`${prefix}${key}`] = applicant[key];
-    //     }
-    //     return transformedApplicant;
-    //   });
 
-    //   const response = await axios.post(
-    //     `${import.meta.env.VITE_API_URL}/co-applicant-form`,
-    //     {
-    //       numberOfApplicants,
-    //       applicants: transformedData,
-    //     }
-    //   );
-    //   alert(response.data.message);
-    //   // Redirect to the next page with numberOfApplicants in state
-    //   navigate("/co-applicant-form-detail-two", {
-    //     state: { 
-    //       numberOfApplicants,
-    //       applicants: transformedData 
-    //     }
-    //   });
-    // } catch (error) {
-    //   console.error("Error submitting the form", error);
-    //   alert("Failed to submit the form");
-    // }
+    if (!ready || !user) {
+      alert("User not authenticated. Please log in.");
+      return;
+    }
 
-    // For testing: Transform data and navigate without submission
-    const transformedData = formValuesList.map((applicant, index) => {
-      const prefix = index === 0 ? "" : `co${index + 1}`;
-      const transformedApplicant = {};
-      for (const key in applicant) {
-        transformedApplicant[`${prefix}${key}`] = applicant[key];
-      }
-      return transformedApplicant;
-    });
+    try {
+      const payload = {
+        userId: user._id, // Dynamically fetch userId from context
+        applicants: formValuesList, // Send the array of applicants
+      };
 
-    console.log("Transformed Data:", transformedData); // Log to check values
-    alert("Form data prepared. Check console for details."); // Temporary alert for testing
-    navigate("/co-applicant-form-detail-two", {
-      state: {
-        numberOfApplicants,
-        applicants: transformedData,
-      },
-    });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/form/personal-details`, // Use environment variable for API URL
+        payload,
+        { withCredentials: true } // Include credentials for authentication
+      );
+      console.log("Response from backend:", response.data);
+
+      alert("Personal details saved successfully!");
+      navigate("/co-applicant-form-detail-two", {
+        state: {
+          numberOfApplicants,
+          applicants: formValuesList,
+        },
+      });
+    } catch (error) {
+      console.error("Error saving personal details:", error);
+      alert("Failed to save personal details. Please try again.");
+    }
   };
 
   const getFieldProps = (index, fieldName, placeholder) => {

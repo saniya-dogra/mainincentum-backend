@@ -270,7 +270,7 @@ const formSchema = new mongoose.Schema({
       ref: "User",
       required: true,
     },
-    personalDetails: personalDetailsSchema,
+    personalDetails: [personalDetailsSchema],
     loanApplication: loanApplicationSchema,
     loanDocuments: loanDocumentsSchema,
     status: {

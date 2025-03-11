@@ -4,10 +4,17 @@ const upload = require("../utils/FileUploaded");
 
 // ====================== Step 1: Save Personal Details ======================
 const savePersonalDetails = asyncHandler(async (req, res) => {
-  const { userId, ...personalDetails } = req.body;
+  const { userId, applicants } = req.body;
 
-  if (!userId || !personalDetails.full_name || !personalDetails.email_id) {
-    return res.status(400).json({ message: "userId, full_name, and email_id are required" });
+  if (!userId || !applicants || !Array.isArray(applicants) || applicants.length === 0) {
+    return res.status(400).json({ message: "userId and applicants array are required" });
+  }
+
+  // Validate each applicant's required fields
+  for (const applicant of applicants) {
+    if (!applicant.full_name || !applicant.email_id) {
+      return res.status(400).json({ message: "full_name and email_id are required for all applicants" });
+    }
   }
 
   let form = await Form.findOne({ user: userId });
@@ -15,13 +22,13 @@ const savePersonalDetails = asyncHandler(async (req, res) => {
   if (!form) {
     form = new Form({
       user: userId,
-      personalDetails: personalDetails,
+      personalDetails: applicants, // Save array of applicants
       loanApplication: {},
       loanDocuments: {},
       status: "Pending",
     });
   } else {
-    form.personalDetails = personalDetails;
+    form.personalDetails = applicants; // Update with new array of applicants
   }
 
   await form.save();
