@@ -386,7 +386,124 @@ const FormTwo = () => {
             {/* Home Loan */}
             {formValues.loan === "Home Loan" && (
               <div>
+                {/* Property Finalised */}
               <div className="mt-10">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  Property Finalised
+                </h2>
+                <div className="flex flex-col space-y-4">
+                  <div className="grid grid-cols-2 w-full gap-6">
+                    {/* Radio buttons for property finalised */}
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="property_finalised"
+                        checked={formValues.property_finalised === "Yes"}
+                        value="Yes"
+                        onChange={(e) =>
+                          handleRadioChange(
+                            "property_finalised",
+                            e.target.value
+                          )
+                        }
+                        className="form-radio h-5 w-5 text-blue-600"
+                      />
+                      <span className="ml-3 text-white">Yes</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="property_finalised"
+                        checked={formValues.property_finalised === "No"}
+                        value="No"
+                        onChange={(e) =>
+                          handleRadioChange(
+                            "property_finalised",
+                            e.target.value
+                          )
+                        }
+                        className="form-radio h-5 w-5 text-blue-600"
+                      />
+                      <span className="ml-3 text-white">No</span>
+                    </label>
+                  </div>
+                  {/* Conditional input for property address */}
+                  {formValues.property_finalised === "Yes" && (
+                    <Input
+                      placeholder="Property Address (if Yes)"
+                      name="property_address"
+                      value={formValues.property_address}
+                      onChange={handleInputChange}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Agreement/MoU Executed */}
+              <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Agreement/MoU Executed
+            </h2>
+            <div className="grid grid-cols-2 w-full gap-6">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="agreement_executed"
+                  checked={formValues.agreement_executed === "Yes"}
+                  value="Yes"
+                  onChange={(e) =>
+                    handleRadioChange("agreement_executed", e.target.value)
+                  }
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-3 text-white">Yes</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="agreement_executed"
+                  checked={formValues.agreement_executed === "No"}
+                  value="No"
+                  onChange={(e) =>
+                    handleRadioChange("agreement_executed", e.target.value)
+                  }
+                  className="form-radio h-5 w-5 text-blue-600"
+                />
+                <span className="ml-3 text-white">No</span>
+              </label>
+            </div>
+
+            {/* Conditional input for Agreement/MoU Value */}
+            {formValues.agreement_executed === "Yes" && (
+              <div className=" mt-6">
+                <Input
+                  placeholder="Agreement/MoU Value (Rs.) (if Yes)"
+                  name="agreement_mou_value"
+                  value={formValues.agreement_mou_value}
+                  onChange={handleInputChange}
+                />
+              </div>
+            )}
+
+              {/* Preferred Banks */}
+              <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
+              <div className=" grid grid-cols-2 w-full gap-6 mt-6">
+                
+              <Input
+                  placeholder="Loan Amount Required (Rs.)"
+                  name="loan_amount_required"
+                  value={formValues.loan_amount_required}
+                  onChange={handleInputChange}
+                />
+                <Input
+                  placeholder=" Enter Your Preferred Banks "
+                  name="preferred_banks"
+                  value={formValues.preferred_banks}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="mt-5">
                 <h2 className="text-xl font-bold text-white mb-4">
                   Employment Details
                 </h2>
@@ -571,130 +688,72 @@ const FormTwo = () => {
                   </div>
                 )}
               </div>
-
-              {/* Property Finalised */}
-              <div className="mt-10">
-                <h2 className="text-xl font-bold text-white mb-4">
-                  Property Finalised
-                </h2>
-                <div className="flex flex-col space-y-4">
-                  <div className="grid grid-cols-2 w-full gap-6">
-                    {/* Radio buttons for property finalised */}
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="property_finalised"
-                        checked={formValues.property_finalised === "Yes"}
-                        value="Yes"
-                        onChange={(e) =>
-                          handleRadioChange(
-                            "property_finalised",
-                            e.target.value
-                          )
-                        }
-                        className="form-radio h-5 w-5 text-blue-600"
-                      />
-                      <span className="ml-3 text-white">Yes</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="property_finalised"
-                        checked={formValues.property_finalised === "No"}
-                        value="No"
-                        onChange={(e) =>
-                          handleRadioChange(
-                            "property_finalised",
-                            e.target.value
-                          )
-                        }
-                        className="form-radio h-5 w-5 text-blue-600"
-                      />
-                      <span className="ml-3 text-white">No</span>
-                    </label>
-                  </div>
-                  {/* Conditional input for property address */}
-                  {formValues.property_finalised === "Yes" && (
-                    <Input
-                      placeholder="Property Address (if Yes)"
-                      name="property_address"
-                      value={formValues.property_address}
-                      onChange={handleInputChange}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* Agreement/MoU Executed */}
-              <h2 className="text-xl font-bold text-white mt-6 mb-4">
-              Agreement/MoU Executed
-            </h2>
-            <div className="grid grid-cols-2 w-full gap-6">
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="agreement_executed"
-                  checked={formValues.agreement_executed === "Yes"}
-                  value="Yes"
-                  onChange={(e) =>
-                    handleRadioChange("agreement_executed", e.target.value)
-                  }
-                  className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-white">Yes</span>
-              </label>
-              <label className="flex items-center">
-                <input
-                  type="radio"
-                  name="agreement_executed"
-                  checked={formValues.agreement_executed === "No"}
-                  value="No"
-                  onChange={(e) =>
-                    handleRadioChange("agreement_executed", e.target.value)
-                  }
-                  className="form-radio h-5 w-5 text-blue-600"
-                />
-                <span className="ml-3 text-white">No</span>
-              </label>
-            </div>
-
-            {/* Conditional input for Agreement/MoU Value */}
-            {formValues.agreement_executed === "Yes" && (
-              <div className=" mt-6">
-                <Input
-                  placeholder="Agreement/MoU Value (Rs.) (if Yes)"
-                  name="agreement_mou_value"
-                  value={formValues.agreement_mou_value}
-                  onChange={handleInputChange}
-                />
-              </div>
-            )}
-
-              {/* Preferred Banks */}
-              <h2 className="text-xl font-bold text-white mt-6 mb-4">
-              Loan Required 
-            </h2>
-              <div className=" grid grid-cols-2 w-full gap-6 mt-6">
-                
-              <Input
-                  placeholder="Loan Amount Required (Rs.)"
-                  name="loan_amount_required"
-                  value={formValues.loan_amount_required}
-                  onChange={handleInputChange}
-                />
-                <Input
-                  placeholder=" Enter Your Preferred Banks "
-                  name="preferred_banks"
-                  value={formValues.preferred_banks}
-                  onChange={handleInputChange}
-                />
-              </div>
             </div>
             )}
 
             {/* Vehicle Loan */}
             {formValues.loan === "Vehicle Loan" && (
               <div>
+                <div className="mt-10">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  {" "}
+                  Vehicle Details{" "}
+                </h2>
+                {/*  Vehicle details */}
+                <div className="grid grid-cols-2  w-full gap-6">
+                  <Input
+                    placeholder="Make and Model of Vehicle "
+                    name="vehicleModel"
+                    value={formValues.vehicleModel}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    placeholder="Expected date of delivery of Vehicle "
+                    name="expectedDeliveryDate"
+                    value={formValues.expectedDeliveryDate}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="grid grid-cols-2 w-full gap-6">
+                  <Input
+                    placeholder="Dealer Name "
+                    name="dealerName"
+                    value={formValues.dealerName}
+                    onChange={handleInputChange}
+                    />
+                  <Input placeholder="Dealer City"
+                        name="dealerCity"
+                        value={formValues.dealerCity}
+                        onChange={handleInputChange}
+                  />
+                </div>
+                {/* Agreement/MoU Value */}
+                <h2 className="text-xl font-bold text-white mt-6 mb-4 ">
+                  Loan Details
+                </h2>
+                <div className="grid grid-cols-2  w-full gap-6">
+                <Input placeholder="Price of Vehicle  "
+                        name="vehiclePrice"
+                        value={formValues.vehiclePrice}
+                        onChange={handleInputChange}
+                />
+                <Input placeholder="Desired loan amount  "
+                        name="loan_amount_required"
+                        value={formValues.loan_amount_required}
+                        onChange={handleInputChange}
+                />
+                </div>
+
+                {/* Preferred Banks */}
+                <div className="mt-2">
+                  <Input
+                    placeholder=" Enter Your Preferred Banks "
+                    name="preferred_banks"
+                    value={formValues.preferred_banks}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
               <div className="mt-10">
                 <h2 className="text-xl font-bold text-white mb-4">
                   Employment Details
@@ -871,73 +930,30 @@ const FormTwo = () => {
                   </div>
                 )}
               </div>
-
-              <div className="mt-10">
-                <h2 className="text-xl font-bold text-white mb-4">
-                  {" "}
-                  Vehicle Details{" "}
-                </h2>
-                {/*  Vehicle details */}
-                <div className="grid grid-cols-2  w-full gap-6">
-                  <Input
-                    placeholder="Make and Model of Vehicle "
-                    name="vehicleModel"
-                    value={formValues.vehicleModel}
-                    onChange={handleInputChange}
-                  />
-                  <Input
-                    placeholder="Expected date of delivery of Vehicle "
-                    name="expectedDeliveryDate"
-                    value={formValues.expectedDeliveryDate}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="grid grid-cols-2 w-full gap-6">
-                  <Input
-                    placeholder="Dealer Name "
-                    name="dealerName"
-                    value={formValues.dealerName}
-                    onChange={handleInputChange}
-                    />
-                  <Input placeholder="Dealer City"
-                        name="dealerCity"
-                        value={formValues.dealerCity}
-                        onChange={handleInputChange}
-                  />
-                </div>
-                {/* Agreement/MoU Value */}
-                <h2 className="text-xl font-bold text-white mt-6 mb-4 ">
-                  Loan Details
-                </h2>
-                <div className="grid grid-cols-2  w-full gap-6">
-                <Input placeholder="Price of Vehicle  "
-                        name="vehiclePrice"
-                        value={formValues.vehiclePrice}
-                        onChange={handleInputChange}
-                />
-                <Input placeholder="Desired loan amount  "
-                        name="loan_amount_required"
-                        value={formValues.loan_amount_required}
-                        onChange={handleInputChange}
-                />
-                </div>
-
-                {/* Preferred Banks */}
-                <div className="mt-2">
-                  <Input
-                    placeholder=" Enter Your Preferred Banks "
-                    name="preferred_banks"
-                    value={formValues.preferred_banks}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
             </div>
             )}
 
             {/* Personal Loan */}
             {formValues.loan === "Personal Loan" && (
                 <div>
+              {/* Preferred Banks */}
+              <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
+              <div className=" grid grid-cols-2 w-full gap-6 mt-6">
+              <Input
+                  placeholder="Loan Amount Required (Rs.)"
+                  name="loan_amount_required"
+                  value={formValues.loan_amount_required}
+                  onChange={handleInputChange}
+                />
+                <Input
+                  placeholder=" Enter Your Preferred Banks "
+                  name="preferred_banks"
+                  value={formValues.preferred_banks}
+                  onChange={handleInputChange}
+                />
+              </div>
                 <div className="mt-10">
                   <h2 className="text-xl font-bold text-white mb-4">
                     Employment Details
@@ -1126,31 +1142,129 @@ const FormTwo = () => {
                     </div>
                   )}
                 </div>
-
-              {/* Preferred Banks */}
-              <h2 className="text-xl font-bold text-white mt-6 mb-4">
-              Loan Required 
-            </h2>
-              <div className=" grid grid-cols-2 w-full gap-6 mt-6">
-              <Input
-                  placeholder="Loan Amount Required (Rs.)"
-                  name="loan_amount_required"
-                  value={formValues.loan_amount_required}
-                  onChange={handleInputChange}
-                />
-                <Input
-                  placeholder=" Enter Your Preferred Banks "
-                  name="preferred_banks"
-                  value={formValues.preferred_banks}
-                  onChange={handleInputChange}
-                />
-              </div>
             </div>
             )}
 
             {/* Business Loan */}
             {formValues.loan === "Business Loan" && (
               <div>
+            {/* Property Finalised */}
+              <div className="mt-10">
+                  <h2 className="text-xl font-bold text-white mb-4">
+                    Property Finalised
+                  </h2>
+                  <div className="flex flex-col space-y-4">
+                    <div className="grid grid-cols-2 w-full gap-6">
+                      {/* Radio buttons for property finalised */}
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="property_finalised"
+                          checked={formValues.property_finalised === "Yes"}
+                          value="Yes"
+                          onChange={(e) =>
+                            handleRadioChange(
+                              "property_finalised",
+                              e.target.value
+                            )
+                          }
+                          className="form-radio h-5 w-5 text-blue-600"
+                        />
+                        <span className="ml-3 text-white">Yes</span>
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="property_finalised"
+                          checked={formValues.property_finalised === "No"}
+                          value="No"
+                          onChange={(e) =>
+                            handleRadioChange(
+                              "property_finalised",
+                              e.target.value
+                            )
+                          }
+                          className="form-radio h-5 w-5 text-blue-600"
+                        />
+                        <span className="ml-3 text-white">No</span>
+                      </label>
+                    </div>
+                    {/* Conditional input for property address */}
+                    {formValues.property_finalised === "Yes" && (
+                      <Input
+                        placeholder="Property Address (if Yes)"
+                        name="property_address"
+                        value={formValues.property_address}
+                        onChange={handleInputChange}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Agreement/MoU Executed */}
+                <h2 className="text-xl font-bold text-white mt-6 mb-4">
+                Agreement/MoU Executed
+              </h2>
+              <div className="grid grid-cols-2 w-full gap-6">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="agreement_executed"
+                    checked={formValues.agreement_executed === "Yes"}
+                    value="Yes"
+                    onChange={(e) =>
+                      handleRadioChange("agreement_executed", e.target.value)
+                    }
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-3 text-white">Yes</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="agreement_executed"
+                    checked={formValues.agreement_executed === "No"}
+                    value="No"
+                    onChange={(e) =>
+                      handleRadioChange("agreement_executed", e.target.value)
+                    }
+                    className="form-radio h-5 w-5 text-blue-600"
+                  />
+                  <span className="ml-3 text-white">No</span>
+                </label>
+              </div>
+
+              {/* Conditional input for Agreement/MoU Value */}
+              {formValues.agreement_executed === "Yes" && (
+                <div className=" mt-6">
+                  <Input
+                    placeholder="Agreement/MoU Value (Rs.) (if Yes)"
+                    name="agreement_mou_value"
+                    value={formValues.agreement_mou_value}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              )}
+
+                {/* Preferred Banks */}
+                <h2 className="text-xl font-bold text-white mt-6 mb-4">
+              Loan Required 
+            </h2>
+                <div className="grid grid-cols-2 w-full gap-6 mt-6">
+                <Input
+                    placeholder="Loan Amount Required (Rs.)"
+                    name="loan_amount_required"
+                    value={formValues.loan_amount_required}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    placeholder=" Enter Your Preferred Banks "
+                    name="preferred_banks"
+                    value={formValues.preferred_banks}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
                 <div className="mt-10">
                   <h2 className="text-xl font-bold text-white mb-4">
                     Details of Application Firm
@@ -1244,8 +1358,14 @@ const FormTwo = () => {
                             </label>
                         </div>
                  </div>
+              </div>
+            )}
 
-                {/* Property Finalised */}
+            {/* Mortgage Loan */}
+            {formValues.loan === "Mortgage Loan" && (
+                <div>
+                  
+                  {/* Property Finalised */}
                 <div className="mt-10">
                   <h2 className="text-xl font-bold text-white mb-4">
                     Property Finalised
@@ -1361,12 +1481,6 @@ const FormTwo = () => {
                     onChange={handleInputChange}
                   />
                 </div>
-              </div>
-            )}
-
-            {/* Mortgage Loan */}
-            {formValues.loan === "Mortgage Loan" && (
-                <div>
                 <div className="mt-10">
                   <h2 className="text-xl font-bold text-white mb-4">
                     Employment Details
@@ -1554,123 +1668,6 @@ const FormTwo = () => {
                     </div>
                     </div>
                   )}
-                </div>
-
-                  {/* Property Finalised */}
-                <div className="mt-10">
-                  <h2 className="text-xl font-bold text-white mb-4">
-                    Property Finalised
-                  </h2>
-                  <div className="flex flex-col space-y-4">
-                    <div className="grid grid-cols-2 w-full gap-6">
-                      {/* Radio buttons for property finalised */}
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="property_finalised"
-                          checked={formValues.property_finalised === "Yes"}
-                          value="Yes"
-                          onChange={(e) =>
-                            handleRadioChange(
-                              "property_finalised",
-                              e.target.value
-                            )
-                          }
-                          className="form-radio h-5 w-5 text-blue-600"
-                        />
-                        <span className="ml-3 text-white">Yes</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          name="property_finalised"
-                          checked={formValues.property_finalised === "No"}
-                          value="No"
-                          onChange={(e) =>
-                            handleRadioChange(
-                              "property_finalised",
-                              e.target.value
-                            )
-                          }
-                          className="form-radio h-5 w-5 text-blue-600"
-                        />
-                        <span className="ml-3 text-white">No</span>
-                      </label>
-                    </div>
-                    {/* Conditional input for property address */}
-                    {formValues.property_finalised === "Yes" && (
-                      <Input
-                        placeholder="Property Address (if Yes)"
-                        name="property_address"
-                        value={formValues.property_address}
-                        onChange={handleInputChange}
-                      />
-                    )}
-                  </div>
-                </div>
-
-                {/* Agreement/MoU Executed */}
-                <h2 className="text-xl font-bold text-white mt-6 mb-4">
-                Agreement/MoU Executed
-              </h2>
-              <div className="grid grid-cols-2 w-full gap-6">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="agreement_executed"
-                    checked={formValues.agreement_executed === "Yes"}
-                    value="Yes"
-                    onChange={(e) =>
-                      handleRadioChange("agreement_executed", e.target.value)
-                    }
-                    className="form-radio h-5 w-5 text-blue-600"
-                  />
-                  <span className="ml-3 text-white">Yes</span>
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="agreement_executed"
-                    checked={formValues.agreement_executed === "No"}
-                    value="No"
-                    onChange={(e) =>
-                      handleRadioChange("agreement_executed", e.target.value)
-                    }
-                    className="form-radio h-5 w-5 text-blue-600"
-                  />
-                  <span className="ml-3 text-white">No</span>
-                </label>
-              </div>
-
-              {/* Conditional input for Agreement/MoU Value */}
-              {formValues.agreement_executed === "Yes" && (
-                <div className=" mt-6">
-                  <Input
-                    placeholder="Agreement/MoU Value (Rs.) (if Yes)"
-                    name="agreement_mou_value"
-                    value={formValues.agreement_mou_value}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              )}
-
-                {/* Preferred Banks */}
-                <h2 className="text-xl font-bold text-white mt-6 mb-4">
-              Loan Required 
-            </h2>
-                <div className="grid grid-cols-2 w-full gap-6 mt-6">
-                <Input
-                    placeholder="Loan Amount Required (Rs.)"
-                    name="loan_amount_required"
-                    value={formValues.loan_amount_required}
-                    onChange={handleInputChange}
-                  />
-                  <Input
-                    placeholder=" Enter Your Preferred Banks "
-                    name="preferred_banks"
-                    value={formValues.preferred_banks}
-                    onChange={handleInputChange}
-                  />
                 </div>
               </div>
 

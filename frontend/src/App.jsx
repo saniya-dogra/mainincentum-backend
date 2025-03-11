@@ -30,6 +30,8 @@ import Disclaimer from './Pages/Others/Disclaimer';
 import PrivacyPolicy from './Pages/Others/PrivacyPolicy';
 import Terms from './Pages/Others/Terms';
 import Thankyou from './Pages/Forms/Thankyou';
+import Coformtwo from './Pages/Forms/Coformtwo';
+import Coformthree from './Pages/Forms/Coformthree';
 function App() {
   return (
         <UserContextProvider>
@@ -59,6 +61,8 @@ function App() {
         <Route path='/about-us' element={<AboutUs/>}/> 
         <Route path='/contact-us' element={<ContactUs/>}/> 
         <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
+        <Route path='/co-applicant-form-detail-two' element={<Coformtwo/>}/> 
+        <Route path='/co-applicant-form-detail-three' element={<Coformthree/>}/> 
         <Route path='/emi-calculator' element={<EmiCalculator/>}/> 
         <Route path='/disclaimer' element={<Disclaimer/>}/> 
         <Route path='/privacy-policy' element={<PrivacyPolicy/>}/> 
