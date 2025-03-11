@@ -1,66 +1,166 @@
+const { default: mongoose } = require("mongoose");
 const Form = require("../models/individualForms/FormOne.model");
 const { asyncHandler } = require("../utils/asyncHandler");
 const upload = require("../utils/FileUploaded");
 
 // ====================== Step 1: Save Personal Details ======================
 const savePersonalDetails = asyncHandler(async (req, res) => {
+  console.log("Request body received:", req.body); // Debug incoming payload
+
   const { userId, applicants } = req.body;
 
+  // Validate request payload
   if (!userId || !applicants || !Array.isArray(applicants) || applicants.length === 0) {
     return res.status(400).json({ message: "userId and applicants array are required" });
+  }
+
+  // Validate userId format
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid userId format" });
   }
 
   // Validate each applicant's required fields
   for (const applicant of applicants) {
     if (!applicant.full_name || !applicant.email_id) {
-      return res.status(400).json({ message: "full_name and email_id are required for all applicants" });
+      return res.status(400).json({ 
+        message: "full_name and email_id are required for all applicants" 
+      });
+    }
+    if (applicant.mobile_number && !/^[0-9]{10}$/.test(applicant.mobile_number)) {
+      return res.status(400).json({ message: "mobile_number must be a 10-digit number" });
+    }
+    if (applicant.permanent_pincode && !/^[0-9]{6}$/.test(applicant.permanent_pincode)) {
+      return res.status(400).json({ message: "permanent_pincode must be a 6-digit number" });
+    }
+    if (applicant.present_pincode && !/^[0-9]{6}$/.test(applicant.present_pincode)) {
+      return res.status(400).json({ message: "present_pincode must be a 6-digit number" });
     }
   }
 
-  let form = await Form.findOne({ user: userId });
+  try {
+    let form = await Form.findOne({ user: userId });
 
-  if (!form) {
-    form = new Form({
-      user: userId,
-      personalDetails: applicants, // Save array of applicants
-      loanApplication: {},
-      loanDocuments: {},
-      status: "Pending",
+    if (!form) {
+      console.log("Creating new Form document for user:", userId);
+      // Explicitly construct the new document
+      form = new Form();
+      form.user = userId;
+      form.personalDetails = applicants;
+      form.loanApplication = {};
+      form.loanDocuments = {};
+      form.status = "Pending";
+      console.log("New Form document before save:", form.toObject()); // Use toObject() for clearer logging
+    } else {
+      console.log("Updating existing Form document for user:", userId);
+      form.personalDetails = applicants;
+      console.log("Updated Form document before save:", form.toObject());
+    }
+
+    await form.save();
+    console.log("Form document saved successfully:", form.toObject());
+    res.status(200).json({ message: "Personal details saved successfully", data: form });
+  } catch (error) {
+    console.error("Error saving personal details:", error);
+    res.status(500).json({ 
+      message: "Failed to save personal details", 
+      error: error.message 
     });
-  } else {
-    form.personalDetails = applicants; // Update with new array of applicants
   }
-
-  await form.save();
-  res.status(200).json({ message: "Personal details saved successfully", data: form });
 });
-
 // ====================== Step 2: Save Loan Application ======================
 const saveLoanApplication = asyncHandler(async (req, res) => {
-  const { userId, ...loanApplication } = req.body;
+  console.log("Request body received:", req.body); // Debug log
 
-  if (!userId || !loanApplication.loanType || !loanApplication.user_type) {
-    return res.status(400).json({ message: "userId, loanType, and user_type are required" });
+  const { userId, loanType, numberOfApplicants, applicants, commonDetails } = req.body;
+
+  // Validate required fields
+  if (!userId || !loanType || !applicants || !Array.isArray(applicants) || applicants.length === 0) {
+    return res.status(400).json({ message: "userId, loanType, and applicants array are required" });
   }
 
-  let form = await Form.findOne({ user: userId });
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid userId format" });
+  }
 
-  if (!form) {
-    form = new Form({
-      user: userId,
-      personalDetails: {},
-      loanApplication: loanApplication,
-      loanDocuments: {},
-      status: "Pending",
+  // Validate each applicant's user_type
+  for (const applicant of applicants) {
+    if (!applicant.user_type) {
+      return res.status(400).json({ message: "user_type is required for all applicants" });
+    }
+  }
+
+  try {
+    let form = await Form.findOne({ user: userId });
+
+    // Transform applicants data to match schema
+    const transformedApplicants = applicants.map((applicant) => {
+      const { user_type, ...rest } = applicant;
+      return {
+        user_type,
+        salariedDetails: user_type === "Salaried" ? {
+          organisation_name: rest.organisation_name || "",
+          organisation_type: rest.organisation_type || "",
+          currentOrganizationExperience: rest.currentOrganizationExperience || "",
+          previousOrganizationExperience: rest.previousOrganizationExperience || "",
+          designation_salaried: rest.designation_salaried || "",
+          place_of_posting: rest.place_of_posting || "",
+          monthly_salary: rest.monthly_salary || "",
+          salary_bank_name: rest.salary_bank_name || "",
+        } : null,
+        selfEmployedDetails: user_type === "Self-Employed" ? {
+          company_name: rest.company_name || "",
+          company_type: rest.company_type || "",
+          incorporation_date: rest.incorporation_date || "",
+          designation_self: rest.designation_self || "",
+          years_in_business: rest.years_in_business || "",
+          years_of_itr_filing: rest.years_of_itr_filing || "",
+        } : null,
+      };
     });
-  } else {
-    form.loanApplication = loanApplication;
+
+    const loanApplicationData = {
+      loanType,
+      applicants: transformedApplicants,
+      property_finalised: commonDetails?.property_finalised || "",
+      property_address: commonDetails?.property_address || "",
+      agreement_executed: commonDetails?.agreement_executed || "",
+      agreement_mou_value: commonDetails?.agreement_mou_value || "",
+      loan_amount_required: commonDetails?.loan_amount_required || "",
+      preferred_banks: commonDetails?.preferred_banks || "",
+      vehicleDetails: loanType === "Vehicle Loan" ? {
+        vehicleModel: commonDetails?.vehicleModel || "",
+        expectedDeliveryDate: commonDetails?.expectedDeliveryDate || "",
+        dealerName: commonDetails?.dealerName || "",
+        dealerCity: commonDetails?.dealerCity || "",
+        vehiclePrice: commonDetails?.vehiclePrice || "",
+      } : null,
+    };
+
+    if (!form) {
+      console.log("Creating new Form document for user:", userId);
+      form = new Form({
+        user: userId,
+        personalDetails: [], // Empty array if not provided yet
+        loanApplication: loanApplicationData,
+        loanDocuments: null,
+        status: "Pending",
+      });
+    } else {
+      console.log("Updating existing Form document for user:", userId);
+      form.loanApplication = loanApplicationData;
+    }
+
+    await form.save();
+    console.log("Form document saved successfully:", form.toObject());
+    res.status(200).json({ message: "Loan application saved successfully", data: form });
+  } catch (error) {
+    console.error("Error saving loan application:", error);
+    res.status(500).json({ 
+      message: "Failed to save loan application", 
+      error: error.message 
+    });
   }
-
-  await form.save();
-  res.status(200).json({ message: "Loan application saved successfully", data: form });
 });
-
 // ====================== Step 3: Save Loan Documents ======================
 const handleFileUploads = upload.fields([
   { name: "panCard", maxCount: 1 },
@@ -89,29 +189,72 @@ const handleFileUploads = upload.fields([
 const saveLoanDocuments = asyncHandler(async (req, res) => {
   const { userId } = req.body;
 
+  console.log("1. Request Body:", req.body); // Should show userId
+  console.log("2. Uploaded Files:", JSON.stringify(req.files, null, 2)); // Detailed file info
+
   if (!userId) {
     return res.status(400).json({ message: "userId is required" });
   }
 
-  let form = await Form.findOne({ user: userId });
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid userId format" });
+  }
 
-  if (!form) {
+  let form = await Form.findOne({ user: userId });
+  console.log("3. Found Form:", form ? form : "No form found");
+
+  if (!form || !form.loanApplication || !form.loanApplication.applicants.length) {
     return res.status(400).json({ message: "Please complete Step 1 and Step 2 first" });
   }
 
-  const loanDocuments = {};
-  for (const [fieldName, fileArray] of Object.entries(req.files || {})) {
-    if (fileArray && fileArray.length > 0) {
-      loanDocuments[fieldName] = fileArray[0].path;
+  const numberOfApplicants = form.loanApplication.applicants.length;
+  console.log("4. Number of Applicants:", numberOfApplicants);
+
+  const loanDocumentsArray = Array(numberOfApplicants)
+    .fill()
+    .map(() => ({}));
+
+  // Process uploaded files
+  if (req.files && Object.keys(req.files).length > 0) {
+    for (const [fieldName, fileArray] of Object.entries(req.files)) {
+      if (fileArray && fileArray.length > 0) {
+        let applicantIndex = 0; // Default to first applicant
+        let docType = fieldName;
+
+        console.log("5. Processing Field:", fieldName);
+
+        if (fieldName.includes("_")) {
+          const [indexStr, type] = fieldName.split("_");
+          const index = parseInt(indexStr, 10);
+          if (!isNaN(index) && index >= 0 && index < numberOfApplicants) {
+            applicantIndex = index;
+            docType = type;
+          } else {
+            console.warn(`Invalid applicant index in field: ${fieldName}, defaulting to 0`);
+          }
+        }
+
+        console.log(`6. Assigning ${docType} to applicant ${applicantIndex}: ${fileArray[0].path}`);
+        loanDocumentsArray[applicantIndex][docType] = fileArray[0].path;
+      }
     }
+  } else {
+    console.log("5. No files uploaded or req.files is empty");
+    return res.status(400).json({ message: "No files uploaded" });
   }
 
-  form.loanDocuments = loanDocuments;
+  console.log("7. Loan Documents Array Before Save:", JSON.stringify(loanDocumentsArray, null, 2));
+
+  // Assign and save
+  form.loanDocuments = loanDocumentsArray;
+  form.markModified("loanDocuments");
   await form.save();
 
-  res.status(201).json({ message: "Loan documents saved successfully", data: form });
-});
+  const updatedForm = await Form.findOne({ user: userId });
+  console.log("8. Saved Form Loan Documents:", JSON.stringify(updatedForm.loanDocuments, null, 2));
 
+  res.status(201).json({ message: "Loan documents saved successfully", data: updatedForm });
+});
 // ====================== Fetch All Forms ======================
 const fetchAllForms = asyncHandler(async (req, res) => {
   const forms = await Form.find().populate("user");
@@ -189,364 +332,3 @@ module.exports = {
   updateFormStatus,
   deleteForm,
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // controllers/formOne.js
-// const FormOne = require("../models/individualForms/FormOne.model");
-// const FormTwo = require("../models/individualForms/FormTwo.model");
-// const LoanDocuments = require("../models/individualForms/FormThree.model");
-
-// const { asyncHandler } = require("../utils/asyncHandler");
-// const fs = require("fs");
-// const { default: mongoose } = require("mongoose");
-
-
-// const createFormOne = async (req, res) => {
-//   try {
-//     const {
-//       full_name,
-//       father_name,
-//       mobile_number,
-//       email_id,
-//       dob,
-//       gender,
-//       qualification,
-//       employment_type,
-//       marital_status,
-//       spouse_employment_type,
-//       no_of_dependents,
-//       pan_number,
-//       residence_type,
-//       citizenship,
-//       permanent_state,
-//       permanent_district,
-//       permanent_address,
-//       permanent_pincode,
-//       present_state,
-//       present_district,
-//       present_address,
-//       present_pincode,
-//     } = req.body;
-
-//     const existingEmail = await FormOne.findOne({ email_id });
-//     if (existingEmail) {
-//       return res
-//         .status(400)
-//         .json({ error: "Email already exists. Please use a different email." });
-//     }
-
-//     const formOneData = new FormOne({
-//       full_name,
-//       father_name,
-//       mobile_number,
-//       email_id,
-//       dob,
-//       gender,
-//       qualification,
-//       employment_type,
-//       marital_status,
-//       spouse_employment_type,
-//       no_of_dependents,
-//       pan_number,
-//       residence_type,
-//       citizenship,
-//       permanent_state,
-//       permanent_district,
-//       permanent_address,
-//       permanent_pincode,
-//       present_state,
-//       present_district,
-//       present_address,
-//       present_pincode,
-//     });
-
-//     const savedData = await formOneData.save();
-
-//     res.status(201).json({
-//       message: "Form data submitted successfully!",
-//       data: savedData,
-//     });
-//   } catch (error) {
-//     console.error("Error in form submission:", error);
-//     if (error.code === 11000) {
-//       return res
-//         .status(400)
-//         .json({
-//           error: "Duplicate email detected. Please use a different email.",
-//         });
-//     }
-//     res
-//       .status(500)
-//       .json({ message: "Internal Server Error", error: error.message });
-//   }
-// };
-
-// const getFormOneData = asyncHandler(async (req, res) => {
-//   try {
-//     const formOneData = await FormOne.find();
-//     if (!formOneData) {
-//       return res.status(404).json({ message: "Form not found" });
-//     }
-//     res.status(200).json({
-//       message: "Form data retrieved successfully!",
-//       data: formOneData,
-//     });
-//   } catch (error) {
-//     console.error("Error in retrieving form data:", error);
-//     res
-//       .status(500)
-//       .json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-
-// const getFormOneById = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     const formOneData = await FormOne.findById(id);
-
-//     if (!formOneData) {
-//       return res.status(404).json({ message: "Form not found" });
-//     }
-
-//     res.status(200).json({
-//       message: "Form data retrieved successfully!",
-//       data: formOneData,
-//     });
-//   } catch (error) {
-//     console.error("Error in retrieving form data:", error);
-//     res
-//       .status(500)
-//       .json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-// const updateFormOne = asyncHandler(async(req,res)=>{
-//   try {
-//     const { id } = req.params;
-//     if (!id) {
-//       return res.status(400).json({ message: "ID parameter is required" });
-//   }
-//     const updateForm = await FormOne.findByIdAndUpdate(id,req.body,{new:true});
-//     if(!updateForm){
-//       return res.status(404).json({message:"Form not found"});
-//     }
-
-//     res.status(200).json({message:"Form updated successfully",data:updateForm});
-//   } catch (error) {
-//     console.error("Error in updating form data:", error);
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-
-// const deleteFormOne = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     if (!id) {
-//       return res.status(400).json({ message: "ID parameter is required" });
-//     }
-
-//     const deletedForm = await FormOne.findByIdAndDelete(id);
-
-//     if (!deletedForm) {
-//       return res.status(404).json({ message: "Form not found" });
-//     }
-
-//     res.status(200).json({ message: "Form deleted successfully", data: deletedForm });
-//   } catch (error) {
-//     console.error("Error in deleting form data:", error);
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-
-
-
-
-// const createFormTwo = asyncHandler(async (req, res) => { // Using asyncHandler here.
-//   try {
-//     console.log("Received request body:", req.body); // Log the raw request body
-
-//     const loan = new FormTwo(req.body);  // Directly use req.body
-//     const savedLoan = await loan.save();    // Use .save()
-
-//     res.status(201).json({
-//       message: "Loan application submitted successfully",
-//       loan: savedLoan, // Return the entire saved document
-//     });
-//   } catch (error) {
-//       console.error("Error saving form data:", error); // More descriptive error
-//       res.status(400).json({ message: "Error saving form data", error: error.message }); // Send error details
-//   }
-// });
-
-// const getFormTwoData = asyncHandler(async(req,res)=>{
-//   try {
-//     const formTwoData = await FormTwo.find();
-//     if(!formTwoData){
-//       return res.status(404).json({message:"Form not found"});
-//     }
-
-//     res.status(200).json({message:"Form data retrieved successfully",data:formTwoData});
-//   } catch (error) {
-//     console.error("Error in retrieving form data:", error);
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-// const getFormTwoById = asyncHandler(async(req,res)=>{
-//   try {
-//     const {id} = req.params;
-//     if(!id){
-//       return res.status(400).json({message:"ID parameter is required"});
-//     }
-
-//     const formTwoData = await FormTwo.findById(id);
-//     if(!formTwoData){
-//       return res.status(404).json({message:"Form not found"});
-//     }
-
-//     res.status(200).json({message:"Form data retrieved successfully",data:formTwoData});
-
-//   } catch (error) {
-//     console.error("Error in retrieving form data:", error);
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-
-
-// const UpdateFormTwo = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     // Validate MongoDB ObjectId
-//     if (!id || !mongoose.Types.ObjectId.isValid(id)) {  
-//       return res.status(400).json({ message: "Invalid or missing ID parameter" });
-//     }
-
-//     // Ensure request body is not empty
-//     if (!req.body || Object.keys(req.body).length === 0) {
-//       return res.status(400).json({ message: "No data provided for update" });
-//     }
-
-//     // Update the form
-//     const updateFormTwo = await FormTwo.findByIdAndUpdate(id, req.body, { 
-//       new: true, 
-//       runValidators: true // Ensures validation rules are applied
-//     });
-
-//     if (!updateFormTwo) {
-//       return res.status(404).json({ message: "Form not found" });
-//     }
-
-//     res.status(200).json({ message: "Form updated successfully", data: updateFormTwo });
-
-//   } catch (error) {
-//     console.error("Error in updating form data:", error);
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// });
-// const deleteFormTwo = asyncHandler(async(req,res)=>{
-//   try {
-//     const {id} = req.params;
-
-//     if(!id){
-//       return res.status(400).json({message:"ID parameter is required"});
-//     }
-
-//     const deleteFormTwo = await FormTwo.findByIdAndDelete(id);
-//     if(!deleteFormTwo){
-//       return res.status(404).json({message:"Form not found"});
-//     }   
-//     res.status(200).json({message:"Form deleted successfully",data:deleteFormTwo});
-//   } catch (error) {
-//     console.error("Error in deleting form data:", error); 
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// })
-
-
-
-
-
-
-
-
-// const uploadLoanDocuments = async (req, res) => {
-//   try {
-//     console.log("Request Body:", req.body); 
-//     console.log("Request Files:", req.files); 
-   
-//     if (!req.files || Object.keys(req.files).length === 0) {
-//       console.log("No files were uploaded."); 
-//       return res.status(400).json({ message: "No files were uploaded." });
-//     }
-
-
-//     const documentData = {};
-//     for (const [fieldName, fileArray] of Object.entries(req.files)) {
-//       documentData[fieldName] = fileArray[0].filename; 
-//     }
-
-
-//     const newLoanDocument = new LoanDocuments(documentData);
-//     await newLoanDocument.save();
-
-//     res.status(201).json({ message: "Loan documents uploaded successfully", data: newLoanDocument });
-//   } catch (error) {
-//     console.error("Error uploading loan documents:", error);
-
-
-//     if (req.files) {
-//       Object.values(req.files).forEach((fileArray) => {
-//         fileArray.forEach((file) => {
-//           fs.unlinkSync(file.path);
-//         });
-//       });
-//     }
-
-//     res.status(500).json({ message: "Internal Server Error", error: error.message });
-//   }
-// };
-
-// const getAllLoanDocuments = async (req, res) => {
-//   try {
-//     const documents = await LoanDocuments.find();
-//     res.status(200).json(documents);
-//   } catch (error) {
-//     res.status(500).json({ message: "Error fetching loan documents", error: error.message });
-//   }
-// };
-
-
-
-
-// module.exports = {
-//   createFormOne,
-//   getFormOneData,
-//   getFormOneById,
-//   updateFormOne,
-//   deleteFormOne,
-//   createFormTwo,
-//   getFormTwoData,
-//   getFormTwoById,
-//   UpdateFormTwo,
-//   deleteFormTwo,
-//   uploadLoanDocuments,
-
-// };
