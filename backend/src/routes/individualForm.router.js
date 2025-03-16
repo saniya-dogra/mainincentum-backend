@@ -21,11 +21,15 @@ router.get("/:id", formController.fetchFormById);
 // Update Form
 router.put("/:id", formController.updateForm);
 
+// Delete Form
+router.delete("/:id", formController.deleteForm);
+
+
 // Update Form Status
 router.patch("/:id/status", formController.updateFormStatus);
 
-// Delete Form
-router.delete("/:id", formController.deleteForm);
+router.get("/user/:userId", formController.getFormsByUserId);
+
 
 module.exports = router;
 

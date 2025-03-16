@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Input from "../../components/form/Input.jsx";
 import Dropdown from "../../components/form/Dropdown.jsx";
@@ -6,10 +6,11 @@ import Button from "../../components/form/Button.jsx";
 import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { createFormTwo } from "../../store/formTwoSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { saveLoanApplication } from "../../store/formOneSlice.js";
+import { UserContext } from "../../contextapi/UserContext.jsx";
 
 const CoformTwo = () => {
   const location = useLocation();
@@ -17,6 +18,9 @@ const CoformTwo = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.form);
+
+  const { user } = useContext(UserContext);
 
   const initialFormValues = {
     loan: "",
@@ -67,7 +71,12 @@ const CoformTwo = () => {
         [name]: value,
       }));
     }
-    console.log(`Updated ${name} for applicant ${applicantIndex !== null ? applicantIndex : "common"}:`, value);
+    console.log(
+      `Updated ${name} for applicant ${
+        applicantIndex !== null ? applicantIndex : "common"
+      }:`,
+      value
+    );
   };
 
   const handleOptionSelect = (name, option, applicantIndex = null) => {
@@ -84,7 +93,6 @@ const CoformTwo = () => {
         [name]: option,
       }));
     }
-    console.log(`Selected ${name} for applicant ${applicantIndex !== null ? applicantIndex : "common"}:`, option);
   };
 
   const handleRadioChange = (name, value, applicantIndex = null) => {
@@ -101,17 +109,18 @@ const CoformTwo = () => {
         [name]: value,
       }));
     }
-    console.log(`Radio ${name} changed for applicant ${applicantIndex !== null ? applicantIndex : "common"}:`, value);
   };
 
   const getNavigationPath = () => {
     const { loan } = formValues;
-    const userTypes = formValues.applicants.map((applicant) => applicant.user_type || "Self-Employed");
+    const userTypes = formValues.applicants.map(
+      (applicant) => applicant.user_type || "Self-Employed"
+    );
 
     const paths = {
       "Home Loan": {
-        Salaried: "vehicle&user_type=salaried",
-        "Self-Employed": "vehicle&user_type=self_employed",
+        Salaried: "home&user_type=salaried",
+        "Self-Employed": "home&user_type=self_employed",
       },
       "Vehicle Loan": {
         Salaried: "vehicle&user_type=salaried",
@@ -122,7 +131,8 @@ const CoformTwo = () => {
         "Self-Employed": "personal&user_type=self_employed",
       },
       "Business Loan": {
-        "": "business&user_type=/",
+        Salaried: "business&user_type=salaried",
+        "Self-Employed": "business&user_type=self_employed",
       },
       "Mortgage Loan": {
         Salaried: "mortgage&user_type=salaried",
@@ -145,17 +155,19 @@ const CoformTwo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      toast.error("User not authenticated. Please log in.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     const transformedData = {
+      userId: user?.id, // Assuming userId comes from previous form or context
       loanType: formValues.loan,
       numberOfApplicants,
-      applicants: formValues.applicants.map((applicant, index) => {
-        const prefix = index === 0 ? "" : `co${index + 1}`;
-        const transformedApplicant = {};
-        for (const key in applicant) {
-          transformedApplicant[`${prefix}${key}`] = applicant[key];
-        }
-        return transformedApplicant;
-      }),
+      applicants: formValues.applicants.map((applicant) => applicant), // Already in correct format
       commonDetails: {
         property_finalised: formValues.property_finalised,
         property_address: formValues.property_address,
@@ -172,25 +184,40 @@ const CoformTwo = () => {
         }),
       },
     };
-
     console.log("Form Values Before Submission:", formValues);
     console.log("Transformed Data:", transformedData);
 
-    toast.success("Form data prepared. Check console for details.", {
-      position: "top-center",
-      autoClose: 2000,
-      onClose: () => {
-        const navigationPath = getNavigationPath();
-        if (navigationPath !== "#") {
-          navigate(navigationPath, { state: { numberOfApplicants, applicants: transformedData.applicants } });
-        } else {
-          toast.error("Invalid loan type or user type. Please select loan type and employment status.", {
-            position: "top-center",
-            autoClose: 2000,
-          });
-        }
-      },
-    });
+    try {
+      const result = await dispatch(
+        saveLoanApplication(transformedData)
+      ).unwrap();
+      toast.success("Loan application saved successfully!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          const navigationPath = getNavigationPath();
+          if (navigationPath !== "#") {
+            navigate(navigationPath, {
+              state: {
+                numberOfApplicants,
+                applicants: transformedData.applicants,
+              },
+            });
+          } else {
+            toast.error("Invalid navigation path.", {
+              position: "top-center",
+              autoClose: 2000,
+            });
+          }
+        },
+      });
+    } catch (err) {
+      console.error("Submission Error:", err);
+      toast.error(err.message || "Failed to save loan application.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
   };
 
   const renderEmploymentDetails = (index) => (
@@ -205,7 +232,9 @@ const CoformTwo = () => {
             name={`user_type-${index}`}
             checked={formValues.applicants[index].user_type === "Salaried"}
             value="Salaried"
-            onChange={(e) => handleRadioChange("user_type", e.target.value, index)}
+            onChange={(e) =>
+              handleRadioChange("user_type", e.target.value, index)
+            }
             className="form-radio h-5 w-5 text-blue-600"
           />
           <span className="ml-3 text-white">Salaried</span>
@@ -216,7 +245,9 @@ const CoformTwo = () => {
             name={`user_type-${index}`}
             checked={formValues.applicants[index].user_type === "Self-Employed"}
             value="Self-Employed"
-            onChange={(e) => handleRadioChange("user_type", e.target.value, index)}
+            onChange={(e) =>
+              handleRadioChange("user_type", e.target.value, index)
+            }
             className="form-radio h-5 w-5 text-blue-600"
           />
           <span className="ml-3 text-white">Self-Employed / Professional</span>
@@ -250,7 +281,9 @@ const CoformTwo = () => {
               isOpen={openDropdown === `organisation_type-${index}`}
               id={`organisation_type-${index}`}
               value={formValues.applicants[index].organisation_type}
-              onSelect={(option) => handleOptionSelect("organisation_type", option, index)}
+              onSelect={(option) =>
+                handleOptionSelect("organisation_type", option, index)
+              }
             />
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
@@ -263,7 +296,9 @@ const CoformTwo = () => {
             <Input
               placeholder="Experience in Previous Organization"
               name="previousOrganizationExperience"
-              value={formValues.applicants[index].previousOrganizationExperience}
+              value={
+                formValues.applicants[index].previousOrganizationExperience
+              }
               onChange={(e) => handleInputChange(e, index)}
             />
           </div>
@@ -308,13 +343,21 @@ const CoformTwo = () => {
               onChange={(e) => handleInputChange(e, index)}
             />
             <Dropdown
-              options={["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"]}
+              options={[
+                "Company",
+                "Partnership Firm",
+                "Proprietary Firm",
+                "LLP",
+                "Others",
+              ]}
               placeholder="Type of Firm"
               setOpenDropdown={setOpenDropdown}
               isOpen={openDropdown === `company_type-${index}`}
               id={`company_type-${index}`}
               value={formValues.applicants[index].company_type}
-              onSelect={(option) => handleOptionSelect("company_type", option, index)}
+              onSelect={(option) =>
+                handleOptionSelect("company_type", option, index)
+              }
             />
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
@@ -325,13 +368,21 @@ const CoformTwo = () => {
               onChange={(e) => handleInputChange(e, index)}
             />
             <Dropdown
-              options={["Proprietor", "Partner", "Founder", "Director", "Others"]}
+              options={[
+                "Proprietor",
+                "Partner",
+                "Founder",
+                "Director",
+                "Others",
+              ]}
               placeholder="Designation"
               setOpenDropdown={setOpenDropdown}
               isOpen={openDropdown === `designation_self-${index}`}
               id={`designation_self-${index}`}
               value={formValues.applicants[index].designation_self}
-              onSelect={(option) => handleOptionSelect("designation_self", option, index)}
+              onSelect={(option) =>
+                handleOptionSelect("designation_self", option, index)
+              }
             />
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
@@ -408,7 +459,13 @@ const CoformTwo = () => {
           <div className="mx-4 lg:mx-12 mt-4">
             <div className="grid grid-cols-2 w-full">
               <Dropdown
-                options={["Home Loan", "Vehicle Loan", "Business Loan", "Personal Loan", "Mortgage Loan"]}
+                options={[
+                  "Home Loan",
+                  "Vehicle Loan",
+                  "Business Loan",
+                  "Personal Loan",
+                  "Mortgage Loan",
+                ]}
                 placeholder="Loan Type"
                 setOpenDropdown={setOpenDropdown}
                 isOpen={openDropdown === "loan"}
@@ -420,10 +477,14 @@ const CoformTwo = () => {
 
             {formValues.loan && (
               <>
-                {["Home Loan", "Business Loan", "Mortgage Loan"].includes(formValues.loan) && (
+                {["Home Loan", "Business Loan", "Mortgage Loan"].includes(
+                  formValues.loan
+                ) && (
                   <>
                     <div className="mt-10">
-                      <h2 className="text-xl font-bold text-white mb-4">Property Finalised</h2>
+                      <h2 className="text-xl font-bold text-white mb-4">
+                        Property Finalised
+                      </h2>
                       <div className="flex flex-col space-y-4">
                         <div className="grid grid-cols-2 w-full gap-6">
                           <label className="flex items-center">
@@ -432,7 +493,12 @@ const CoformTwo = () => {
                               name="property_finalised"
                               checked={formValues.property_finalised === "Yes"}
                               value="Yes"
-                              onChange={(e) => handleRadioChange("property_finalised", e.target.value)}
+                              onChange={(e) =>
+                                handleRadioChange(
+                                  "property_finalised",
+                                  e.target.value
+                                )
+                              }
                               className="form-radio h-5 w-5 text-blue-600"
                             />
                             <span className="ml-3 text-white">Yes</span>
@@ -443,7 +509,12 @@ const CoformTwo = () => {
                               name="property_finalised"
                               checked={formValues.property_finalised === "No"}
                               value="No"
-                              onChange={(e) => handleRadioChange("property_finalised", e.target.value)}
+                              onChange={(e) =>
+                                handleRadioChange(
+                                  "property_finalised",
+                                  e.target.value
+                                )
+                              }
                               className="form-radio h-5 w-5 text-blue-600"
                             />
                             <span className="ml-3 text-white">No</span>
@@ -460,7 +531,9 @@ const CoformTwo = () => {
                       </div>
                     </div>
 
-                    <h2 className="text-xl font-bold text-white mt-6 mb-4">Agreement/MoU Executed</h2>
+                    <h2 className="text-xl font-bold text-white mt-6 mb-4">
+                      Agreement/MoU Executed
+                    </h2>
                     <div className="grid grid-cols-2 w-full gap-6">
                       <label className="flex items-center">
                         <input
@@ -468,7 +541,12 @@ const CoformTwo = () => {
                           name="agreement_executed"
                           checked={formValues.agreement_executed === "Yes"}
                           value="Yes"
-                          onChange={(e) => handleRadioChange("agreement_executed", e.target.value)}
+                          onChange={(e) =>
+                            handleRadioChange(
+                              "agreement_executed",
+                              e.target.value
+                            )
+                          }
                           className="form-radio h-5 w-5 text-blue-600"
                         />
                         <span className="ml-3 text-white">Yes</span>
@@ -479,7 +557,12 @@ const CoformTwo = () => {
                           name="agreement_executed"
                           checked={formValues.agreement_executed === "No"}
                           value="No"
-                          onChange={(e) => handleRadioChange("agreement_executed", e.target.value)}
+                          onChange={(e) =>
+                            handleRadioChange(
+                              "agreement_executed",
+                              e.target.value
+                            )
+                          }
                           className="form-radio h-5 w-5 text-blue-600"
                         />
                         <span className="ml-3 text-white">No</span>
@@ -500,7 +583,9 @@ const CoformTwo = () => {
 
                 {formValues.loan === "Vehicle Loan" && (
                   <div className="mt-10">
-                    <h2 className="text-xl font-bold text-white mb-4">Vehicle Details</h2>
+                    <h2 className="text-xl font-bold text-white mb-4">
+                      Vehicle Details
+                    </h2>
                     <div className="grid grid-cols-2 w-full gap-6">
                       <Input
                         placeholder="Make and Model of Vehicle"
@@ -540,7 +625,9 @@ const CoformTwo = () => {
                   </div>
                 )}
 
-                <h2 className="text-xl font-bold text-white mt-6 mb-4">Loan Required</h2>
+                <h2 className="text-xl font-bold text-white mt-6 mb-4">
+                  Loan Required
+                </h2>
                 <div className="grid grid-cols-2 w-full gap-6 mt-6">
                   <Input
                     placeholder="Loan Amount Required (Rs.)"
@@ -556,7 +643,9 @@ const CoformTwo = () => {
                   />
                 </div>
 
-                {formValues.applicants.map((_, index) => renderEmploymentDetails(index))}
+                {formValues.applicants.map((_, index) =>
+                  renderEmploymentDetails(index)
+                )}
               </>
             )}
 

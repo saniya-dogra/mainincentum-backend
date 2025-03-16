@@ -21,7 +21,7 @@ app.use(cors({
      //"https://incentum.ai",    // Add your production URL here when you deploy
      //"https://www.incentum.ai" // Add if you have a www subdomain.
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],  // Correct
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],  // Correct
   allowedHeaders: ["Content-Type", "Authorization"], // Correct
   credentials: true, // Correct
 }));

@@ -6,11 +6,14 @@ import Button from "../../components/form/Button.jsx";
 import { FaUser } from "react-icons/fa";
 import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
-import axios from "axios";
 import { UserContext } from "../../contextapi/UserContext.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify"; // Added toast for feedback
+import "react-toastify/dist/ReactToastify.css";
+import { savePersonalDetails } from "../../store/formOneSlice.js";
 
 export default function Coformone() {
-  const {user, ready} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [numberOfApplicants, setNumberOfApplicants] = useState(1);
   const [formValuesList, setFormValuesList] = useState([
     {
@@ -41,6 +44,8 @@ export default function Coformone() {
 
   const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.form);
 
   // Handle change in the number of applicants
   const handleNumberOfApplicantsChange = (value) => {
@@ -92,42 +97,47 @@ export default function Coformone() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    if (!ready || !user) {
-      alert("User not authenticated. Please log in.");
+    if (!user) {
+      toast.error("User not authenticated. Please log in.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
       return;
     }
-
     try {
       const payload = {
-        userId: user._id, // Dynamically fetch userId from context
-        applicants: formValuesList, // Send the array of applicants
+        userId: user?.id,
+        applicants: formValuesList,
       };
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/form/personal-details`, // Use environment variable for API URL
-        payload,
-        { withCredentials: true } // Include credentials for authentication
-      );
-      console.log("Response from backend:", response.data);
-
-      alert("Personal details saved successfully!");
-      navigate("/co-applicant-form-detail-two", {
-        state: {
-          numberOfApplicants,
-          applicants: formValuesList,
+      const result = await dispatch(savePersonalDetails(payload)).unwrap();
+      toast.success("Personal details saved successfully!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          navigate("/co-applicant-form-detail-two", {
+            state: {
+              numberOfApplicants,
+              applicants: formValuesList,
+            },
+          });
         },
       });
-    } catch (error) {
-      console.error("Error saving personal details:", error);
-      alert("Failed to save personal details. Please try again.");
+    } catch (err) {
+      console.error("Form Submission Error:", err);
+      toast.error(err || "Failed to save personal details. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   };
 
   const getFieldProps = (index, fieldName, placeholder) => {
     return {
       name: fieldName,
-      placeholder: `${placeholder}${index > 0 ? ` (Applicant ${index + 1})` : ""}`,
+      placeholder: `${placeholder}${
+        index > 0 ? ` (Applicant ${index + 1})` : ""
+      }`,
       value: formValuesList[index][fieldName] || "",
       onChange: (e) => handleInputChange(index, e),
     };
@@ -135,6 +145,7 @@ export default function Coformone() {
 
   return (
     <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
+      <ToastContainer />
       <div className="absolute mt-20 md:mt-32 w-full h-1 bg-[#9ea0c5e7]"></div>
       <div className="w-full lg:w-1/4 py-10 px-4 lg:pl-16 flex flex-col shadow-xl relative rounded-r-3xl">
         <h2 className="text-2xl lg:text-3xl font-bold mb-8 lg:mb-14 text-white tracking-wide text-center -mt-3">
@@ -192,7 +203,9 @@ export default function Coformone() {
             isOpen={openDropdown === "numberOfApplicants"}
             id="numberOfApplicants"
             value={numberOfApplicants.toString()}
-            onSelect={(option) => handleNumberOfApplicantsChange(parseInt(option))}
+            onSelect={(option) =>
+              handleNumberOfApplicantsChange(parseInt(option))
+            }
           />
         </div>
         <form onSubmit={handleFormSubmit}>
@@ -203,9 +216,23 @@ export default function Coformone() {
               </h1>
               <div className="mx-2 lg:mx-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
-                  <Input {...getFieldProps(index, "full_name", "Full Name as per Pan card")} />
-                  <Input {...getFieldProps(index, "father_name", "Father Name")} />
-                  <Input {...getFieldProps(index, "mobile_number", "Enter 10-digit mobile number")} />
+                  <Input
+                    {...getFieldProps(
+                      index,
+                      "full_name",
+                      "Full Name as per Pan card"
+                    )}
+                  />
+                  <Input
+                    {...getFieldProps(index, "father_name", "Father Name")}
+                  />
+                  <Input
+                    {...getFieldProps(
+                      index,
+                      "mobile_number",
+                      "Enter 10-digit mobile number"
+                    )}
+                  />
                   <Input {...getFieldProps(index, "email_id", "Email ID")} />
                   <Input {...getFieldProps(index, "dob", "DOB")} />
                   <Dropdown
@@ -215,25 +242,42 @@ export default function Coformone() {
                     isOpen={openDropdown === `gender-${index}`}
                     id={`gender-${index}`}
                     value={formValues.gender}
-                    onSelect={(option) => handleOptionSelect(index, "gender", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "gender", option)
+                    }
                   />
                   <Dropdown
-                    options={["Post Graduate", "Graduate", "Higher Secondary", "Secondary", "Others"]}
+                    options={[
+                      "Post Graduate",
+                      "Graduate",
+                      "Higher Secondary",
+                      "Secondary",
+                      "Others",
+                    ]}
                     placeholder="Qualification"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === `qualification-${index}`}
                     id={`qualification-${index}`}
                     value={formValues.qualification}
-                    onSelect={(option) => handleOptionSelect(index, "qualification", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "qualification", option)
+                    }
                   />
                   <Dropdown
-                    options={["Salaried", "Self Employed", "Professional", "Unemployed"]}
+                    options={[
+                      "Salaried",
+                      "Self Employed",
+                      "Professional",
+                      "Unemployed",
+                    ]}
                     placeholder="Employment Type"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === `employmentType-${index}`}
                     id={`employmentType-${index}`}
                     value={formValues.employment_type}
-                    onSelect={(option) => handleOptionSelect(index, "employment_type", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "employment_type", option)
+                    }
                   />
                   <Dropdown
                     options={["Married", "Unmarried", "Other"]}
@@ -242,7 +286,9 @@ export default function Coformone() {
                     isOpen={openDropdown === `maritalStatus-${index}`}
                     id={`maritalStatus-${index}`}
                     value={formValues.marital_status}
-                    onSelect={(option) => handleOptionSelect(index, "marital_status", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "marital_status", option)
+                    }
                   />
                   <Dropdown
                     options={["Earning", "Home Maker"]}
@@ -252,7 +298,11 @@ export default function Coformone() {
                     id={`spouseEmploymentType-${index}`}
                     value={formValues.spouse_employment_type}
                     onSelect={(option) =>
-                      handleOptionSelect(index, "spouse_employment_type", option)
+                      handleOptionSelect(
+                        index,
+                        "spouse_employment_type",
+                        option
+                      )
                     }
                   />
                   <Dropdown
@@ -262,9 +312,13 @@ export default function Coformone() {
                     isOpen={openDropdown === `dependents-${index}`}
                     id={`dependents-${index}`}
                     value={formValues.no_of_dependents}
-                    onSelect={(option) => handleOptionSelect(index, "no_of_dependents", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "no_of_dependents", option)
+                    }
                   />
-                  <Input {...getFieldProps(index, "pan_number", "Pan Number")} />
+                  <Input
+                    {...getFieldProps(index, "pan_number", "Pan Number")}
+                  />
                   <Dropdown
                     options={["Owned", "Rented", "Parental", "Others"]}
                     placeholder="Residence Type"
@@ -272,7 +326,9 @@ export default function Coformone() {
                     isOpen={openDropdown === `residenceType-${index}`}
                     id={`residenceType-${index}`}
                     value={formValues.residence_type}
-                    onSelect={(option) => handleOptionSelect(index, "residence_type", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "residence_type", option)
+                    }
                   />
                   <Dropdown
                     options={["Resident Indian", "Non-Resident Indian"]}
@@ -281,7 +337,9 @@ export default function Coformone() {
                     isOpen={openDropdown === `citizenship-${index}`}
                     id={`citizenship-${index}`}
                     value={formValues.citizenship}
-                    onSelect={(option) => handleOptionSelect(index, "citizenship", option)}
+                    onSelect={(option) =>
+                      handleOptionSelect(index, "citizenship", option)
+                    }
                   />
                 </div>
               </div>
@@ -290,10 +348,22 @@ export default function Coformone() {
               </h1>
               <div className="mx-4 lg:mx-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
-                  <Input {...getFieldProps(index, "permanent_state", "State")} />
-                  <Input {...getFieldProps(index, "permanent_district", "District")} />
-                  <Input {...getFieldProps(index, "permanent_address", "Enter Your Permanent Address")} />
-                  <Input {...getFieldProps(index, "permanent_pincode", "Pin Code")} />
+                  <Input
+                    {...getFieldProps(index, "permanent_state", "State")}
+                  />
+                  <Input
+                    {...getFieldProps(index, "permanent_district", "District")}
+                  />
+                  <Input
+                    {...getFieldProps(
+                      index,
+                      "permanent_address",
+                      "Enter Your Permanent Address"
+                    )}
+                  />
+                  <Input
+                    {...getFieldProps(index, "permanent_pincode", "Pin Code")}
+                  />
                 </div>
               </div>
               <h1 className="text-lg lg:text-xl font-bold mt-4 lg:mt-6 ml-2 lg:ml-3 text-white mb-2 lg:mb-3">
@@ -302,9 +372,19 @@ export default function Coformone() {
               <div className="mx-4 lg:mx-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
                   <Input {...getFieldProps(index, "present_state", "State")} />
-                  <Input {...getFieldProps(index, "present_district", "District")} />
-                  <Input {...getFieldProps(index, "present_address", "Enter Your Present Address")} />
-                  <Input {...getFieldProps(index, "present_pincode", "Pin Code")} />
+                  <Input
+                    {...getFieldProps(index, "present_district", "District")}
+                  />
+                  <Input
+                    {...getFieldProps(
+                      index,
+                      "present_address",
+                      "Enter Your Present Address"
+                    )}
+                  />
+                  <Input
+                    {...getFieldProps(index, "present_pincode", "Pin Code")}
+                  />
                 </div>
               </div>
             </div>

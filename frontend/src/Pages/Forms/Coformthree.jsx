@@ -1,44 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoDocuments } from "react-icons/io5";
 import { FaUser, FaBookOpen } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadLoanDocuments, resetUploadState } from "../../store/formOneSlice";
+import { UserContext } from "../../contextapi/UserContext";
 
 const Coformthree = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { formData, loading, error, success, documents, userId } = useSelector((state) => state.form);
+  const { user } = useContext(UserContext);
+
   const [applicantsData, setApplicantsData] = useState([]);
-  const [files, setFiles] = useState({});
-  const [uploadError, setUploadError] = useState(null);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [fileErrors, setFileErrors] = useState({});
+  const [files, setFiles] = useState([]);
+  const [fileErrors, setFileErrors] = useState([]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const { numberOfApplicants } = location.state || {};
+    const { numberOfApplicants, userId: stateUserId } = location.state || {};
     const parsedApplicants = [];
-    const searchString = location.search; // Full query string, e.g., "?applicant1=vehicle&user_type=salaried&applicant2=vehicle&user_type=self_employed"
+    const searchString = location.search;
 
     console.log("URL Search Params:", searchString);
     console.log("Number of Applicants from State:", numberOfApplicants);
+    console.log("UserId from Redux:", userId);
+    console.log("UserId from location.state:", stateUserId);
+    console.log("FormData from Redux:", formData);
 
     for (let i = 1; i <= (numberOfApplicants || 0); i++) {
       const applicantKey = `applicant${i}`;
-      const loanType = params.get(applicantKey); // e.g., "vehicle"
-      console.log(`Applicant ${i} Loan Type:`, loanType);
-
+      const loanType = params.get(applicantKey);
       if (loanType) {
-        // Extract the specific user_type for this applicant by finding its position in the query string
         const applicantPattern = `${applicantKey}=${loanType}&user_type=([^&]*)`;
         const regex = new RegExp(applicantPattern);
         const match = searchString.match(regex);
         const userType = match && match[1] ? match[1].trim().toLowerCase() : "self_employed";
         const finalUserType = userType === "salaried" ? "salaried" : "self_employed";
-
-        console.log(`Applicant ${i} Raw User Type:`, match ? match[1] : "Not found");
-        console.log(`Applicant ${i} Final User Type:`, finalUserType);
 
         parsedApplicants.push({
           loanType: loanType || "home",
@@ -48,28 +50,61 @@ const Coformthree = () => {
     }
 
     setApplicantsData(parsedApplicants);
+    setFiles(parsedApplicants.map(() => ({})));
+    setFileErrors(parsedApplicants.map(() => ({})));
     console.log("Parsed Applicants Data:", parsedApplicants);
   }, [location]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Documents uploaded successfully!", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => {
+          dispatch(resetUploadState());
+          navigate("/application-submitted-successfully");
+        },
+      });
+    }
+    if (error) {
+      toast.error(error.message || "Failed to upload documents.", {
+        position: "top-center",
+        autoClose: 2000,
+        onClose: () => dispatch(resetUploadState()),
+      });
+    }
+  }, [success, error, dispatch, navigate]);
 
   const FileUploader = ({ name, applicantIndex }) => {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
       onDrop: (acceptedFiles) => {
         const file = acceptedFiles[0];
-        const prefixedName = `${applicantIndex}_${name}`;
         if (file.size > 3 * 1024 * 1024) {
-          setFileErrors((prevErrors) => ({
-            ...prevErrors,
-            [prefixedName]: "File size exceeds 3 MB. Please reduce the size.",
-          }));
+          setFileErrors((prevErrors) => {
+            const newErrors = [...prevErrors];
+            newErrors[applicantIndex] = {
+              ...newErrors[applicantIndex],
+              [name]: "File size exceeds 3 MB. Please reduce the size.",
+            };
+            return newErrors;
+          });
         } else {
-          setFileErrors((prevErrors) => ({
-            ...prevErrors,
-            [prefixedName]: null,
-          }));
-          setFiles((prevFiles) => ({
-            ...prevFiles,
-            [prefixedName]: file,
-          }));
+          setFileErrors((prevErrors) => {
+            const newErrors = [...prevErrors];
+            newErrors[applicantIndex] = {
+              ...newErrors[applicantIndex],
+              [name]: null,
+            };
+            return newErrors;
+          });
+          setFiles((prevFiles) => {
+            const newFiles = [...prevFiles];
+            newFiles[applicantIndex] = {
+              ...newFiles[applicantIndex],
+              [name]: file,
+            };
+            return newFiles;
+          });
         }
       },
       accept: { "application/pdf": [".pdf"] },
@@ -90,11 +125,11 @@ const Coformthree = () => {
             </p>
           )}
         </div>
-        {fileErrors[`${applicantIndex}_${name}`] && (
-          <p className="text-red-500 text-sm mt-1">{fileErrors[`${applicantIndex}_${name}`]}</p>
+        {fileErrors[applicantIndex]?.[name] && (
+          <p className="text-red-500 text-sm mt-1">{fileErrors[applicantIndex][name]}</p>
         )}
-        {files[`${applicantIndex}_${name}`] && !fileErrors[`${applicantIndex}_${name}`] && (
-          <p className="text-sm text-green-600 mt-1">{files[`${applicantIndex}_${name}`].name} uploaded</p>
+        {files[applicantIndex]?.[name] && !fileErrors[applicantIndex]?.[name] && (
+          <p className="text-sm text-green-600 mt-1">{files[applicantIndex][name].name} uploaded</p>
         )}
       </div>
     );
@@ -102,10 +137,21 @@ const Coformthree = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUploadError(null);
-    setUploadSuccess(false);
 
-    const hasErrors = Object.values(fileErrors).some((error) => error !== null);
+    // Check if the user is authenticated
+    if (!user) {
+      toast.error("User not authenticated. Please log in.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
+    }
+
+    // Check for file errors
+    const hasErrors = fileErrors.some((applicantErrors) =>
+      Object.values(applicantErrors).some((error) => error !== null)
+    );
+
     if (hasErrors) {
       toast.error("Please ensure all files are below 3 MB.", {
         position: "top-center",
@@ -114,21 +160,46 @@ const Coformthree = () => {
       return;
     }
 
-    const formData = new FormData();
-    for (const key in files) {
-      if (files[key]) {
-        formData.append(key, files[key]);
-      }
+    // Check if any files are selected
+    const hasFiles = files.some((applicantFiles) => Object.keys(applicantFiles).length > 0);
+    if (!hasFiles) {
+      toast.error("Please upload at least one document.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
     }
 
-    console.log("Files to be submitted:", files);
-    toast.success("Document data prepared. Check console for details.", {
-      position: "top-center",
-      autoClose: 2000,
-      onClose: () => {
-        navigate("/application-submitted-successfully");
-      },
-    });
+    try {
+      const uploadPromises = files
+        .map((applicantFiles, index) => {
+          if (Object.keys(applicantFiles).length > 0) {
+            return dispatch(
+              uploadLoanDocuments({
+                userId: user.id,
+                applicantIndex: index,
+                files: applicantFiles,
+              })
+            ).unwrap(); // unwrap to handle promise resolution
+          }
+          return null;
+        })
+        .filter(Boolean); // Remove null promises
+
+      console.log("Submitting with userId:", user.id);
+      console.log("Files to submit:", files);
+
+      // Wait for all uploads to complete
+      await Promise.all(uploadPromises);
+
+      // Success is handled in useEffect
+    } catch (error) {
+      console.error("Error during document upload:", error);
+      toast.error("An error occurred while uploading documents. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    }
   };
 
   const getDocumentList = (loanType, userType) => {
@@ -254,13 +325,8 @@ const Coformthree = () => {
       },
     };
 
-    console.log(`Fetching documents for loanType: ${loanType}, userType: ${userType}`);
-    const docs = loanType === "business" ? documentLists.business : documentLists[loanType]?.[userType] || [];
-    console.log("Documents returned:", docs);
-    return docs;
+    return loanType === "business" ? documentLists.business : documentLists[loanType]?.[userType] || [];
   };
-
-  console.log("Rendering with applicantsData:", applicantsData);
 
   return (
     <div className="min-h-screen bg-[#010349f0] text-gray-900 flex flex-col lg:flex-row">
@@ -345,7 +411,7 @@ const Coformthree = () => {
                         {getDocumentList(applicant.loanType, applicant.userType).map((doc, docIndex) => {
                           const fieldNamesMap = {
                             "PAN Card": "panCard",
-                            "PAN Card of Firm": "panCardofFirm",
+                            "PAN Card of Firm": "panCard",
                             "Aadhar Card": "aadharCard",
                             "Employer ID Card": "employerIDCard",
                             "Joining/Confirmation/Experience Letter": "joiningConfirmationExperienceLetter",
@@ -368,7 +434,7 @@ const Coformthree = () => {
                             "Memorandum Of Association": "memorandumOfAssociation",
                             "Other Relevant Documents": "otherRelevantDocuments",
                           };
-                          const name = fieldNamesMap[doc] || doc;
+                          const name = fieldNamesMap[doc] || doc.toLowerCase().replace(/ /g, "");
                           return (
                             <tr key={docIndex} className="hover:bg-gray-50">
                               <td className="border border-gray-300 p-2 sm:p-4 text-center">{docIndex + 1}</td>
@@ -387,13 +453,15 @@ const Coformthree = () => {
             ) : (
               <p className="text-white">No applicants data available. Please complete the previous steps.</p>
             )}
-            {uploadError && <p className="text-red-500 mt-4">{uploadError}</p>}
             <div className="mt-6 sm:mt-8 flex justify-center">
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-[#4CAF50] hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                disabled={loading}
+                className={`w-full sm:w-auto bg-[#4CAF50] hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </button>
             </div>
           </div>

@@ -1,189 +1,228 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchFormById, updateFormStatus } from "../../store/formOneSlice";
 
+const UserApplications = () => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
 
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const { currentForm, loading, error } = useSelector((state) => state.form);
 
-const UserApplications = ({id}) => {
-    const [showDropdown, setShowDropdown] = useState(false);
-     
-    const allUser = useSelector((state) => state.form.forms);
-    // const singleUser = forms?.data.filter((form) => form.id === id);
+  console.log("Received ID from useParams:", id);
+  console.log("Current Form:", currentForm);
+  console.log("Loading:", loading, "Error:", error);
 
-  const handleStatusChange = (status) => {
+  useEffect(() => {
+    if (id) {
+      console.log("Fetching form with ID:", id);
+      dispatch(fetchFormById(id));
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (currentForm && currentForm.status) {
+      setSelectedStatus(currentForm.status);
+      console.log("Initial status set to:", currentForm.status);
+    }
+  }, [currentForm]);
+
+  const handleStatusChange = async (status) => {
     setSelectedStatus(status);
-    setShowDropdown(false); 
+    setShowDropdown(false);
+    console.log("Attempting to update status to:", status);
+
+    try {
+      const response = await dispatch(updateFormStatus({ id, status })).unwrap();
+      console.log("Status updated successfully:", response);
+      await dispatch(fetchFormById(id)); // Refresh form data
+    } catch (err) {
+      console.error("Failed to update status:", err);
+      alert(`Failed to update status: ${err.status ? `${err.status} - ${err.data?.message || err.message}` : err.message || "Unknown error"}`);
+    }
   };
 
-  // if(loading){
-  //   return <h1>Loading...</h1>
-  // }
+  if (loading) {
+    return <h1 className="text-center mt-10">Loading...</h1>;
+  }
 
-  // if(error){
-  //   return <h1>Error: {error.message}</h1> 
-  // }
+  if (error) {
+    return (
+      <h1 className="text-center mt-10 text-red-500">
+        Error: {typeof error === "string" ? error : error.message || "Something went wrong"}
+      </h1>
+    );
+  }
 
-  // if(!formData){
-  //   return <h1>No data found</h1>
-  // }
+  if (!currentForm) {
+    return <h1 className="text-center mt-10">No data found for this application</h1>;
+  }
 
-      return (
-        <div className="min-h-screen bg-gray-50 p-4">
-          {/* Main Container */}
-          <div className="bg-white rounded-md shadow-md overflow-hidden">
-            <div className="flex">
-              {/* Sidebar */}
-              <div className="w-1/5 bg-[#FFFCEE] border-r">
-                <div className="flex flex-col items-center py-6">
-                  {/* Profile Image */}
-                  <img
-                    src="https://via.placeholder.com/70"
-                    alt="Profile"
-                    className="w-20 h-20 rounded-full mb-2"
-                  />
-                  <h3 className="text-lg font-semibold">prinnce</h3>
-                </div>
-    
-                {/* Sidebar Menu */}
-                <ul className="space-y-3 px-6">
-                  <li className="flex items-center text-gray-700 font-medium">
-                    <i className="fas fa-user text-gray-400 mr-2"></i> View Profile
+  const personalDetail = currentForm.personalDetails?.[0] || {};
+  const loanApplication = currentForm.loanApplication || {};
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="bg-white rounded-md shadow-md overflow-hidden">
+        <div className="flex">
+          <div className="w-1/5 bg-[#FFFCEE] border-r">
+            <div className="flex flex-col items-center py-6">
+              <img
+                src="https://via.placeholder.com/70"
+                alt="Profile"
+                className="w-20 h-20 rounded-full mb-2"
+              />
+              <h3 className="text-lg font-semibold">{personalDetail.full_name || "N/A"}</h3>
+            </div>
+
+            <ul className="space-y-3 px-6">
+              <li className="flex items-center text-gray-700 font-medium">
+                <i className="fas fa-user text-gray-400 mr-2"></i> View Profile
+              </li>
+              <li className="flex items-center text-gray-700 font-medium">
+                <i className="fas fa-file-alt text-gray-400 mr-2"></i> Documents
+              </li>
+            </ul>
+            <li className="mt-14 px-6 flex items-center text-gray-700 font-medium">
+              <i className="fas fa-file-alt text-gray-400 mr-2"></i> Application Status
+            </li>
+
+            <div className="relative mt-3 px-6">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                {selectedStatus || "Change Status"}
+                <i className="fas fa-chevron-down ml-2"></i>
+              </button>
+
+              {showDropdown && (
+                <ul className="absolute bg-white border rounded-md shadow-md mt-1 w-48 z-10">
+                  <li
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleStatusChange("Pending")}
+                  >
+                    Pending
                   </li>
-                  <li className="flex items-center text-gray-700 font-medium">
-                    <i className="fas fa-file-alt text-gray-400 mr-2"></i> Documents
+                  <li
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleStatusChange("Approved")}
+                  >
+                    Approved
+                  </li>
+                  <li
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleStatusChange("Rejected")}
+                  >
+                    Rejected
                   </li>
                 </ul>
-                <li className="mt-14 px-6 flex items-center text-gray-700 font-medium">
-                    <i className="fas fa-file-alt text-gray-400 mr-2"></i> Application satus
-                  </li>
-                  
+              )}
+            </div>
+          </div>
 
-        <div className="relative mt-3 px-6">
-        <button
-          className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center"
-          onClick={() => setShowDropdown(!showDropdown)}
-        >
-         
-          <i className="fas fa-chevron-down ml-2"></i>
-        </button>
+          <div className="w-4/5 p-6">
+            <div className="flex justify-between items-center rounded-lg bg-[#ECEAEA] mb-4">
+              <h2 className="text-xl m-5 font-semibold">{personalDetail.full_name || "N/A"}</h2>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Attachment
+              </button>
+            </div>
 
-        {showDropdown && (
-          <ul className="absolute bg-white border rounded-md shadow-md mt-1 w-48 z-10">
-            <li
-              className="px-4 py-2  hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleStatusChange("In Process")}
-            >
-              In Process
-            </li>
-            <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleStatusChange("Closed")}
-            >
-              Closed
-            </li>
-            <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleStatusChange("Pending")}
-            >
-              Pending
-            </li>
-          </ul>
-        )}
-         </div>
+            <div className="grid grid-cols-2 gap-6 border-b pb-6">
+              <div>
+                <h3 className="text-md font-semibold mb-2">Personal Information</h3>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Birth Date:</span>{" "}
+                  {personalDetail.date_of_birth || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Gender:</span>{" "}
+                  {personalDetail.gender || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Contact No:</span>{" "}
+                  {personalDetail.mobile_number || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Email Id:</span>{" "}
+                  {personalDetail.email_id || "N/A"}
+                </p>
               </div>
-    
-              {/* Main Content */}
-              <div className="w-4/5 p-6">
-                {/* Top Header */}
-                <div className="flex justify-between items-center rounded-lg bg-[#ECEAEA] mb-4">
-                  <h2 className="text-xl m-5 font-semibold">Aimee Liu</h2>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                      Attachment
-                    </button>
-                </div>
-    
-                {/* Personal Information Section */}
-                <div className="grid grid-cols-2 gap-6 border-b pb-6">
-                  {/* Left Column */}
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">Personal Information</h3>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Birth Date:</span> 09 Jan 2004
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Gender:</span> Female
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Contact No:</span> 987654321
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Email Id:</span> Aaaaaa@gmail.com
-                    </p>
-                  </div>
-    
-                  {/* Right Column */}
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">Additional Details</h3>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Father Name:</span> Mongo DB
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Marital Status:</span> Single
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Resident:</span> Indian
-                    </p>
-                  </div>
-    
-                  {/* Employment Details */}
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">Employment Details</h3>
-                    <p className="text-sm text-gray-800">
-                      <span className="font-medium text-blue-600">Qualification:</span> Graduation
-                    </p>
-                    <p className="text-sm text-gray-800">
-                      <span className="font-medium text-blue-600">Employment Type:</span> Salaried
-                    </p>
-                  </div>
-    
-                  {/* Address */}
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">Address</h3>
-                    <p className="text-sm text-gray-800">
-                      <span className="font-medium text-blue-600">Address:</span>{" "}
-                      XXXXXXXXXXXXXXXXXXXXXXXXX
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium text-blue-600">Pin Code:</span> 647994
-                    </p>
-                  </div>
-                </div>
-    
-                {/* Application Status Section */}
-                <div className="mt-6">
-                  <h3 className="text-md font-semibold mb-2">Application Status</h3>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600">Application No:</span> 21212
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600">Loan Type:</span> Car Loan
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600">Parents Contact:</span> 6479949992
-                  </p>
-                </div>
+
+              <div>
+                <h3 className="text-md font-semibold mb-2">Additional Details</h3>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Father Name:</span>{" "}
+                  {personalDetail.father_name || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Marital Status:</span>{" "}
+                  {personalDetail.marital_status || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Resident:</span>{" "}
+                  {personalDetail.resident || "N/A"}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-md font-semibold mb-2">Employment Details</h3>
+                <p className="text-sm text-gray-800">
+                  <span className="font-medium text-blue-600">Qualification:</span>{" "}
+                  {personalDetail.qualification || "N/A"}
+                </p>
+                <p className="text-sm text-gray-800">
+                  <span className="font-medium text-blue-600">Employment Type:</span>{" "}
+                  {personalDetail.user_type || "N/A"}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-md font-semibold mb-2">Address</h3>
+                <p className="text-sm text-gray-800">
+                  <span className="font-medium text-blue-600">Address:</span>{" "}
+                  {personalDetail.permanent_address || "N/A"}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium text-blue-600">Pin Code:</span>{" "}
+                  {personalDetail.permanent_pincode || "N/A"}
+                </p>
               </div>
             </div>
-    
-            {/* Bottom Save Button */}
-            <div className="flex justify-end p-4 bg-gray-50">
-              <button className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                <i className="fas fa-save "></i> Save
-              </button>
+
+            <div className="mt-6">
+              <h3 className="text-md font-semibold mb-2">Application Status</h3>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600">Application No:</span>{" "}
+                {currentForm._id || "N/A"}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600">Loan Type:</span>{" "}
+                {loanApplication.loan_type || "N/A"}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600">Loan Amount:</span>{" "}
+                {loanApplication.loan_amount_required || "N/A"}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600">Status:</span>{" "}
+                {selectedStatus || currentForm.status || "N/A"}
+              </p>
             </div>
           </div>
         </div>
-      );
-    };
-    
-    export default UserApplications;
-    
+
+        <div className="flex justify-end p-4 bg-gray-50">
+          <button className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <i className="fas fa-save mr-2"></i> Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserApplications;

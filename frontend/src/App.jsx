@@ -18,8 +18,6 @@ import HomeDashboard from './Pages/dashboard/homedashboard';
 // import { HomeOneContextProvider } from './contextapi/HomeOneContext';
 import ClientApplication from './Pages/dashboard/ClientApplication';
 import UserApplications from './Pages/dashboard/UserApplications';
-import FormTwo from './Pages/Forms/FormTwo';
-import FormOne from './Pages/Forms/FormOne';
 import FormThree from './Pages/Forms/FormThree';
 import AboutUs from './Pages/Others/AboutUs';
 import ContactUs from './Pages/Others/ContactUs';
@@ -49,13 +47,11 @@ function App() {
         <Route path='business-loan' element={<BusinessLoan/>}/>
         <Route path='Mortgage-loan' element={<MortgageLoan/>}/>
         <Route path='/HomePage' element={<HomePage/>} />
-        <Route path='/form-detail-one' element={<FormOne/>} />
-        <Route path='/form-details-two' element={<FormTwo/>} />
         <Route path='/form-details-three' element={<FormThree/>} />
         <Route path='/user-profile' element={<Profile/>}/>
         <Route path='/dashboard' element={<HomeDashboard/>}/>
         <Route path='/client-application' element={<ClientApplication/>}/>
-        <Route path='/user-applications' element={<UserApplications/>}/>
+        <Route path='/user-applications/:id' element={<UserApplications/>}/>
         <Route path='/about-us' element={<AboutUs/>}/> 
         <Route path='/contact-us' element={<ContactUs/>}/> 
         <Route path='/co-applicant-form-detail-one' element={<Coformone/>}/> 
