@@ -15,11 +15,8 @@ const personalDetailsSchema = new mongoose.Schema(
     employment_type: { type: String },
     marital_status: { type: String },
     spouse_employment_type: { type: String },
-    no_of_dependents: { type: Number, min: 0, max: 3 },
-    pan_number: {
-      type: String,
-      // match: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-    },
+    no_of_dependents: { type: Number },
+    pan_number: { type: String },
     residence_type: { type: String },
     citizenship: { type: String },
 
@@ -41,21 +38,7 @@ const personalDetailsSchema = new mongoose.Schema(
 const salariedDetailsSchema = new mongoose.Schema(
   {
     organisation_name: { type: String },
-    organisation_type: {
-      type: String,
-      enum: [
-        "Central Govt.",
-        "State Govt.",
-        "Govt. Organisation",
-        "PSU",
-        "Private Limited Company",
-        "Public Limited Company",
-        "Partnership Firm",
-        "Proprietary Firm",
-        "LLP",
-        "Others",
-      ],
-    },
+    organisation_type: { type: String },
     currentOrganizationExperience: { type: String },
     previousOrganizationExperience: { type: String },
     designation_salaried: { type: String },
@@ -69,21 +52,9 @@ const salariedDetailsSchema = new mongoose.Schema(
 const selfEmployedDetailsSchema = new mongoose.Schema(
   {
     company_name: { type: String },
-    company_type: {
-      type: String,
-      enum: [
-        "Company",
-        "Partnership Firm",
-        "Proprietary Firm",
-        "LLP",
-        "Others",
-      ],
-    },
+    company_type: { type: String },
     incorporation_date: { type: String }, // Changed to String to match frontend input
-    designation_self: {
-      type: String,
-      enum: ["Proprietor", "Partner", "Founder", "Director", "Others"],
-    },
+    designation_self: { type: String },
     years_in_business: { type: String }, // Changed to String to match frontend input
     years_of_itr_filing: { type: String }, // Changed to String to match frontend input
   },
@@ -112,9 +83,9 @@ const loanApplicationSchema = new mongoose.Schema(
       ],
     },
     applicants: [applicantDetailsSchema], // Array to store details for multiple applicants
-    property_finalised: { type: String, enum: ["Yes", "No"] },
+    property_finalised: { type: String },
     property_address: { type: String },
-    agreement_executed: { type: String, enum: ["Yes", "No"] },
+    agreement_executed: { type: String },
     agreement_mou_value: { type: String }, // Changed to String to match frontend input
     loan_amount_required: { type: String }, // Changed to String to match frontend input
     preferred_banks: { type: String },
@@ -171,7 +142,7 @@ const formSchema = new mongoose.Schema(
     loanDocuments: [loanDocumentsSchema],
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
+      enum: ["Pending", "Approved","In Progress", "Rejected"],
       default: "Pending",
     },
   },

@@ -348,50 +348,44 @@ const fetchAllForms = asyncHandler(async (req, res) => {
 const fetchFormById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Validate ID format
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid form ID format"
-    });
+    return res.status(400).json({ success: false, message: "Invalid form ID format" });
   }
 
   try {
-    const form = await Form.findById(id)
-      .populate("user", "name email")
-      .lean();
-
+    const form = await Form.findById(id).populate("user", "name email").lean();
     if (!form) {
-      return res.status(404).json({
-        success: false,
-        message: "Form not found"
-      });
+      return res.status(404).json({ success: false, message: "Form not found" });
     }
 
-    // Reorder fields explicitly
+    const baseUrl = `${req.protocol}://${req.get("host")}/`;
+    const updatedLoanDocuments = form.loanDocuments.map((doc) => {
+      const updatedDoc = {};
+      for (const [key, value] of Object.entries(doc)) {
+        updatedDoc[key] = value ? `${baseUrl}${value.split('/').pop()}` : null;
+      }
+      return updatedDoc;
+    });
+
     const reorderedForm = {
       _id: form._id,
       user: form.user,
       personalDetails: form.personalDetails,
       loanApplication: form.loanApplication,
-      loanDocuments: form.loanDocuments,
+      loanDocuments: updatedLoanDocuments,
       status: form.status,
       createdAt: form.createdAt,
       updatedAt: form.updatedAt,
-      __v: form.__v
+      __v: form.__v,
     };
 
     res.status(200).json({
       success: true,
       message: "Form fetched successfully",
-      data: reorderedForm
+      data: reorderedForm,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch form",
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: "Failed to fetch form", error: error.message });
   }
 });
 
@@ -497,7 +491,7 @@ const updateFormStatus = asyncHandler(async (req, res) => {
   }
 
   // Validate status
-  const validStatuses = ["Pending", "Approved", "Rejected"];
+  const validStatuses = ["Pending", "Approved", "In Progress", "Rejected"];
   if (!status || !validStatuses.includes(status)) {
     return res.status(400).json({
       success: false,

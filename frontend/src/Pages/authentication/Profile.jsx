@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     console.log("User from UserContext:", user);
-    if (user && user.id) {  // Changed from user._id to user.id
+    if (user && user.id) {
       console.log("Fetching forms for user ID:", user.id);
       dispatch(fetchFormsByUserId(user.id));
     } else {
@@ -19,7 +19,7 @@ const Dashboard = () => {
   }, [dispatch, user]);
 
   const defaultUser = {
-    id: null,  // Changed from _id to id
+    id: null,
     name: "Unknown User",
     email: "N/A",
     pincode: "N/A",
@@ -33,14 +33,16 @@ const Dashboard = () => {
         return "bg-green-500 hover:bg-green-600";
       case "rejected":
         return "bg-red-500 hover:bg-red-600";
+      case "In Progress":
+        return "bg-yellow-500 hover:bg-red-600";
       case "pending":
-        return "bg-yellow-500 hover:bg-yellow-600";
+        return "bg-blue-500 hover:bg-yellow-600";
       default:
-        return "bg-gray-500 hover:bg-gray-600";
+        return "bg-yellow-500 hover:bg-yellow-600";
     }
   };
 
-  const isUserAuthenticated = user && Object.keys(user).length > 0 && user.id;  // Changed from _id to id
+  const isUserAuthenticated = user && Object.keys(user).length > 0 && user.id;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white">
@@ -151,6 +153,9 @@ const Dashboard = () => {
                         </p>
                         <p className="text-gray-700 text-sm">
                           Amount: ₹{form.loanApplication?.loan_amount_required?.toLocaleString() || "N/A"}
+                        </p>
+                        <p className="text-gray-600 text-xs">
+                          Application No: {form._id || "N/A"}
                         </p>
                         <p className="text-gray-600 text-xs">
                           Applied: {form.createdAt 
