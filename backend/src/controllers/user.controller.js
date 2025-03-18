@@ -35,6 +35,8 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, phoneNumber, pincode, password, confirmpassword } = req.body;
 
+  console.log('Request body:', req.body); // Log incoming data
+
   if (!name || !email || !phoneNumber || !pincode || !password || !confirmpassword) {
     throw new ApiError(400, "All fields are required");
   }
@@ -43,17 +45,27 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Passwords do not match");
   }
 
-  const existingUser = await User.findOne({ email, phoneNumber });
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
-    throw new ApiError(409, "User already exists! Please login.");
+    throw new ApiError(409, "User with this email already exists! Please login.");
   }
 
   const newUser = new User({ name, email, phoneNumber, pincode, password });
+  console.log('Document to insert:', newUser); // Log document before saving
   await newUser.save();
+
+  const userResponse = {
+    _id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    phoneNumber: newUser.phoneNumber,
+    pincode: newUser.pincode,
+    createdAt: newUser.createdAt,
+  };
 
   return res
     .status(201)
-    .json(new ApiResponse(201, newUser, "User Registered Successfully"));
+    .json(new ApiResponse(201, userResponse, "User Registered Successfully"));
 });
 
 // Login user
