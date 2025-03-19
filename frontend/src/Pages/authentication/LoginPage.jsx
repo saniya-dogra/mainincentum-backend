@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../index.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from "../../contextapi/UserContext";
+import DOMPurify from "dompurify";
 
 axios.defaults.withCredentials = true;
 
@@ -18,29 +18,31 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const sanitizeInput = (input) => DOMPurify.sanitize(input);
+
   const validateForm = () => {
     const newErrors = {};
+    const cleanPhoneNumber = sanitizeInput(formData.phoneNumber);
+    const cleanPassword = sanitizeInput(formData.password);
 
-    if (!formData.phoneNumber || !/^\d{10}$/.test(formData.phoneNumber.trim())) {
+    if (!cleanPhoneNumber || !/^\d{10}$/.test(cleanPhoneNumber.trim())) {
       newErrors.phoneNumber = "Phone number must be exactly 10 digits.";
     }
-
-    if (!formData.password || formData.password.length < 6) {
+    if (!cleanPassword || cleanPassword.length < 6) {
       newErrors.password = "Password must be at least 6 characters long.";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({ ...prevData, [name]: sanitizeInput(value) }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) {
       toast.error("Please correct the errors in the form!", {
         position: "top-center",
@@ -48,40 +50,39 @@ export default function LoginPage() {
       });
       return;
     }
-  
+
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, formData, {
         withCredentials: true,
       });
-      console.log("Login response:", response);  // Check if data is being received properly
-      setUser(response.data);
-      toast.dismiss();  // Dismiss any existing toasts
-  
+      const { userId, ...userData } = response.data.data; // Destructure userId and rest of data
+      const formattedUser = { id: userId, ...userData }; // Match Profile component expectation
+      console.log("Setting user in context:", formattedUser);
+      setUser(formattedUser);
+
       toast.success("Login successful!", {
         position: "top-center",
         autoClose: 2000,
         onClose: () => {
-          navigate("/");  // Navigate after toast closes
+          navigate("/user-profile"); // Navigate to profile immediately
         },
       });
     } catch (error) {
-      console.error("Login error:", error);
       const errorMessage =
         error.response?.data?.message || "Login failed. Please try again.";
-  
-      toast.dismiss();  // Dismiss any existing toast
-      toast.error(errorMessage, {
-        position: "top-center",
-        autoClose: 2000,
-      });
+      if (error.response?.status === 429) {
+        toast.error("Too many login attempts. Please wait and try again.");
+      } else {
+        toast.error(errorMessage, {
+          position: "top-center",
+          autoClose: 2000,
+        });
+      }
     }
   };
-  
-  
 
   return (
     <div className="min-h-screen bg-image grid grid-cols-1 xl:grid-cols-2">
-      {/* Left Section */}
       <div className="flex flex-col w-full p-6 xl:p-12">
         <div className="flex flex-col justify-center h-2/3 mx-auto">
           <h2 className="text-white text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold leading-tight mt-20">
@@ -105,7 +106,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      {/* Right Section */}
       <div className="flex items-center justify-center p-6 bg-opacity-80">
         <div className="w-full max-w-md p-6 bg-white bg-opacity-10 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg -mt-12">
           <h2 className="text-gray-200 text-3xl font-bold mb-4">Login</h2>
@@ -150,8 +150,6 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
-
-      {/* Toast Container */}
       <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );

@@ -8,7 +8,7 @@ import { FaBookOpen } from "react-icons/fa6";
 import { IoDocuments } from "react-icons/io5";
 import { UserContext } from "../../contextapi/UserContext.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify"; // Added toast for feedback
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { savePersonalDetails } from "../../store/formOneSlice.js";
 
@@ -41,6 +41,7 @@ export default function Coformone() {
       present_pincode: "",
     },
   ]);
+  const [errors, setErrors] = useState([{}]); // Error state for each applicant
 
   const [openDropdown, setOpenDropdown] = useState(null);
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ export default function Coformone() {
       present_pincode: "",
     }));
     setFormValuesList(newFormValuesList);
+    setErrors(Array(value).fill({})); // Reset errors for new number of applicants
   };
 
   const handleInputChange = (index, e) => {
@@ -84,6 +86,12 @@ export default function Coformone() {
       const updatedForms = [...prev];
       updatedForms[index] = { ...updatedForms[index], [name]: value };
       return updatedForms;
+    });
+    // Clear error for this field when user starts typing
+    setErrors((prev) => {
+      const updatedErrors = [...prev];
+      updatedErrors[index] = { ...updatedErrors[index], [name]: "" };
+      return updatedErrors;
     });
   };
 
@@ -95,8 +103,29 @@ export default function Coformone() {
     });
   };
 
+  const validateForm = () => {
+    const newErrors = formValuesList.map((formValues) => {
+      const applicantErrors = {};
+      if (!formValues.full_name) applicantErrors.full_name = "Please fill this field";
+      if (!formValues.email_id) applicantErrors.email_id = "Please fill this field";
+      if (!formValues.mobile_number) applicantErrors.mobile_number = "Please fill this field";
+      return applicantErrors;
+    });
+    setErrors(newErrors);
+    return newErrors.every((err) => Object.keys(err).length === 0); // True if no errors
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fill all required fields.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+      return;
+    }
+
     if (!user) {
       toast.error("User not authenticated. Please log in.", {
         position: "top-center",
@@ -104,6 +133,7 @@ export default function Coformone() {
       });
       return;
     }
+
     try {
       const payload = {
         userId: user?.id,
@@ -135,11 +165,12 @@ export default function Coformone() {
   const getFieldProps = (index, fieldName, placeholder) => {
     return {
       name: fieldName,
-      placeholder: `${placeholder}${
-        index > 0 ? ` (Applicant ${index + 1})` : ""
-      }`,
+      placeholder: errors[index]?.[fieldName]
+        ? errors[index][fieldName] // Show error in placeholder if present
+        : `${placeholder}${index > 0 ? ` (Applicant ${index + 1})` : ""}`,
       value: formValuesList[index][fieldName] || "",
       onChange: (e) => handleInputChange(index, e),
+      error: errors[index]?.[fieldName], // Pass error state to Input component
     };
   };
 
@@ -203,35 +234,30 @@ export default function Coformone() {
             isOpen={openDropdown === "numberOfApplicants"}
             id="numberOfApplicants"
             value={numberOfApplicants.toString()}
-            onSelect={(option) =>
-              handleNumberOfApplicantsChange(parseInt(option))
-            }
+            onSelect={(option) => handleNumberOfApplicantsChange(parseInt(option))}
           />
         </div>
         <form onSubmit={handleFormSubmit}>
           {formValuesList.map((formValues, index) => (
-            <div key={index} className="mx-4 lg:mx-12">
+            <div
+              key={index}
+              className={`mx-4 lg:mx-12 p-4 rounded-xl ${
+                Object.keys(errors[index] || {}).length > 0
+                  ? "border-2 border-red-500"
+                  : "border-2 border-transparent"
+              }`}
+            >
               <h1 className="text-lg lg:text-xl font-bold mt-4 lg:mt-6 text-white mb-2 lg:mb-3">
                 Applicant {index + 1} Details
               </h1>
               <div className="mx-2 lg:mx-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
                   <Input
-                    {...getFieldProps(
-                      index,
-                      "full_name",
-                      "Full Name as per Pan card"
-                    )}
+                    {...getFieldProps(index, "full_name", "Full Name as per Pan card")}
                   />
+                  <Input {...getFieldProps(index, "father_name", "Father Name")} />
                   <Input
-                    {...getFieldProps(index, "father_name", "Father Name")}
-                  />
-                  <Input
-                    {...getFieldProps(
-                      index,
-                      "mobile_number",
-                      "Enter 10-digit mobile number"
-                    )}
+                    {...getFieldProps(index, "mobile_number", "Enter 10-digit mobile number")}
                   />
                   <Input {...getFieldProps(index, "email_id", "Email ID")} />
                   <Input {...getFieldProps(index, "dob", "DOB")} />
@@ -242,9 +268,7 @@ export default function Coformone() {
                     isOpen={openDropdown === `gender-${index}`}
                     id={`gender-${index}`}
                     value={formValues.gender}
-                    onSelect={(option) =>
-                      handleOptionSelect(index, "gender", option)
-                    }
+                    onSelect={(option) => handleOptionSelect(index, "gender", option)}
                   />
                   <Dropdown
                     options={[
@@ -264,12 +288,7 @@ export default function Coformone() {
                     }
                   />
                   <Dropdown
-                    options={[
-                      "Salaried",
-                      "Self Employed",
-                      "Professional",
-                      "Unemployed",
-                    ]}
+                    options={["Salaried", "Self Employed", "Professional", "Unemployed"]}
                     placeholder="Employment Type"
                     setOpenDropdown={setOpenDropdown}
                     isOpen={openDropdown === `employmentType-${index}`}
@@ -298,11 +317,7 @@ export default function Coformone() {
                     id={`spouseEmploymentType-${index}`}
                     value={formValues.spouse_employment_type}
                     onSelect={(option) =>
-                      handleOptionSelect(
-                        index,
-                        "spouse_employment_type",
-                        option
-                      )
+                      handleOptionSelect(index, "spouse_employment_type", option)
                     }
                   />
                   <Dropdown
@@ -316,9 +331,7 @@ export default function Coformone() {
                       handleOptionSelect(index, "no_of_dependents", option)
                     }
                   />
-                  <Input
-                    {...getFieldProps(index, "pan_number", "Pan Number")}
-                  />
+                  <Input {...getFieldProps(index, "pan_number", "Pan Number")} />
                   <Dropdown
                     options={["Owned", "Rented", "Parental", "Others"]}
                     placeholder="Residence Type"
@@ -348,22 +361,12 @@ export default function Coformone() {
               </h1>
               <div className="mx-4 lg:mx-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
+                  <Input {...getFieldProps(index, "permanent_state", "State")} />
+                  <Input {...getFieldProps(index, "permanent_district", "District")} />
                   <Input
-                    {...getFieldProps(index, "permanent_state", "State")}
+                    {...getFieldProps(index, "permanent_address", "Enter Your Permanent Address")}
                   />
-                  <Input
-                    {...getFieldProps(index, "permanent_district", "District")}
-                  />
-                  <Input
-                    {...getFieldProps(
-                      index,
-                      "permanent_address",
-                      "Enter Your Permanent Address"
-                    )}
-                  />
-                  <Input
-                    {...getFieldProps(index, "permanent_pincode", "Pin Code")}
-                  />
+                  <Input {...getFieldProps(index, "permanent_pincode", "Pin Code")} />
                 </div>
               </div>
               <h1 className="text-lg lg:text-xl font-bold mt-4 lg:mt-6 ml-2 lg:ml-3 text-white mb-2 lg:mb-3">
@@ -372,25 +375,17 @@ export default function Coformone() {
               <div className="mx-4 lg:mx-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-3 lg:gap-4">
                   <Input {...getFieldProps(index, "present_state", "State")} />
+                  <Input {...getFieldProps(index, "present_district", "District")} />
                   <Input
-                    {...getFieldProps(index, "present_district", "District")}
+                    {...getFieldProps(index, "present_address", "Enter Your Present Address")}
                   />
-                  <Input
-                    {...getFieldProps(
-                      index,
-                      "present_address",
-                      "Enter Your Present Address"
-                    )}
-                  />
-                  <Input
-                    {...getFieldProps(index, "present_pincode", "Pin Code")}
-                  />
+                  <Input {...getFieldProps(index, "present_pincode", "Pin Code")} />
                 </div>
               </div>
             </div>
           ))}
-          <div className="mt-6 lg:mt-8">
-            <Button type="submit" text="Submit" className="mt-4 lg:mt-6" />
+          <div className="mt-6 lg:mt-8 flex justify-center">
+            <Button type="submit" text="Submit & Next" className="mt-4 lg:mt-6" />
           </div>
         </form>
       </div>

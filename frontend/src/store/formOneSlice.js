@@ -21,7 +21,7 @@ export const savePersonalDetails = createAsyncThunk(
 
 // Save Loan Application
 export const saveLoanApplication = createAsyncThunk(
-  "form/saveLoanApplication", // Changed name to match others
+  "form/saveLoanApplication",
   async (data, { rejectWithValue }) => {
     try {
       console.log("Sending data to /form/loan-application:", data);
@@ -40,19 +40,14 @@ export const saveLoanApplication = createAsyncThunk(
 // Upload Loan Documents
 export const uploadLoanDocuments = createAsyncThunk(
   "form/uploadLoanDocuments",
-  async ({ userId, applicantIndex, files }, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
-      formData.append("userId", userId);
-      formData.append("applicantIndex", applicantIndex);
+      console.log("FormData contents:");
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value instanceof File ? value.name : value}`);
+      }
 
-      Object.entries(files).forEach(([fieldName, file]) => {
-        if (file) {
-          formData.append(fieldName, file);
-        }
-      });
-
-      console.log("Sending data to /form/loan-documents with userId:", userId);
+      console.log("Sending data to /form/loan-documents with userId:", formData.get("userId"));
       const response = await axios.post(`${API_URL}/form/loan-documents`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
@@ -60,8 +55,11 @@ export const uploadLoanDocuments = createAsyncThunk(
       console.log("Response from uploadLoanDocuments:", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error in uploadLoanDocuments:", error.response?.data || error.message);
-      return rejectWithValue(error.response?.data || { message: "An error occurred during upload" });
+      const errorDetails = error.response
+        ? { status: error.response.status, data: error.response.data }
+        : { message: error.message || "Network or client-side error" };
+      console.error("Error in uploadLoanDocuments:", errorDetails);
+      return rejectWithValue(errorDetails.data || { message: "Failed to upload documents" });
     }
   }
 );
@@ -98,20 +96,23 @@ export const fetchFormById = createAsyncThunk(
   }
 );
 
+// Fetch Forms by User ID
 export const fetchFormsByUserId = createAsyncThunk(
   "form/fetchFormsByUserId",
   async (userId, { rejectWithValue }) => {
     try {
       console.log(`Fetching forms for user ID from ${API_URL}/form/user/${userId}`);
-      const response = await axios.get(`${API_URL}/form/user/${userId}`);
+      const response = await axios.get(`${API_URL}/form/user/${userId}`, {
+        withCredentials: true,
+      });
       console.log("Response from fetchFormsByUserId:", response.data);
-      return response.data;
+      return response.data.data; // Return the forms array
     } catch (error) {
       const errorDetails = error.response
         ? { status: error.response.status, data: error.response.data }
         : { message: error.message };
       console.error("Error in fetchFormsByUserId:", errorDetails);
-      return rejectWithValue(errorDetails);
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch forms");
     }
   }
 );
@@ -139,9 +140,7 @@ export const updateFormStatus = createAsyncThunk(
     try {
       console.log(`Sending PATCH request to ${API_URL}/form/${id}/status with status:`, status);
       const response = await axios.patch(`${API_URL}/form/${id}/status`, { status }, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
       console.log("Response from updateFormStatus:", response.data);
       return response.data;
@@ -154,6 +153,7 @@ export const updateFormStatus = createAsyncThunk(
     }
   }
 );
+
 // Delete Form
 export const deleteForm = createAsyncThunk(
   "form/deleteForm",
@@ -162,7 +162,7 @@ export const deleteForm = createAsyncThunk(
       console.log(`Sending DELETE request to ${API_URL}/form/${id}`);
       const response = await axios.delete(`${API_URL}/form/${id}`);
       console.log("Response from deleteForm:", response.data);
-      return response.data; // Assuming backend returns { success: true, message: "Form deleted" }
+      return response.data;
     } catch (error) {
       const errorDetails = error.response
         ? { status: error.response.status, data: error.response.data }
@@ -198,8 +198,6 @@ const formSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Existing cases remain unchanged...
-      // Save Personal Details
       .addCase(savePersonalDetails.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -216,7 +214,6 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      // Save Loan Application
       .addCase(saveLoanApplication.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -233,7 +230,6 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      // Upload Loan Documents
       .addCase(uploadLoanDocuments.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -251,7 +247,6 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      // Fetch All Forms
       .addCase(fetchAllForms.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -267,7 +262,6 @@ const formSlice = createSlice({
         state.forms = [];
         state.total = 0;
       })
-      // Fetch Form by ID
       .addCase(fetchFormById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -281,7 +275,21 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.currentForm = null;
       })
-      // Update Form
+      .addCase(fetchFormsByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchFormsByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.forms = action.payload;
+        state.total = action.payload.length;
+      })
+      .addCase(fetchFormsByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.forms = [];
+        state.total = 0;
+      })
       .addCase(updateForm.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -301,7 +309,6 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      // Update Form Status
       .addCase(updateFormStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -321,7 +328,6 @@ const formSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
-      // Delete Form
       .addCase(deleteForm.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -335,24 +341,9 @@ const formSlice = createSlice({
       .addCase(deleteForm.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      })
-      // Fetch Forms by User ID (New Case)
-      .addCase(fetchFormsByUserId.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchFormsByUserId.fulfilled, (state, action) => {
-        state.loading = false;
-        state.forms = action.payload.data; // Store user's forms in forms array
-        state.total = action.payload.data.length;
-      })
-      .addCase(fetchFormsByUserId.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-        state.forms = [];
-        state.total = 0;
       });
   },
 });
-export const { resetUploadState } = formSlice.actions; // Export resetUploadState
+
+export const { resetUploadState } = formSlice.actions;
 export default formSlice.reducer;

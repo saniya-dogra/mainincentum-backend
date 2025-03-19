@@ -6,32 +6,32 @@ const jwt = require('jsonwebtoken');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Name is required"],  // Custom message
+    required: [true, "Name is required"],
     trim: true,
-    minlength: [3, "Name must be at least 3 characters long"],  // Min length constraint
+    minlength: [3, "Name must be at least 3 characters long"],
   },
   email: {
     type: String,
     required: [true, "Email is required"],
-    unique: [true, "Email must be unique"],
+    unique: true, // Simplified unique constraint
     lowercase: true,
     trim: true,
-    match: [/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/, "Please enter a valid email address"],  // Regex to match valid email
+    match: [/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/, "Please enter a valid email address"],
   },
   phoneNumber: {
     type: String,
     required: [true, "Phone number is required"],
-    match: [/^\d{10}$/, "Phone number must be 10 digits"],  // Validate for 10-digit phone number
+    match: [/^\d{10}$/, "Phone number must be 10 digits"],
   },
   pincode: {
     type: String,
     required: [true, "Pincode is required"],
-      // Validate for 6-digit pincode
+    match: [/^\d{6}$/, "Pincode must be 6 digits"], // Added validation for 6-digit pincode
   },
   password: {
     type: String,
     required: [true, "Password is required"],
-    minlength: [6, "Password must be at least 6 characters long"],  // Min length constraint
+    minlength: [6, "Password must be at least 6 characters long"],
   },
   refreshToken: {
     type: String,
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Middleware to hash the password before saving the user
+// Middleware to hash the password before saving
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);

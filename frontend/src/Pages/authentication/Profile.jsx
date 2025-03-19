@@ -4,19 +4,21 @@ import { UserContext } from "../../contextapi/UserContext";
 import { fetchFormsByUserId } from "../../store/formOneSlice";
 
 const Dashboard = () => {
-  const { user } = useContext(UserContext);
+  const { user, ready } = useContext(UserContext);
   const dispatch = useDispatch();
   const { forms, loading, error } = useSelector((state) => state.form);
 
   useEffect(() => {
     console.log("User from UserContext:", user);
-    if (user && user.id) {
+    if (ready && user && user.id) {
       console.log("Fetching forms for user ID:", user.id);
       dispatch(fetchFormsByUserId(user.id));
-    } else {
-      console.log("No valid user ID found");
+    } else if (ready && !user) {
+      console.log("No user authenticated, redirecting to login");
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, ready]);
+
+  if (!ready) return <div>Loading...</div>;
 
   const defaultUser = {
     id: null,
@@ -33,20 +35,19 @@ const Dashboard = () => {
         return "bg-green-500 hover:bg-green-600";
       case "rejected":
         return "bg-red-500 hover:bg-red-600";
-      case "In Progress":
-        return "bg-yellow-500 hover:bg-red-600";
-      case "pending":
-        return "bg-blue-500 hover:bg-yellow-600";
-      default:
+      case "in progress":
         return "bg-yellow-500 hover:bg-yellow-600";
+      case "pending":
+        return "bg-blue-500 hover:bg-blue-700";
+      default:
+        return "bg-gray-500 hover:bg-gray-600";
     }
   };
 
-  const isUserAuthenticated = user && Object.keys(user).length > 0 && user.id;
+  const isUserAuthenticated = !!user?.id;
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white">
-      {/* Sidebar */}
       <div className="w-full md:w-64 flex flex-col items-center p-6 bg-gradient-to-b from-blue-600 to-blue-300 text-white">
         <img
           src={displayUser.avatar || "https://placehold.co/100x100"}
@@ -61,25 +62,57 @@ const Dashboard = () => {
         </button>
         <div className="mt-8 w-full text-start">
           <p className="mt-4 flex gap-2 items-center hover:underline cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+              />
             </svg>
             Personal Information
           </p>
           <p className="mt-4 flex gap-2 items-center hover:underline cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+              />
             </svg>
             Applied Loans
           </p>
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-4 sm:p-8 bg-gray-100">
         <h2 className="text-sm sm:text-md font-medium mb-3 bg-blue-200 w-full sm:w-[20%] md:w-[40%] lg:w-[20%] text-center rounded-full p-2 flex gap-2 items-center group transition duration-300 ease-in-out hover:bg-blue-300 hover:scale-105 hover:shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 group-hover:animate-bounce">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 group-hover:animate-bounce"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            />
           </svg>
           Personal Information
         </h2>
@@ -104,8 +137,19 @@ const Dashboard = () => {
         </div>
 
         <h2 className="text-sm sm:text-md font-medium mt-6 mb-3 bg-blue-200 w-full sm:w-[20%] md:w-[40%] lg:w-[20%] text-center rounded-full p-2 flex gap-2 items-center group transition duration-300 ease-in-out hover:bg-blue-300 hover:scale-105 hover:shadow-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 group-hover:animate-bounce">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 group-hover:animate-bounce"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
           </svg>
           Loan Applications
         </h2>
@@ -122,13 +166,9 @@ const Dashboard = () => {
             </div>
           ) : error ? (
             <p className="text-red-500 text-center p-4">
-              Unable to load applications: {typeof error === "object" ? error.message || "An error occurred" : error}
+              Unable to load applications: {error}
             </p>
-          ) : !forms ? (
-            <p className="text-gray-500 text-center p-4">
-              Unable to fetch applications. Please try again later.
-            </p>
-          ) : forms.length === 0 ? (
+          ) : !forms || forms.length === 0 ? (
             <div className="text-center p-4">
               <p className="text-gray-500">No loan applications found</p>
               <p className="text-gray-400 text-sm mt-2">
@@ -149,7 +189,7 @@ const Dashboard = () => {
                       </div>
                       <div className="ml-4">
                         <p className="font-semibold text-gray-900">
-                          {form.loanApplication?.loan_type || "Unknown Loan Type"}
+                          {form.loanApplication?.loanType || "Unknown Loan Type"}
                         </p>
                         <p className="text-gray-700 text-sm">
                           Amount: ₹{form.loanApplication?.loan_amount_required?.toLocaleString() || "N/A"}
@@ -158,11 +198,12 @@ const Dashboard = () => {
                           Application No: {form._id || "N/A"}
                         </p>
                         <p className="text-gray-600 text-xs">
-                          Applied: {form.createdAt 
-                            ? new Date(form.createdAt).toLocaleString('en-IN', {
-                                dateStyle: 'medium',
-                                timeStyle: 'short'
-                              }) 
+                          Applied:{" "}
+                          {form.createdAt
+                            ? new Date(form.createdAt).toLocaleString("en-IN", {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                              })
                             : "N/A"}
                         </p>
                       </div>

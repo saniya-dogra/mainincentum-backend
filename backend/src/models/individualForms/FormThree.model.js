@@ -7,7 +7,7 @@ const loanDocumentsSchema = new mongoose.Schema({
   employerIDCard: { type: String },
   joiningConfirmationExperienceLetter: { type: String },
   last12MonthSalaryAccountStatement: { type: String },
-  last12MonthSavingsAccountStatement: { type: String },
+  last12MonthSavingsBankAccountStatement: { type: String },
   existingLoanAccountStatement: { type: String },
   latest6MonthSalarySlip: { type: String },
   form16PartABAnd26AS: { type: String },
