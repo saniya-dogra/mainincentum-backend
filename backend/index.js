@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const csurf = require("csurf");
 require("dotenv").config();
-const { connectToDatabase } = require("./src/db");
+const { connectToDatabase } = require("./src/db/index.js");
 
 // Routers
 const userRouter = require("./src/routes/user.router");
