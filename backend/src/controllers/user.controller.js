@@ -4,6 +4,10 @@ const { asyncHandler } = require("../utils/asyncHandler.js");
 const { ApiError } = require("../utils/ApiError");
 const { ApiResponse } = require("../utils/ApiResponse");
 
+// Load environment variables
+require('dotenv').config();
+const ADMIN_CREDENTIALS = JSON.parse(process.env.ADMIN_CREDENTIALS);
+
 // Function to generate access and refresh tokens
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -172,12 +176,6 @@ const profile = asyncHandler(async (req, res) => {
   }
 });
 
-// Admin credentials
-const ADMIN_CREDENTIALS = [
-  { phoneNumber: "9854867952", password: "Harshit@123" },
-  { phoneNumber: "8593147206", password: "Natesh@123" },
-];
-
 // Login admin
 const loginAdmin = asyncHandler(async (req, res) => {
   const { phoneNumber, password } = req.body;
@@ -238,6 +236,7 @@ const verifyAdmin = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Unauthorized: Invalid or expired admin token.");
   }
 });
+
 const logoutAdmin = asyncHandler(async (req, res) => {
   console.log("Admin logout requested for token:", req.cookies?.adminToken);
   res.clearCookie("adminToken", {
@@ -250,4 +249,3 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 });
 
 module.exports = { registerUser, loginUser, logoutUser, profile, loginAdmin, verifyAdmin, logoutAdmin };
-

@@ -64,7 +64,8 @@ export default function LoginPage() {
         position: "top-center",
         autoClose: 2000,
         onClose: () => {
-          navigate("/user-profile"); // Navigate to profile immediately
+          navigate("/");
+          window.location.reload();
         },
       });
     } catch (error) {

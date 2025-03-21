@@ -2,11 +2,9 @@ const jwt = require("jsonwebtoken");
 const { asyncHandler } = require("../utils/asyncHandler");
 const ApiError = require("../utils/ApiError");
 
-// Hardcoded admin credentials (to be replaced later with DB if needed)
-const ADMIN_CREDENTIALS = [
-  { phoneNumber: "9854867952", password: "Harshit@123" },
-  { phoneNumber: "8593147206", password: "Natesh@123" },
-];
+// Load environment variables
+require('dotenv').config();
+const ADMIN_CREDENTIALS = JSON.parse(process.env.ADMIN_CREDENTIALS);
 
 const verifyAdminJWT = asyncHandler(async (req, res, next) => {
   const token =
