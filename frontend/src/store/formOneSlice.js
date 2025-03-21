@@ -133,23 +133,27 @@ export const updateForm = createAsyncThunk(
   }
 );
 
-// Update Form Status
 export const updateFormStatus = createAsyncThunk(
-  "form/updateFormStatus",
-  async ({ id, status }, { rejectWithValue }) => {
+  "form/updateStatus",
+  async ({ id, status, csrfToken }, { rejectWithValue }) => {
     try {
-      console.log(`Sending PATCH request to ${API_URL}/form/${id}/status with status:`, status);
-      const response = await axios.patch(`${API_URL}/form/${id}/status`, { status }, {
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log("Response from updateFormStatus:", response.data);
+      const adminToken = document.cookie.split("adminToken=")[1]?.split(";")[0] || "";
+      const response = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/form/${id}/status`,
+        { status },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${adminToken}`,
+            "X-CSRF-Token": csrfToken,
+          },
+          withCredentials: true,
+        }
+      );
       return response.data;
     } catch (error) {
-      const errorDetails = error.response
-        ? { status: error.response.status, data: error.response.data }
-        : { message: error.message };
-      console.error("Error in updateFormStatus:", errorDetails);
-      return rejectWithValue(errorDetails);
+      console.error("Error in updateFormStatus:", error.response || error);
+      return rejectWithValue(error.response?.data || { message: error.message });
     }
   }
 );

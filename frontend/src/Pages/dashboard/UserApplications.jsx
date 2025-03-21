@@ -72,13 +72,14 @@ const UserApplications = () => {
   const handleStatusChange = async (status) => {
     setSelectedStatus(status);
     setShowDropdown(false);
-    console.log("Attempting to update status to:", status);
-
+    console.log("Attempting to update status to:", status, "with CSRF token:", csrfToken);
+  
     if (!csrfToken) {
-      alert("Security token not available. Please refresh the page.");
+      console.error("CSRF token not available");
+      alert("Security token not available. Please wait or refresh the page.");
       return;
     }
-
+  
     try {
       const response = await dispatch(
         updateFormStatus({ id: sanitizedId, status, csrfToken })
