@@ -28,11 +28,11 @@ const ClientApplication = () => {
       {/* Header */}
       <div className="flex justify-start items-center mb-2 gap-2">
         <img
-          src="https://via.placeholder.com/35"
+          src="https://placehold.co/35x35"
           alt="profile"
           className="w-8 h-8 rounded-full"
           onError={(e) => {
-            e.target.src = "https://dummyimage.com/35x35/ccc/fff";
+            e.target.src = "https://placehold.co/35x35?text=User";
           }}
         />
         <Link to="/client-application" className="text-lg font-semibold">
@@ -46,20 +46,20 @@ const ClientApplication = () => {
           <option>Application Status</option>
           <option value="Pending">Pending</option>
           <option value="Approved">Approved</option>
+          <option value="In Progress">In Progress</option>
           <option value="Rejected">Rejected</option>
         </select>
         <input type="date" className="border border-gray-300 p-2 rounded w-60" />
         <select className="border border-gray-300 p-2 rounded w-60">
           <option>Pin Code</option>
-          {data.map((loan) =>
-            loan.personalDetails.map((detail, index) =>
-              detail.permanent_pincode ? (
-                <option key={`${loan._id}-${index}`} value={detail.permanent_pincode}>
-                  {detail.permanent_pincode}
-                </option>
-              ) : null
-            )
-          )}
+          {data.map((loan) => {
+            const primaryDetail = loan.personalDetails?.[0] || {};
+            return primaryDetail.permanent_pincode ? (
+              <option key={loan._id} value={primaryDetail.permanent_pincode}>
+                {primaryDetail.permanent_pincode}
+              </option>
+            ) : null;
+          })}
         </select>
         <select className="border border-gray-300 p-2 rounded w-60">
           <option>Select</option>
@@ -73,11 +73,12 @@ const ClientApplication = () => {
             <tr className="text-gray-700">
               <th className="p-3 border">Profile</th>
               <th className="p-3 border">Full Name</th>
-              <th className="p-3 border">Loan Amount</th>
-              <th className="p-3 border">Application No</th>
               <th className="p-3 border">Email ID</th>
               <th className="p-3 border">Contact Number</th>
               <th className="p-3 border">Pincode</th>
+              <th className="p-3 border">Application No</th>
+              <th className="p-3 border">Loan Type</th>
+              <th className="p-3 border">Loan Amount</th>
               <th className="p-3 border">Status</th>
               <th className="p-3 border">Actions</th>
             </tr>
@@ -85,21 +86,21 @@ const ClientApplication = () => {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan="9" className="p-3">
+                <td colSpan="10" className="p-3">
                   Loading...
                 </td>
               </tr>
             )}
             {error && (
               <tr>
-                <td colSpan="9" className="p-3 text-red-500">
+                <td colSpan="10" className="p-3 text-red-500">
                   {typeof error === "string" ? error : error.message || "Failed to fetch data"}
                 </td>
               </tr>
             )}
             {!loading && !error && data.length === 0 && (
               <tr>
-                <td colSpan="9" className="p-3">
+                <td colSpan="10" className="p-3">
                   No applications found
                 </td>
               </tr>
@@ -107,10 +108,11 @@ const ClientApplication = () => {
             {!loading &&
               !error &&
               currentRows.length > 0 &&
-              currentRows.map((loan) =>
-                loan.personalDetails.map((detail, index) => (
+              currentRows.map((loan, index) => {
+                const primaryDetail = loan.personalDetails?.[0] || {}; // Take only the first applicant
+                return (
                   <tr
-                    key={`${loan._id}-${index}`}
+                    key={loan._id}
                     className={`${index % 2 !== 0 ? "bg-blue-50" : "bg-white"} hover:bg-gray-100`}
                   >
                     <td className="p-3 border">
@@ -118,16 +120,17 @@ const ClientApplication = () => {
                         👤
                       </div>
                     </td>
-                    <td className="p-3 border">{detail.full_name || "N/A"}</td>
+                    <td className="p-3 border">{primaryDetail.full_name || "N/A"}</td>
+                    <td className="p-3 border">{primaryDetail.email_id || "N/A"}</td>
+                    <td className="p-3 border">{primaryDetail.mobile_number || "N/A"}</td>
+                    <td className="p-3 border">{primaryDetail.permanent_pincode || "N/A"}</td>
+                    <td className="p-3 border">{loan._id || "N/A"}</td>
+                    <td className="p-3 border">{loan.loanApplication?.loanType || "N/A"}</td>
                     <td className="p-3 border">
                       {loan.loanApplication?.loan_amount_required
-                        ? `${loan.loanApplication.loan_amount_required} Lakhs`
+                        ? `₹${loan.loanApplication.loan_amount_required.toLocaleString()}`
                         : "N/A"}
                     </td>
-                    <td className="p-3 border">{loan._id || "N/A"}</td>
-                    <td className="p-3 border">{detail.email_id || "N/A"}</td>
-                    <td className="p-3 border">{detail.mobile_number || "N/A"}</td>
-                    <td className="p-3 border">{detail.permanent_pincode || "N/A"}</td>
                     <td className="p-3 border">{loan.status || "N/A"}</td>
                     <td className="p-3 flex justify-center items-center gap-4">
                       <Link
@@ -154,8 +157,8 @@ const ClientApplication = () => {
                       </button>
                     </td>
                   </tr>
-                ))
-              )}
+                );
+              })}
           </tbody>
         </table>
       </div>

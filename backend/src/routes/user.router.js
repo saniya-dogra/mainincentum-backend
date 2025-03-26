@@ -1,14 +1,23 @@
-const { Router } = require('express');
-const { loginUser, logoutUser, profile, registerUser,  } = require('../controllers/user.controller.js');
-const { verifyJWT } = require('../middleware/auth.middleware.js');
+const { Router } = require("express");
+const { registerUser, loginUser, logoutUser, profile, loginAdmin, verifyAdmin, logoutAdmin } = require("../controllers/user.controller");
+const { verifyAdminJWT } = require("../middleware/adminAuth.middleware");
+const csurf = require("csurf");
 
+// Assuming verifyJWT exists or will be created
+const { verifyJWT } = require("../middleware/auth.middleware"); // Add this line
 
 const router = Router();
+const csrfProtection = csurf({ cookie: true });
 
-router.route("/register").post(registerUser)
+// User routes
+router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
-router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/profile").get(profile);
+router.route("/logout").post(verifyJWT, logoutUser); // Add verifyJWT here
+router.route("/profile").get(verifyJWT, profile); // Optional: protect profile too
+
+// Admin routes
+router.route("/admin-login").post(loginAdmin);
+router.route("/verify-admin").get(verifyAdminJWT, verifyAdmin);
+router.route("/admin-logout").post(verifyAdminJWT, csrfProtection, logoutAdmin);
 
 module.exports = router;
-

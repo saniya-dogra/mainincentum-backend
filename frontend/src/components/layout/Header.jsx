@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import logo from "../../assets/logo.webp"; // Update the path if needed
+import logo from "../../assets/logo.webp";
 import { UserContext } from "../../contextapi/UserContext";
 
 const Header = () => {
@@ -18,45 +18,40 @@ const Header = () => {
   const navigate = useNavigate();
   const servicesDropdownRef = useRef(null);
 
-
   useEffect(() => {
+    console.log("User in Header:", user);
     const handleClickOutside = (event) => {
       if (event.target.closest(".user-profile-dropdown") === null) {
         setShowLogout(false);
       }
-
-        if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(event.target)) {
-            setIsServicesDropdownOpen(false);
-        }
-
+      if (
+        servicesDropdownRef.current &&
+        !servicesDropdownRef.current.contains(event.target)
+      ) {
+        setIsServicesDropdownOpen(false);
+      }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [user]);
 
   if (!ready) return null;
 
-  const toggleServicesDropdown = () => {
-    setIsServicesDropdownOpen(!isServicesDropdownOpen);
-  };
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const toggleServicesDropdown = () => setIsServicesDropdownOpen(!isServicesDropdownOpen);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-          `${import.meta.env.VITE_API_URL}/users/logout`,
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/users/logout`,
         {},
         { withCredentials: true }
       );
+      console.log("Logout Response:", response.data);
+
       localStorage.removeItem("token");
       setUser(null);
+
       toast.success("Logout successful!", {
         position: "top-center",
         autoClose: 2000,
@@ -64,7 +59,16 @@ const Header = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       navigate("/");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Logout failed", {
+      console.error("Logout Error:", {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
+      const errorMessage =
+        err.response?.status === 500
+          ? "Server error during logout. Please try again."
+          : err.response?.data?.message || "Logout failed";
+      toast.error(errorMessage, {
         position: "top-center",
         autoClose: 3000,
       });
@@ -73,22 +77,22 @@ const Header = () => {
 
   const handleServiceClick = (path) => {
     navigate(path);
-    setIsServicesDropdownOpen(false); // Close the dropdown
-    if(isMobileMenuOpen){
-      toggleMobileMenu()
-    }
+    setIsServicesDropdownOpen(false);
+    if (isMobileMenuOpen) toggleMobileMenu();
   };
+
+  const userName = user?.data?.name || user?.name || "User";
 
   return (
     <header className="bg-primary py-2 px-9 flex justify-between items-center relative">
-      {/* Logo */}
+      {/* Logo on the left */}
       <div className="text-white font-bold text-xl flex items-center space-x-3 hover:scale-105 transition-transform duration-300">
-        <Link to="/HomePage">
-        <img src={logo} alt="Rupee Icon" className="w-[130px] h-[60px]" />
+        <Link to="/">
+          <img src={logo} alt="Rupee Icon" className="w-[130px] h-[60px]" />
         </Link>
       </div>
 
-      {/* Hamburger Menu Button */}
+      {/* Hamburger Menu Button for Mobile */}
       <button
         className="text-white text-2xl md:hidden"
         onClick={toggleMobileMenu}
@@ -97,32 +101,19 @@ const Header = () => {
         {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Mobile Navbar */}
+      {/* Mobile Navigation (unchanged, slides from top) */}
       <nav
         className={`absolute top-0 left-0 w-full bg-primary flex flex-col items-start p-4 space-y-4 md:hidden transform transition-transform duration-500 z-50 ${
           isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Close Button */}
-        <button
-          className="self-end text-white text-2xl mb-4"
-          onClick={toggleMobileMenu}
-        >
+        <button className="self-end text-white text-2xl mb-4" onClick={toggleMobileMenu}>
           <FaTimes />
         </button>
-
-        <Link
-          to="/HomePage"
-          className="text-white hover:text-auButtomColor transition"
-          onClick={toggleMobileMenu}
-        >
+        <Link to="/" className="text-white hover:text-auButtomColor transition" onClick={toggleMobileMenu}>
           Home
         </Link>
-        <Link
-          to="/about-us"
-          className="text-white hover:text-auButtomColor transition"
-          onClick={toggleMobileMenu}
-        >
+        <Link to="/about-us" className="text-white hover:text-auButtomColor transition" onClick={toggleMobileMenu}>
           About
         </Link>
         <div className="relative w-full" ref={servicesDropdownRef}>
@@ -175,7 +166,7 @@ const Header = () => {
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
               onClick={() => handleServiceClick("/mortgage-loan")}
             >
-              Mortage Loan
+              Mortgage Loan
             </Link>
           </div>
         </div>
@@ -193,7 +184,6 @@ const Header = () => {
         >
           Contact
         </Link>
-
         {user ? (
           <>
             <button
@@ -221,10 +211,10 @@ const Header = () => {
         )}
       </nav>
 
-      {/* Desktop Navbar */}
-      <nav className="hidden md:flex items-center space-x-8 text-lg">
+      {/* Desktop Navigation (aligned to the right) */}
+      <nav className="hidden md:flex items-center space-x-8 text-lg ml-auto">
         <Link
-          to="/HomePage"
+          to="/"
           className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"
         >
           Home
@@ -248,7 +238,7 @@ const Header = () => {
             />
           </button>
           <div
-            className={`absolute bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-48 z-50 transition-all duration-500 overflow-hidden ${
+            className={`absolute right-0 bg-gray-800 text-white mt-2 rounded-lg shadow-lg w-48 z-50 transition-all duration-500 overflow-hidden ${
               isServicesDropdownOpen ? "max-h-screen" : "max-h-0"
             }`}
           >
@@ -280,11 +270,10 @@ const Header = () => {
               to="/mortgage-loan"
               className="block px-4 py-2 hover:bg-auButtomColor hover:text-gray-900 transition"
             >
-              Mortage Loan
+              Mortgage Loan
             </Link>
           </div>
         </div>
-
         <Link
           to="/emi-calculator"
           className="text-white hover:text-auButtomColor transition hover:scale-110 duration-300"
@@ -319,7 +308,7 @@ const Header = () => {
                   />
                 </svg>
               </div>
-              {user.name && <div>{user.name}</div>}
+              <div>{userName}</div>
             </div>
             {showLogout && (
               <div className="absolute top-full mt-2 right-0 bg-white shadow-lg rounded-lg z-50 w-35 transition-opacity duration-300">
@@ -330,7 +319,7 @@ const Header = () => {
                   <IoArrowBackCircleSharp className="w-8 h-8" />
                   Logout
                 </button>
-                <Link to={"/user-profile"}>
+                <Link to="/user-profile">
                   <button className="flex w-full gap-2 items-center text-left px-3 py-2 text-gray-800 hover:bg-auColor hover:text-white rounded-lg transition-all duration-300">
                     Profile
                   </button>
@@ -346,8 +335,8 @@ const Header = () => {
             Get Started
           </Link>
         )}
-        <ToastContainer position="top-center" autoClose={2000} />
       </nav>
+      <ToastContainer position="top-center" autoClose={2000} />
     </header>
   );
 };

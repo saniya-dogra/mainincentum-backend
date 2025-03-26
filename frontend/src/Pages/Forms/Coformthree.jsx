@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoDocuments } from "react-icons/io5";
-import { FaUser, FaBookOpen } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { FaBookOpen } from "react-icons/fa6";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -46,17 +47,25 @@ const CoformThree = () => {
       let loanType, userType;
 
       if (paramValue) {
-        [loanType, userType] = paramValue.split("&user_type=");
-        userType = userType || "self_employed";
-      } else if (applicants[i]) {
-        loanType = applicants[i].loan || "home";
-        userType = applicants[i].user_type || "self_employed";
+        const [loanPart, userPart] = paramValue.split("&user_type=");
+        loanType = loanPart?.toLowerCase().replace("loan", "") || "personal";
+        userType = userPart?.toLowerCase().replace("-", "_") || applicants[i]?.user_type?.toLowerCase() || "self_employed";
+      } else {
+        loanType = applicants[i]?.loanType?.toLowerCase().replace(" loan", "") || "personal";
+        userType = applicants[i]?.user_type?.toLowerCase().replace("-", "_") || "self_employed";
+      }
+
+      console.log(`Applicant ${i + 1} Raw: paramValue=${paramValue}, loanType=${loanType}, userType=${userType}, stateUserType=${applicants[i]?.user_type}`);
+
+      if (!["salaried", "self_employed"].includes(userType)) {
+        console.warn(`Invalid userType '${userType}' for Applicant ${i + 1}, defaulting to state or self_employed`);
+        userType = applicants[i]?.user_type?.toLowerCase() === "salaried" ? "salaried" : "self_employed";
       }
 
       if (loanType && userType) {
         parsedApplicants.push({
-          loanType: loanType.toLowerCase(),
-          userType: userType.toLowerCase(),
+          loanType,
+          userType,
         });
       }
     }
@@ -70,6 +79,7 @@ const CoformThree = () => {
       return;
     }
 
+    console.log("Parsed Applicants:", parsedApplicants);
     setApplicantsData(parsedApplicants);
     setFiles(parsedApplicants.map(() => ({})));
     setFileErrors(parsedApplicants.map(() => ({})));
@@ -110,6 +120,15 @@ const CoformThree = () => {
             newErrors[applicantIndex] = {
               ...newErrors[applicantIndex],
               [name]: "File size exceeds 3 MB.",
+            };
+            return newErrors;
+          });
+        } else if (file && file.type !== "application/pdf") {
+          setFileErrors((prev) => {
+            const newErrors = [...prev];
+            newErrors[applicantIndex] = {
+              ...newErrors[applicantIndex],
+              [name]: "Only PDF files are allowed.",
             };
             return newErrors;
           });
@@ -165,7 +184,7 @@ const CoformThree = () => {
     e.preventDefault();
     console.log("handleSubmit triggered");
     setIsFormSubmitted(true);
-  
+
     if (!user) {
       toast.error("User not authenticated. Please log in.", {
         position: "top-center",
@@ -174,7 +193,7 @@ const CoformThree = () => {
       setIsFormSubmitted(false);
       return;
     }
-  
+
     const hasErrors = fileErrors.some((err) => Object.values(err).some((e) => e));
     if (hasErrors) {
       toast.error("Please resolve all file errors before submitting.", {
@@ -184,7 +203,7 @@ const CoformThree = () => {
       setIsFormSubmitted(false);
       return;
     }
-  
+
     const hasFiles = files.some((f) => Object.keys(f).length > 0);
     if (!hasFiles) {
       toast.error("Please upload at least one document.", {
@@ -194,37 +213,61 @@ const CoformThree = () => {
       setIsFormSubmitted(false);
       return;
     }
-  
+
     try {
-      const uploadPromises = files.map((applicantFiles, index) => {
-        if (Object.keys(applicantFiles).length > 0) {
-          const formData = new FormData();
-          formData.append("userId", user.id);
-          formData.append("applicantIndex", index);
-  
-          Object.entries(applicantFiles).forEach(([key, file]) => {
-            formData.append(key, file); // e.g., pancard, aadhar
-          });
-  
-          console.log(`FormData for applicant ${index}:`);
-          for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value instanceof File ? value.name : value}`);
-          }
-  
-          return dispatch(uploadLoanDocuments(formData)).unwrap();
-        }
-        return null;
-      }).filter(Boolean);
-  
+      const formData = new FormData();
+      formData.append("userId", user.id);
+
+      const fieldNameMap = {
+        pancard: "panCard",
+        aadharcard: "aadharCard",
+        employeridcard: "employerIDCard",
+        joiningconfirmationexperienceletter: "joiningConfirmationExperienceLetter",
+        last12monthsalaryaccountstatement: "last12MonthSalaryAccountStatement",
+        last12monthsavingsbankaccountstatement: "last12MonthSavingsBankAccountStatement",
+        existingloanaccountstatement: "existingLoanAccountStatement",
+        latest6monthsalaryslip: "latest6MonthSalarySlip",
+        "23yearsform16partaband26as": "form16PartABAnd26AS",
+        "23yearsitrandcomputation": "itrAndComputation",
+        firmregistrationcertificate: "firmRegistrationCertificate",
+        gstrforlastyear: "gstrLastYear",
+        last6or12monthcurrentaccountstatement: "last6Or12MonthCurrentAccountStatement",
+        last6or12monthbusinessaccountstatement: "businessAccountStatement",
+        "23yearsbalancesheets": "balanceSheets",
+        nocloanclosurestatementsforloansclosedin1year: "nocLoanCloseStatements",
+        drivinglicenseselforfamily: "drivingLicense",
+        kycofproprietorpartnersdirectors: "kycProprietorPartnersDirectors",
+        certificateforincorporation: "certificateForIncorporation",
+        articleofassociation: "articleOfAssociation",
+        memorandumofassociation: "memorandumOfAssociation",
+        otherrelevantdocuments: "otherRelevantDocuments",
+        pancardoffirm: "panCardofFirm",
+      };
+
+      files.forEach((applicantFiles, index) => {
+        console.log(`Files for Applicant ${index + 1}:`, applicantFiles);
+        Object.entries(applicantFiles).forEach(([key, file]) => {
+          const backendField = fieldNameMap[key] || key; // Fallback to key if not in map
+          const fieldName = `${index}_${backendField}`;
+          console.log(`Appending: ${fieldName} -> ${file.name}`);
+          formData.append(fieldName, file);
+        });
+      });
+
+      console.log("FormData contents before submission:");
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value instanceof File ? value.name : value}`);
+      }
+
       console.log("Submitting Files for All Applicants:", files);
-      await Promise.all(uploadPromises);
+      await dispatch(uploadLoanDocuments(formData)).unwrap();
     } catch (err) {
       console.error("Detailed Upload Error:", {
         message: err.message,
         response: err.response?.data,
         status: err.response?.status,
       });
-      toast.error(err.response?.data?.message || "Failed to upload documents. Please try again.", {
+      toast.error(err.message || "Failed to upload documents. Please try again.", {
         position: "top-center",
         autoClose: 2000,
       });
@@ -270,6 +313,7 @@ const CoformThree = () => {
           "Latest 6 Month Salary Slip",
           "2/3 years Form 16 (Part A & B) and 26 AS",
           "2/3 years ITR and Computation",
+          "NOC / Loan Closure Statements for loans closed in 1 year",
           "Driving License (Self or Family)",
         ],
         self_employed: [
@@ -282,6 +326,7 @@ const CoformThree = () => {
           "Existing Loan Account Statement",
           "2/3 years ITR and Computation",
           "2/3 years Balance Sheets",
+          "NOC / Loan Closure Statements for loans closed in 1 year",
           "Driving License (Self or Family)",
         ],
       },
@@ -307,6 +352,7 @@ const CoformThree = () => {
           "Existing Loan Account Statement",
           "2/3 years ITR and Computation",
           "2/3 years Balance Sheets",
+          "NOC / Loan Closure Statements for loans closed in 1 year",
         ],
       },
       business: {
@@ -323,6 +369,8 @@ const CoformThree = () => {
           "Existing Loan Account Statement",
           "2/3 years ITR and Computation",
           "2/3 years Balance Sheets",
+          "NOC / Loan Closure Statements for loans closed in 1 year",
+          "Other Relevant Documents",
         ],
       },
       mortgage: {
@@ -347,11 +395,26 @@ const CoformThree = () => {
           "Existing Loan Account Statement",
           "2/3 years ITR and Computation",
           "2/3 years Balance Sheets",
+          "NOC / Loan Closure Statements for loans closed in 1 year",
         ],
       },
     };
 
-    return loanType === "business" ? documentLists.business.all : documentLists[loanType]?.[userType] || [];
+    console.log(`Getting documents for loanType: ${loanType}, userType: ${userType}`);
+    const docs = loanType === "business" ? documentLists.business.all : documentLists[loanType]?.[userType] || [];
+    console.log(`Documents returned:`, docs);
+    return docs;
+  };
+
+  const getDisplayLoanType = (loanType) => {
+    const loanTypeMap = {
+      home: "Home Loan",
+      vehicle: "Vehicle Loan",
+      personal: "Personal Loan",
+      business: "Business Loan",
+      mortgage: "Mortgage Loan",
+    };
+    return loanTypeMap[loanType] || "Unknown Loan";
   };
 
   return (
@@ -414,38 +477,51 @@ const CoformThree = () => {
         <form onSubmit={handleSubmit}>
           <div className="mx-2 sm:mx-4 lg:mx-8 mt-4">
             {applicantsData.length > 0 ? (
-              applicantsData.map((applicant, index) => (
-                <div key={index} className="bg-white p-4 sm:p-6 py-8 sm:py-11 rounded-2xl shadow-md mb-6">
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-                    Applicant {index + 1} - {applicant.loanType} ({applicant.userType})
-                  </h1>
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse border border-gray-300">
-                      <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-300 p-2 text-left">#</th>
-                          <th className="border border-gray-300 p-2 text-left">Document Name</th>
-                          <th className="border border-gray-300 p-2 text-left">Upload</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {getDocumentList(applicant.loanType, applicant.userType).map((doc, docIndex) => {
-                          const name = doc.toLowerCase().replace(/[^a-z0-9]/g, "");
-                          return (
-                            <tr key={docIndex} className="hover:bg-gray-50">
-                              <td className="border border-gray-300 p-2 text-center">{docIndex + 1}</td>
-                              <td className="border border-gray-300 p-2">{doc}</td>
-                              <td className="border border-gray-300 p-2">
-                                <FileUploader name={name} applicantIndex={index} />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+              applicantsData.map((applicant, index) => {
+                const displayLoanType = getDisplayLoanType(applicant.loanType);
+                const displayUserType =
+                  applicant.userType === "salaried" ? "Salaried" : "Self Employed";
+
+                return (
+                  <div
+                    key={index}
+                    className="bg-white p-4 sm:p-6 py-8 sm:py-11 rounded-2xl shadow-md mb-6"
+                  >
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+                      Applicant {index + 1} - {displayLoanType} ({displayUserType})
+                    </h1>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse border border-gray-300">
+                        <thead>
+                          <tr className="bg-gray-100">
+                            <th className="border border-gray-300 p-2 text-left">#</th>
+                            <th className="border border-gray-300 p-2 text-left">Document Name</th>
+                            <th className="border border-gray-300 p-2 text-left">Upload</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {getDocumentList(applicant.loanType, applicant.userType).map(
+                            (doc, docIndex) => {
+                              const name = doc.toLowerCase().replace(/[^a-z0-9]/g, "");
+                              return (
+                                <tr key={docIndex} className="hover:bg-gray-50">
+                                  <td className="border border-gray-300 p-2 text-center">
+                                    {docIndex + 1}
+                                  </td>
+                                  <td className="border border-gray-300 p-2">{doc}</td>
+                                  <td className="border border-gray-300 p-2">
+                                    <FileUploader name={name} applicantIndex={index} />
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className="text-white">Loading applicant data...</p>
             )}

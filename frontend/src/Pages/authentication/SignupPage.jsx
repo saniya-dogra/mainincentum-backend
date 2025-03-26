@@ -63,7 +63,6 @@ export default function SignupPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all required fields
     if (!validateForm()) {
       toast.error("Please fill all the fields correctly!", {
         position: "top-center",
@@ -73,19 +72,17 @@ export default function SignupPage() {
     }
 
     try {
-      // Make the API call to register the user
-      await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, formData);
-      // Show success toast
+      await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, formData, {
+        withCredentials: true, // Keep cookies for session
+      });
       toast.success("Registration successful!", {
         position: "top-center",
         autoClose: 3000,
       });
-      // Redirect to login page after success
       navigate("/login-page");
     } catch (error) {
       console.error(error);
-      // Show failure toast if registration failed
-      toast.error("Registration failed! Please try again.", {
+      toast.error(error.response?.data?.message || "Registration failed! Please try again.", {
         position: "top-center",
         autoClose: 3000,
       });
@@ -160,8 +157,6 @@ export default function SignupPage() {
           </form>
         </div>
       </div>
-    
-      {/* Ensure ToastContainer is properly rendered */}
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );

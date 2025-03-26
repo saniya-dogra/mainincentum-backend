@@ -1,8 +1,12 @@
 const { User } = require("../models/authentication/User.models"); // Mongoose model
 const jwt = require("jsonwebtoken");
 const { asyncHandler } = require("../utils/asyncHandler.js");
-const {ApiError} = require("../utils/ApiError");
-const {ApiResponse} = require("../utils/ApiResponse");
+const { ApiError } = require("../utils/ApiError");
+const { ApiResponse } = require("../utils/ApiResponse");
+
+// Load environment variables
+require('dotenv').config();
+const ADMIN_CREDENTIALS = JSON.parse(process.env.ADMIN_CREDENTIALS);
 
 // Function to generate access and refresh tokens
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -12,21 +16,15 @@ const generateAccessAndRefreshTokens = async (userId) => {
       throw new ApiError(404, "User not found");
     }
 
-    // Generate tokens
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
-    // Save the refresh token in the database
     user.refreshToken = refreshToken;
-    await user.save();
+    await user.save({ validateBeforeSave: false }); // Avoid validation for speed
 
     return { accessToken, refreshToken };
   } catch (error) {
-    console.error(
-      "Error in generateAccessAndRefreshTokens:",
-      error.message,
-      error.stack
-    );
+    console.error("Error in generateAccessAndRefreshTokens:", error.message, error.stack);
     throw new ApiError(500, "Failed to generate access and refresh tokens");
   }
 };
@@ -35,7 +33,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, phoneNumber, pincode, password, confirmpassword } = req.body;
 
-  console.log('Request body:', req.body); // Log incoming data
+  console.log("Register request body:", req.body);
 
   if (!name || !email || !phoneNumber || !pincode || !password || !confirmpassword) {
     throw new ApiError(400, "All fields are required");
@@ -51,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const newUser = new User({ name, email, phoneNumber, pincode, password });
-  console.log('Document to insert:', newUser); // Log document before saving
+  console.log("New user document:", newUser);
   await newUser.save();
 
   const userResponse = {
@@ -82,31 +80,63 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+
+  console.log("Setting user cookies: accessToken:", accessToken);
+
   return res
     .status(200)
     .cookie("token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax", // Changed to lax for cross-site compatibility
       maxAge: 1000 * 60 * 60, // 1 hour
+      path: "/",
     })
-    .json(new ApiResponse(200, { accessToken, refreshToken, user }, "Login successful"));
+    .cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    })
+    .json(new ApiResponse(200, { accessToken, refreshToken, userId: user._id }, "Login successful"));
 });
 
 // Logout user
 const logoutUser = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  // Attempt to get user from token (if middleware provides it)
+  const token = req.cookies?.token;
 
-  const user = await User.findById(userId);
-  if (user) {
-    user.refreshToken = null;
-    await user.save();
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      const user = await User.findById(decoded.id);
+      if (user) {
+        user.refreshToken = null;
+        await user.save({ validateBeforeSave: false });
+        console.log("User logged out, refresh token cleared for userId:", decoded.id);
+      }
+    } catch (error) {
+      console.error("Token verification failed during logout:", error.message);
+      // Proceed with logout even if token is invalid/expired
+    }
   }
 
+  // Always clear cookies and return success
   return res
     .status(200)
-    .clearCookie("token")
-    .clearCookie("refreshToken")
+    .clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    })
+    .clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    })
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
@@ -115,39 +145,107 @@ const profile = asyncHandler(async (req, res) => {
   const token = req.cookies?.token;
 
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized: Token not found" });
+    throw new ApiError(401, "Unauthorized: Token not found");
   }
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-    if (err) {
-      console.error("JWT Verification Error:", err.message);
-      if (err.name === "TokenExpiredError") {
-        return res.status(403).json({ error: "Token expired, please log in again" });
-      }
-      if (err.name === "JsonWebTokenError") {
-        return res.status(403).json({ error: "Invalid token" });
-      }
-      return res.status(403).json({ error: "Token verification failed" });
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.id).select("-password -refreshToken");
+    if (!user) {
+      throw new ApiError(404, "User not found");
     }
 
-    try {
-      const user = await User.findById(decoded.id);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      return res.status(200).json({
+    return res.status(200).json(
+      new ApiResponse(200, {
         id: user._id,
         name: user.name,
         email: user.email,
         pincode: user.pincode,
         phoneNumber: user.phoneNumber,
-      });
-    } catch (dbError) {
-      console.error("Database Error:", dbError.message);
-      return res.status(500).json({ error: "Failed to fetch user information" });
+      }, "Profile fetched successfully")
+    );
+  } catch (error) {
+    console.error("Profile JWT Error:", error.message);
+    if (error.name === "TokenExpiredError") {
+      throw new ApiError(403, "Token expired, please log in again");
     }
-  });
+    if (error.name === "JsonWebTokenError") {
+      throw new ApiError(403, "Invalid token");
+    }
+    throw new ApiError(403, "Token verification failed");
+  }
 });
 
-module.exports = { registerUser, loginUser, logoutUser, profile };
+// Login admin
+const loginAdmin = asyncHandler(async (req, res) => {
+  const { phoneNumber, password } = req.body;
+
+  if (!phoneNumber || !password) {
+    throw new ApiError(400, "Phone number and password are required");
+  }
+
+  const admin = ADMIN_CREDENTIALS.find(
+    (cred) => cred.phoneNumber === phoneNumber && cred.password === password
+  );
+
+  if (!admin) {
+    throw new ApiError(401, "Invalid admin credentials");
+  }
+
+  const adminToken = jwt.sign(
+    { phoneNumber: admin.phoneNumber },
+    process.env.ADMIN_ACCESS_TOKEN_SECRET,
+    { expiresIn: "1h" }
+  );
+
+  console.log("Setting adminToken cookie:", adminToken);
+
+  return res
+    .status(200)
+    .cookie("adminToken", adminToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax", // Changed to lax for cross-site compatibility
+      maxAge: 1000 * 60 * 60, // 1 hour
+      path: "/",
+    })
+    .json(new ApiResponse(200, { adminToken }, "Admin login successful"));
+});
+
+// Verify admin
+const verifyAdmin = asyncHandler(async (req, res) => {
+  const token = req.cookies?.adminToken;
+
+  console.log("Verifying adminToken from cookies:", token);
+
+  if (!token) {
+    throw new ApiError(401, "Unauthorized: No admin token provided.");
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET);
+    const admin = ADMIN_CREDENTIALS.find(
+      (cred) => cred.phoneNumber === decoded.phoneNumber
+    );
+    if (!admin) {
+      throw new ApiError(403, "Forbidden: Not an authorized admin.");
+    }
+    return res.status(200).json(new ApiResponse(200, {}, "Admin token verified"));
+  } catch (error) {
+    console.error("Verify admin error:", error.message);
+    throw new ApiError(401, "Unauthorized: Invalid or expired admin token.");
+  }
+});
+
+const logoutAdmin = asyncHandler(async (req, res) => {
+  console.log("Admin logout requested for token:", req.cookies?.adminToken);
+  res.clearCookie("adminToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+  return res.status(200).json(new ApiResponse(200, {}, "Admin logged out successfully"));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, profile, loginAdmin, verifyAdmin, logoutAdmin };

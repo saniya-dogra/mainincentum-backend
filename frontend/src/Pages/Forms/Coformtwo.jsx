@@ -54,6 +54,13 @@ const CoformTwo = () => {
   };
 
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [errors, setErrors] = useState({
+    loan: "",
+    loan_amount_required: "",
+    agreement_mou_value: "",
+    vehiclePrice: "",
+    applicants: Array(numberOfApplicants).fill({}),
+  });
 
   const handleInputChange = (e, applicantIndex = null) => {
     const { name, value } = e.target;
@@ -64,11 +71,18 @@ const CoformTwo = () => {
           idx === applicantIndex ? { ...applicant, [name]: value } : applicant
         ),
       }));
+      setErrors((prev) => ({
+        ...prev,
+        applicants: prev.applicants.map((applicantErrors, idx) =>
+          idx === applicantIndex ? { ...applicantErrors, [name]: "" } : applicantErrors
+        ),
+      }));
     } else {
       setFormValues((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -80,11 +94,18 @@ const CoformTwo = () => {
           idx === applicantIndex ? { ...applicant, [name]: option } : applicant
         ),
       }));
+      setErrors((prev) => ({
+        ...prev,
+        applicants: prev.applicants.map((applicantErrors, idx) =>
+          idx === applicantIndex ? { ...applicantErrors, [name]: "" } : applicantErrors
+        ),
+      }));
     } else {
       setFormValues((prevState) => ({
         ...prevState,
         [name]: option,
       }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -96,73 +117,106 @@ const CoformTwo = () => {
           idx === applicantIndex ? { ...applicant, [name]: value } : applicant
         ),
       }));
+      setErrors((prev) => ({
+        ...prev,
+        applicants: prev.applicants.map((applicantErrors, idx) =>
+          idx === applicantIndex ? { ...applicantErrors, [name]: "" } : applicantErrors
+        ),
+      }));
     } else {
       setFormValues((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      loan: !formValues.loan ? "This field is required" : "",
+      loan_amount_required: !formValues.loan_amount_required ? "This field is required" : "",
+      agreement_mou_value:
+        ["Home Loan", "Business Loan", "Mortgage Loan"].includes(formValues.loan) &&
+        formValues.agreement_executed === "Yes" &&
+        !formValues.agreement_mou_value
+          ? "This field is required"
+          : "",
+      vehiclePrice:
+        formValues.loan === "Vehicle Loan" && !formValues.vehiclePrice
+          ? "This field is required"
+          : "",
+      applicants: formValues.applicants.map((applicant) => ({
+        user_type: !applicant.user_type ? "This field is required" : "",
+      })),
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors =
+      newErrors.loan ||
+      newErrors.loan_amount_required ||
+      newErrors.agreement_mou_value ||
+      newErrors.vehiclePrice ||
+      newErrors.applicants.some((applicantErrors) => Object.values(applicantErrors).some(Boolean));
+
+    return !hasErrors;
   };
 
   const getNavigationPath = () => {
     const { loan } = formValues;
-    if (!loan) {
-      console.error("Loan type not selected");
-      return "#";
-    }
+    if (!loan) return "#";
 
-    const userTypes = formValues.applicants.map(
-      (applicant) => applicant.user_type || "Self-Employed"
-    );
+    const userTypes = formValues.applicants.map((applicant) => applicant.user_type || "Self-Employed");
 
     const paths = {
       "Home Loan": {
-        Salaried: "home&user_type=salaried",
-        "Self-Employed": "home&user_type=self_employed",
+        Salaried: "salaried",
+        "Self-Employed": "self_employed",
       },
       "Vehicle Loan": {
-        Salaried: "vehicle&user_type=salaried",
-        "Self-Employed": "vehicle&user_type=self_employed",
+        Salaried: "salaried",
+        "Self-Employed": "self_employed",
       },
       "Personal Loan": {
-        Salaried: "personal&user_type=salaried",
-        "Self-Employed": "personal&user_type=self_employed",
+        Salaried: "salaried",
+        "Self-Employed": "self_employed",
       },
       "Business Loan": {
-        Salaried: "business&user_type=salaried",
-        "Self-Employed": "business&user_type=self_employed",
+        Salaried: "salaried",
+        "Self-Employed": "self_employed",
       },
       "Mortgage Loan": {
-        Salaried: "mortgage&user_type=salaried",
-        "Self-Employed": "mortgage&user_type=self_employed",
+        Salaried: "salaried",
+        "Self-Employed": "self_employed",
       },
     };
 
     const queryParams = userTypes
       .map((userType, index) => {
-        const param = paths[loan]?.[userType] ?? "";
-        return param ? `applicant${index + 1}=${param}` : "";
+        const param = paths[loan]?.[userType];
+        if (!param) return "";
+        return `applicant${index + 1}=${loan.toLowerCase().replace(/\s+/g, "")}&user_type=${param}`;
       })
       .filter(Boolean)
       .join("&");
 
-    console.log("Generated Query Params:", queryParams);
     return queryParams ? `/co-applicant-form-detail-three?${queryParams}` : "#";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user) {
-      toast.error("User not authenticated. Please log in.", {
+    if (!validateForm()) {
+      toast.error("Please fill all required fields.", {
         position: "top-center",
         autoClose: 2000,
       });
       return;
     }
 
-    if (!formValues.loan) {
-      toast.error("Please select a loan type.", {
+    if (!user) {
+      toast.error("User not authenticated. Please log in.", {
         position: "top-center",
         autoClose: 2000,
       });
@@ -175,7 +229,7 @@ const CoformTwo = () => {
       numberOfApplicants,
       applicants: formValues.applicants.map((applicant) => ({
         ...applicant,
-        user_type: applicant.user_type || "Self-Employed", // Ensure user_type is always set
+        user_type: applicant.user_type || "Self-Employed",
       })),
       commonDetails: {
         property_finalised: formValues.property_finalised,
@@ -211,11 +265,6 @@ const CoformTwo = () => {
                 applicants: transformedData.applicants,
               },
             });
-          } else {
-            toast.error("Invalid navigation path. Please fill all required fields.", {
-              position: "top-center",
-              autoClose: 2000,
-            });
           }
         },
       });
@@ -229,7 +278,7 @@ const CoformTwo = () => {
   };
 
   const renderEmploymentDetails = (index) => (
-    <div key={index} className="mt-8">
+    <div key={index} className="mt-8 p-4 rounded-xl">
       <h2 className="text-xl font-bold text-white mb-4">
         Employment Details - Applicant {index + 1}
       </h2>
@@ -257,137 +306,204 @@ const CoformTwo = () => {
           <span className="ml-3 text-white">Self-Employed / Professional</span>
         </label>
       </div>
+      {errors.applicants[index].user_type && (
+        <p className="text-red-500 text-xs mt-2">{errors.applicants[index].user_type}</p>
+      )}
 
-      {formValues.applicants[index].user_type === "Salaried" && (
-        <div>
+      {formValues.applicants[index].user_type === "Salaried" && formValues.loan !== "Business Loan" && (
+        <div className="mt-4">
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Organisation Name"
-              name="organisation_name"
-              value={formValues.applicants[index].organisation_name}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Dropdown
-              options={[
-                "Central Govt.",
-                "State Govt.",
-                "Govt. Organisation",
-                "PSU",
-                "Private Limited Company",
-                "Public Limited Company",
-                "Partnership Firm",
-                "Proprietary Firm",
-                "LLP",
-                "Others",
-              ]}
-              placeholder="Organisation Type"
-              setOpenDropdown={setOpenDropdown}
-              isOpen={openDropdown === `organisation_type-${index}`}
-              id={`organisation_type-${index}`}
-              value={formValues.applicants[index].organisation_type}
-              onSelect={(option) => handleOptionSelect("organisation_type", option, index)}
-            />
+            <div>
+              <Input
+                placeholder="Organisation Name"
+                name="organisation_name"
+                value={formValues.applicants[index].organisation_name}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].organisation_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].organisation_name}</p>
+              )}
+            </div>
+            <div>
+              <Dropdown
+                options={[
+                  "Central Govt.",
+                  "State Govt.",
+                  "Govt. Organisation",
+                  "PSU",
+                  "Private Limited Company",
+                  "Public Limited Company",
+                  "Partnership Firm",
+                  "Proprietary Firm",
+                  "LLP",
+                  "Others",
+                ]}
+                placeholder="Organisation Type"
+                setOpenDropdown={setOpenDropdown}
+                isOpen={openDropdown === `organisation_type-${index}`}
+                id={`organisation_type-${index}`}
+                value={formValues.applicants[index].organisation_type}
+                onSelect={(option) => handleOptionSelect("organisation_type", option, index)}
+              />
+              {errors.applicants[index].organisation_type && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].organisation_type}</p>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Experience in Current Organization"
-              name="currentOrganizationExperience"
-              value={formValues.applicants[index].currentOrganizationExperience}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Input
-              placeholder="Experience in Previous Organization"
-              name="previousOrganizationExperience"
-              value={formValues.applicants[index].previousOrganizationExperience}
-              onChange={(e) => handleInputChange(e, index)}
-            />
+            <div>
+              <Input
+                placeholder="Experience in Current Organization"
+                name="currentOrganizationExperience"
+                value={formValues.applicants[index].currentOrganizationExperience}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].currentOrganizationExperience && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].currentOrganizationExperience}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                placeholder="Experience in Previous Organization"
+                name="previousOrganizationExperience"
+                value={formValues.applicants[index].previousOrganizationExperience}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].previousOrganizationExperience && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].previousOrganizationExperience}</p>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Designation"
-              name="designation_salaried"
-              value={formValues.applicants[index].designation_salaried}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Input
-              placeholder="Place of Posting"
-              name="place_of_posting"
-              value={formValues.applicants[index].place_of_posting}
-              onChange={(e) => handleInputChange(e, index)}
-            />
+            <div>
+              <Input
+                placeholder="Designation"
+                name="designation_salaried"
+                value={formValues.applicants[index].designation_salaried}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].designation_salaried && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].designation_salaried}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                placeholder="Place of Posting"
+                name="place_of_posting"
+                value={formValues.applicants[index].place_of_posting}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].place_of_posting && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].place_of_posting}</p>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Monthly Salary (in hand)"
-              name="monthly_salary"
-              value={formValues.applicants[index].monthly_salary}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Input
-              placeholder="Bank in which salary account is maintained"
-              name="salary_bank_name"
-              value={formValues.applicants[index].salary_bank_name}
-              onChange={(e) => handleInputChange(e, index)}
-            />
+            <div>
+              <Input
+                placeholder="Monthly Salary (in hand)"
+                name="monthly_salary"
+                value={formValues.applicants[index].monthly_salary}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].monthly_salary && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].monthly_salary}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                placeholder="Bank in which salary account is maintained"
+                name="salary_bank_name"
+                value={formValues.applicants[index].salary_bank_name}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].salary_bank_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].salary_bank_name}</p>
+              )}
+            </div>
           </div>
         </div>
       )}
 
-      {formValues.applicants[index].user_type === "Self-Employed" && (
-        <div>
+      {(formValues.applicants[index].user_type === "Self-Employed" || formValues.loan === "Business Loan") && (
+        <div className="mt-4">
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Name of Firm/Company"
-              name="company_name"
-              value={formValues.applicants[index].company_name}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Dropdown
-              options={[
-                "Company",
-                "Partnership Firm",
-                "Proprietary Firm",
-                "LLP",
-                "Others",
-              ]}
-              placeholder="Type of Firm"
-              setOpenDropdown={setOpenDropdown}
-              isOpen={openDropdown === `company_type-${index}`}
-              id={`company_type-${index}`}
-              value={formValues.applicants[index].company_type}
-              onSelect={(option) => handleOptionSelect("company_type", option, index)}
-            />
+            <div>
+              <Input
+                placeholder="Name of Firm/Company"
+                name="company_name"
+                value={formValues.applicants[index].company_name}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].company_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].company_name}</p>
+              )}
+            </div>
+            <div>
+              <Dropdown
+                options={["Company", "Partnership Firm", "Proprietary Firm", "LLP", "Others"]}
+                placeholder="Type of Firm"
+                setOpenDropdown={setOpenDropdown}
+                isOpen={openDropdown === `company_type-${index}`}
+                id={`company_type-${index}`}
+                value={formValues.applicants[index].company_type}
+                onSelect={(option) => handleOptionSelect("company_type", option, index)}
+              />
+              {errors.applicants[index].company_type && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].company_type}</p>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Firm Registration / Incorporation Date"
-              name="incorporation_date"
-              value={formValues.applicants[index].incorporation_date}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Dropdown
-              options={["Proprietor", "Partner", "Founder", "Director", "Others"]}
-              placeholder="Designation"
-              setOpenDropdown={setOpenDropdown}
-              isOpen={openDropdown === `designation_self-${index}`}
-              id={`designation_self-${index}`}
-              value={formValues.applicants[index].designation_self}
-              onSelect={(option) => handleOptionSelect("designation_self", option, index)}
-            />
+            <div>
+              <Input
+                placeholder="Firm Registration / Incorporation Date"
+                name="incorporation_date"
+                value={formValues.applicants[index].incorporation_date}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].incorporation_date && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].incorporation_date}</p>
+              )}
+            </div>
+            <div>
+              <Dropdown
+                options={["Proprietor", "Partner", "Founder", "Director", "Others"]}
+                placeholder="Designation"
+                setOpenDropdown={setOpenDropdown}
+                isOpen={openDropdown === `designation_self-${index}`}
+                id={`designation_self-${index}`}
+                value={formValues.applicants[index].designation_self}
+                onSelect={(option) => handleOptionSelect("designation_self", option, index)}
+              />
+              {errors.applicants[index].designation_self && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].designation_self}</p>
+              )}
+            </div>
           </div>
           <div className="grid grid-cols-2 w-full gap-6">
-            <Input
-              placeholder="Years in Line of Business (VINTAGE)"
-              name="years_in_business"
-              value={formValues.applicants[index].years_in_business}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-            <Input
-              placeholder="Years of ITR Filing (VINTAGE)"
-              name="years_of_itr_filing"
-              value={formValues.applicants[index].years_of_itr_filing}
-              onChange={(e) => handleInputChange(e, index)}
-            />
+            <div>
+              <Input
+                placeholder="Years in Line of Business (VINTAGE)"
+                name="years_in_business"
+                value={formValues.applicants[index].years_in_business}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].years_in_business && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].years_in_business}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                placeholder="Years of ITR Filing (VINTAGE)"
+                name="years_of_itr_filing"
+                value={formValues.applicants[index].years_of_itr_filing}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+              {errors.applicants[index].years_of_itr_filing && (
+                <p className="text-red-500 text-xs mt-1">{errors.applicants[index].years_of_itr_filing}</p>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -447,7 +563,7 @@ const CoformTwo = () => {
         </p>
         <form onSubmit={handleSubmit}>
           <div className="mx-4 lg:mx-12 mt-4">
-            <div className="grid grid-cols-2 w-full">
+            <div>
               <Dropdown
                 options={[
                   "Home Loan",
@@ -463,6 +579,7 @@ const CoformTwo = () => {
                 value={formValues.loan}
                 onSelect={(option) => handleOptionSelect("loan", option)}
               />
+              {errors.loan && <p className="text-red-500 text-xs mt-1">{errors.loan}</p>}
             </div>
 
             {formValues.loan && (
@@ -497,12 +614,17 @@ const CoformTwo = () => {
                           </label>
                         </div>
                         {formValues.property_finalised === "Yes" && (
-                          <Input
-                            placeholder="Property Address (if Yes)"
-                            name="property_address"
-                            value={formValues.property_address}
-                            onChange={handleInputChange}
-                          />
+                          <div>
+                            <Input
+                              placeholder="Property Address (if Yes)"
+                              name="property_address"
+                              value={formValues.property_address}
+                              onChange={handleInputChange}
+                            />
+                            {errors.property_address && (
+                              <p className="text-red-500 text-xs mt-1">{errors.property_address}</p>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -540,6 +662,9 @@ const CoformTwo = () => {
                           value={formValues.agreement_mou_value}
                           onChange={handleInputChange}
                         />
+                        {errors.agreement_mou_value && (
+                          <p className="text-red-500 text-xs mt-1">{errors.agreement_mou_value}</p>
+                        )}
                       </div>
                     )}
                   </>
@@ -549,58 +674,93 @@ const CoformTwo = () => {
                   <div className="mt-10">
                     <h2 className="text-xl font-bold text-white mb-4">Vehicle Details</h2>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Input
-                        placeholder="Make and Model of Vehicle"
-                        name="vehicleModel"
-                        value={formValues.vehicleModel}
-                        onChange={handleInputChange}
-                      />
-                      <Input
-                        placeholder="Expected date of delivery of Vehicle"
-                        name="expectedDeliveryDate"
-                        value={formValues.expectedDeliveryDate}
-                        onChange={handleInputChange}
-                      />
+                      <div>
+                        <Input
+                          placeholder="Make and Model of Vehicle"
+                          name="vehicleModel"
+                          value={formValues.vehicleModel}
+                          onChange={handleInputChange}
+                        />
+                        {errors.vehicleModel && (
+                          <p className="text-red-500 text-xs mt-1">{errors.vehicleModel}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Input
+                          placeholder="Expected date of delivery of Vehicle"
+                          name="expectedDeliveryDate"
+                          value={formValues.expectedDeliveryDate}
+                          onChange={handleInputChange}
+                        />
+                        {errors.expectedDeliveryDate && (
+                          <p className="text-red-500 text-xs mt-1">{errors.expectedDeliveryDate}</p>
+                        )}
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Input
-                        placeholder="Dealer Name"
-                        name="dealerName"
-                        value={formValues.dealerName}
-                        onChange={handleInputChange}
-                      />
-                      <Input
-                        placeholder="Dealer City"
-                        name="dealerCity"
-                        value={formValues.dealerCity}
-                        onChange={handleInputChange}
-                      />
+                      <div>
+                        <Input
+                          placeholder="Dealer Name"
+                          name="dealerName"
+                          value={formValues.dealerName}
+                          onChange={handleInputChange}
+                        />
+                        {errors.dealerName && (
+                          <p className="text-red-500 text-xs mt-1">{errors.dealerName}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Input
+                          placeholder="Dealer City"
+                          name="dealerCity"
+                          value={formValues.dealerCity}
+                          onChange={handleInputChange}
+                        />
+                        {errors.dealerCity && (
+                          <p className="text-red-500 text-xs mt-1">{errors.dealerCity}</p>
+                        )}
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 w-full gap-6">
-                      <Input
-                        placeholder="Price of Vehicle"
-                        name="vehiclePrice"
-                        value={formValues.vehiclePrice}
-                        onChange={handleInputChange}
-                      />
+                      <div>
+                        <Input
+                          placeholder="Price of Vehicle"
+                          name="vehiclePrice"
+                          value={formValues.vehiclePrice}
+                          onChange={handleInputChange}
+                        />
+                        {errors.vehiclePrice && (
+                          <p className="text-red-500 text-xs mt-1">{errors.vehiclePrice}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
 
                 <h2 className="text-xl font-bold text-white mt-6 mb-4">Loan Required</h2>
                 <div className="grid grid-cols-2 w-full gap-6 mt-6">
-                  <Input
-                    placeholder="Loan Amount Required (Rs.)"
-                    name="loan_amount_required"
-                    value={formValues.loan_amount_required}
-                    onChange={handleInputChange}
-                  />
-                  <Input
-                    placeholder="Enter Your Preferred Banks"
-                    name="preferred_banks"
-                    value={formValues.preferred_banks}
-                    onChange={handleInputChange}
-                  />
+                  <div>
+                    <Input
+                      placeholder="Loan Amount Required (Rs.)"
+                      name="loan_amount_required"
+                      value={formValues.loan_amount_required}
+                      onChange={handleInputChange}
+                    />
+                    {errors.loan_amount_required && (
+                      <p className="text-red-500 text-xs mt-1">{errors.loan_amount_required}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      placeholder="Enter Your Preferred Banks"
+                      name="preferred_banks"
+                      value={formValues.preferred_banks}
+                      onChange={handleInputChange}
+                    />
+                    {errors.preferred_banks && (
+                      <p className="text-red-500 text-xs mt-1">{errors.preferred_banks}</p>
+                    )}
+                  </div>
                 </div>
 
                 {formValues.applicants.map((_, index) => renderEmploymentDetails(index))}
@@ -608,7 +768,11 @@ const CoformTwo = () => {
             )}
 
             <div className="mt-6 flex justify-center">
-              <Button type="submit" text={loading ? "Submitting..." : "Submit"} disabled={loading} />
+              <Button
+                type="submit"
+                text={loading ? "Submitting..." : "Submit"}
+                disabled={loading}
+              />
             </div>
           </div>
         </form>
