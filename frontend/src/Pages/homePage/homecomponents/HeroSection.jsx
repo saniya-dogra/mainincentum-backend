@@ -26,7 +26,7 @@ const HeroSection = () => {
       {/* Buttons (If you still need them) */}
       <div className="flex gap-4">
         <Link
-          to="/form-detail-one"
+          to="/co-applicant-form-detail-one"
           className="bg-white text-blue-800 font-medium px-4 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
         >
           Apply Now →

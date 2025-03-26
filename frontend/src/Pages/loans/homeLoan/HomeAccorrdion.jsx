@@ -244,7 +244,7 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
                 className="mt-[10px] lg:mt-[25px] mx-6 lg:ml-[120px]"
                 data-aos="fade-right"
             >
-                <h1 className="text-[40px] md:ml-[10px] lg:text-[45px] font-bold heading">
+                <h1 className="text-[35px] md:ml-[10px] lg:text-[45px] font-bold heading">
                     {titles[type]}
                 </h1>
                 <p className="text-[18px] md:ml-[10px] lg:text-[18px] text-white font-medium leading-[30px] lg:leading-[35px]">
@@ -282,7 +282,7 @@ function HomeAccorrdion({ type, openAccordion, handleAccordionClick }) {
                                         transition: "max-height 0.5s ease-in-out",
                                     }}
                                 >
-                                    <AccordionBody className="px-6 lg:px-16 pb-4 lg:pb-2 text-white text-[20px] lg:text-[17px]">
+                                    <AccordionBody className="px-6 lg:px-16 pb-4 lg:pb-2 text-white text-md sm:text-lg lg:text-[17px]">
                                         {section.content}
                                     </AccordionBody>
                                 </div>
