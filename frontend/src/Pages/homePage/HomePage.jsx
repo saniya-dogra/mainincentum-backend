@@ -14,7 +14,9 @@ const HomePage = () => {
     <div>
       <HeroSection/>
       <FeaturesSection/>
+      <div className='p-3'>
       <TrustedClients/>
+      </div>
       <BankingSection/>
       <FAQ/>
     </div>

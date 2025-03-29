@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { Autoplay } from "swiper/modules";
 import homeloan from '../../../assets/homeloan.webp';
 import vehicleloan from '../../../assets/vehicleloan.webp';
 import personalloan from '../../../assets/personalloan.webp';
@@ -7,6 +11,7 @@ import businessloan from '../../../assets/businessloan.webp';
 
 const FeaturesSection = () => {
   const [activeTab, setActiveTab] = useState("home-loan");
+  const [activeIndex, setActiveIndex] = useState(1); // For carousel active slide
 
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
@@ -16,31 +21,6 @@ const FeaturesSection = () => {
 
   // Carousel Logic
   const carouselImages = ["/slimage1.jpg", "/slimage2.jpg", "/slimage3.jpg", "/slimage2.jpg"];
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const totalSlides = carouselImages.length;
-  const extendedCarouselImages = [...carouselImages, ...carouselImages]; // Duplicate for infinite effect
-
-  // Responsive Slide Count
-  const getSlidesPerView = () => {
-    if (window.innerWidth < 640) return 1; // Mobile
-    if (window.innerWidth < 1024) return 2; // Tablet
-    return 3; // PC
-  };
-
-  const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
-
-  useEffect(() => {
-    const handleResize = () => setSlidesPerView(getSlidesPerView());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCarouselIndex((prevIndex) => (prevIndex + 1) % totalSlides);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <>
@@ -217,6 +197,7 @@ const FeaturesSection = () => {
           </div>
 
           {/* Mortgage Loan */}
+         
           <div
             id="mortgage-loan"
             className="flex flex-col md:flex-row items-center justify-center hover:bg-[#e5e5e5] transition-colors"
@@ -253,27 +234,39 @@ const FeaturesSection = () => {
           </div>
         </div>
       </div>
-      {/* Carousel Section */}
-      <div className="relative w-full max-w-[900px] mx-auto overflow-hidden mt-8">
-          <div
-            className="flex transition-transform duration-700 ease-in-out gap-0"
-            style={{ transform: `translateX(-${carouselIndex * (100 / slidesPerView)}%)` }}
-          >
-            {extendedCarouselImages.map((img, i) => (
+      {/* Updated Carousel Section */}
+      <div className="relative w-full max-w-[900px] mx-auto mt-8">
+        <Swiper
+          spaceBetween={20}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          modules={[Autoplay]}
+          loop={true}
+          slidesPerView={3}
+          centeredSlides={true}
+          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          breakpoints={{
+            320: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+        >
+          {carouselImages.map((img, index) => (
+            <SwiperSlide key={index}>
               <div
-                key={i}
-                className={`flex-shrink-0 flex items-center justify-center`}
-                style={{ width: `${100 / slidesPerView}%` }}
+                className={`flex items-center justify-center transition-all duration-500 ${
+                  activeIndex === index ? "scale-110 shadow-2xl" : "opacity-95 scale-90"
+                }`}
               >
                 <img
                   src={img}
-                  alt={`Slide ${i}`}
-                  className="w-full h-auto max-h-[400px] object-contain"
+                  alt={`Slide ${index}`}
+                  className="w-full h-auto max-h-[400px] object-contain rounded-lg"
                 />
               </div>
-            ))}
-          </div>
-        </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </>
   );
 };
