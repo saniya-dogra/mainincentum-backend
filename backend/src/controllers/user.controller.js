@@ -6,7 +6,6 @@ const { ApiResponse } = require("../utils/ApiResponse");
 
 // Load environment variables
 require('dotenv').config();
-const ADMIN_CREDENTIALS = JSON.parse(process.env.ADMIN_CREDENTIALS);
 
 // Function to generate access and refresh tokens
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -176,67 +175,6 @@ const profile = asyncHandler(async (req, res) => {
   }
 });
 
-// Login admin
-const loginAdmin = asyncHandler(async (req, res) => {
-  const { phoneNumber, password } = req.body;
-
-  if (!phoneNumber || !password) {
-    throw new ApiError(400, "Phone number and password are required");
-  }
-
-  const admin = ADMIN_CREDENTIALS.find(
-    (cred) => cred.phoneNumber === phoneNumber && cred.password === password
-  );
-
-  if (!admin) {
-    throw new ApiError(401, "Invalid admin credentials");
-  }
-
-  const adminToken = jwt.sign(
-    { phoneNumber: admin.phoneNumber },
-    process.env.ADMIN_ACCESS_TOKEN_SECRET,
-    { expiresIn: "1h" }
-  );
-
-  console.log("Setting adminToken cookie:", adminToken);
-
-  return res
-    .status(200)
-    .cookie("adminToken", adminToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax", // Changed to lax for cross-site compatibility
-      maxAge: 1000 * 60 * 60, // 1 hour
-      path: "/",
-    })
-    .json(new ApiResponse(200, { adminToken }, "Admin login successful"));
-});
-
-// Verify admin
-const verifyAdmin = asyncHandler(async (req, res) => {
-  const token = req.cookies?.adminToken;
-
-  console.log("Verifying adminToken from cookies:", token);
-
-  if (!token) {
-    throw new ApiError(401, "Unauthorized: No admin token provided.");
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET);
-    const admin = ADMIN_CREDENTIALS.find(
-      (cred) => cred.phoneNumber === decoded.phoneNumber
-    );
-    if (!admin) {
-      throw new ApiError(403, "Forbidden: Not an authorized admin.");
-    }
-    return res.status(200).json(new ApiResponse(200, {}, "Admin token verified"));
-  } catch (error) {
-    console.error("Verify admin error:", error.message);
-    throw new ApiError(401, "Unauthorized: Invalid or expired admin token.");
-  }
-});
-
 const logoutAdmin = asyncHandler(async (req, res) => {
   console.log("Admin logout requested for token:", req.cookies?.adminToken);
   res.clearCookie("adminToken", {
@@ -248,4 +186,4 @@ const logoutAdmin = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Admin logged out successfully"));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, profile, loginAdmin, verifyAdmin, logoutAdmin };
+module.exports = { registerUser, loginUser, logoutUser, profile, logoutAdmin };

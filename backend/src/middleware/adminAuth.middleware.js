@@ -4,7 +4,6 @@ const ApiError = require("../utils/ApiError");
 
 // Load environment variables
 require('dotenv').config();
-const ADMIN_CREDENTIALS = JSON.parse(process.env.ADMIN_CREDENTIALS);
 
 const verifyAdminJWT = asyncHandler(async (req, res, next) => {
   const token =
@@ -24,18 +23,19 @@ const verifyAdminJWT = asyncHandler(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET);
-    const admin = ADMIN_CREDENTIALS.find(
-      (cred) => cred.phoneNumber === decoded.phoneNumber
-    );
-    if (!admin) {
-      if (typeof ApiError === "function") {
-        throw new ApiError(403, "Forbidden: Not an authorized admin.");
-      } else {
-        console.error("ApiError is not a constructor, falling back to plain error");
-        return res.status(403).json({ message: "Forbidden: Not an authorized admin." });
-      }
-    }
-    req.admin = admin; // Attach admin info to request
+    // The following lines are removed as per the edit hint:
+    // const admin = ADMIN_CREDENTIALS.find(
+    //   (cred) => cred.phoneNumber === decoded.phoneNumber
+    // );
+    // if (!admin) {
+    //   if (typeof ApiError === "function") {
+    //     throw new ApiError(403, "Forbidden: Not an authorized admin.");
+    //   } else {
+    //     console.error("ApiError is not a constructor, falling back to plain error");
+    //     return res.status(403).json({ message: "Forbidden: Not an authorized admin." });
+    //   }
+    // }
+    // req.admin = admin; // Attach admin info to request
     next();
   } catch (error) {
     console.error("Admin JWT verification error:", error.message);

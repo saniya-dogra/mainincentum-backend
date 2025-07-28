@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { registerUser, loginUser, logoutUser, profile, loginAdmin, verifyAdmin, logoutAdmin } = require("../controllers/user.controller");
+const { registerUser, loginUser, logoutUser, profile, logoutAdmin } = require("../controllers/user.controller");
 const { verifyAdminJWT } = require("../middleware/adminAuth.middleware");
 const csurf = require("csurf");
 
@@ -16,8 +16,6 @@ router.route("/logout").post(verifyJWT, logoutUser); // Add verifyJWT here
 router.route("/profile").get(verifyJWT, profile); // Optional: protect profile too
 
 // Admin routes
-router.route("/admin-login").post(loginAdmin);
-router.route("/verify-admin").get(verifyAdminJWT, verifyAdmin);
 router.route("/admin-logout").post(verifyAdminJWT, csrfProtection, logoutAdmin);
 
 module.exports = router;
