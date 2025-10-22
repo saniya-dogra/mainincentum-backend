@@ -221,7 +221,7 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to Database
-connectToDatabase(process.env.DB_URL);
+connectToDatabase(process.env.MONGO_URI);
 
 // Start server
 app.listen(port, () => {
