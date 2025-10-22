@@ -10,7 +10,7 @@ export function UserContextProvider({ children }) {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/profile`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/profile`, {
           withCredentials: true, // Send JWT cookie
         });
         console.log("Profile response:", response.data); // Debug log
