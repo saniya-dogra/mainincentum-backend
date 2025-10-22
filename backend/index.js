@@ -109,12 +109,13 @@ app.listen(port, () => {
 
 
 
+
+// index.js
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const csurf = require("csurf");
 require("dotenv").config();
 const { connectToDatabase } = require("./src/db/index.js");
 
@@ -126,17 +127,17 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Trust proxy (important for Render)
+// Trust Render proxy
 app.set("trust proxy", 1);
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 1000,
   message: "Too many requests from this IP, please try again later.",
 });
 
-// ✅ CORS setup
+// ✅ CORS: Allow frontend on Hostinger and local dev
 app.use(
   cors({
     origin: [
@@ -144,8 +145,7 @@ app.use(
       "http://localhost:5173",         // local dev
     ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
-    credentials: true, // allow sending cookies/auth headers
+    credentials: true, // important for cookies
   })
 );
 
@@ -162,7 +162,7 @@ app.use(
           "'self'",
           "https://incentump.zetawa.com",
           "http://localhost:5173",
-          "https://mainincentum-backend.onrender.com",
+          `https://mainincentum-backend.onrender.com`,
         ],
       },
     },
@@ -194,27 +194,10 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// CSRF protection
-const csrfProtection = csurf({
-  cookie: {
-    key: "_csrf",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 24 * 60 * 60 * 1000,
-  },
-  secret: process.env.CSRF_SECRET || "default-csrf-secret",
-});
-
-app.get("/api/csrf-token", csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
-
-// ✅ Health check routes
+// Health check
 app.get("/", (req, res) => {
   res.send("✅ Backend is running and CORS enabled!");
 });
-
 app.get("/api", (req, res) => {
   res.json({ message: "Welcome to the API" });
 });
@@ -223,16 +206,16 @@ app.get("/api", (req, res) => {
 app.use("/api/users", userRouter);
 app.use("/api/form", formRouter);
 
-// Admin route (protected)
+// Admin route
 app.use(
-  process.env.ADMIN_ROUTE_SECRET || "/api/admin",
+  process.env.VITE_ADMIN_ROUTE_SECRET || "/api/admin",
   verifyAdminJWT,
   (req, res) => {
     res.json({ message: "Welcome to the Admin Dashboard" });
   }
 );
 
-// CSRF error handler
+// CSRF error handler (optional)
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).json({ message: "Invalid CSRF token" });
@@ -241,8 +224,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-// Connect to DB
-connectToDatabase(process.env.MONGO_URI);
+// Connect to MongoDB
+connectToDatabase(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected!"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Start server
 app.listen(port, () => {
