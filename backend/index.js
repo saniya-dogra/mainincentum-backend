@@ -136,12 +136,12 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again later.",
 });
 
-// ✅ CORS Setup — this is the main fix
+// ✅ CORS setup
 app.use(
   cors({
     origin: [
-      "https://incentump.zetawa.com", // your frontend domain
-      "http://localhost:5173", // for local testing
+      "https://incentump.zetawa.com", // frontend domain
+      "http://localhost:5173",         // local dev
     ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
@@ -174,7 +174,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET || "default-secret"));
 
-// Serve uploaded files securely
+// Serve uploaded files
 app.use(
   "/uploads",
   express.static("uploads", {
@@ -194,7 +194,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// CSRF Protection
+// CSRF protection
 const csrfProtection = csurf({
   cookie: {
     key: "_csrf",
@@ -210,7 +210,7 @@ app.get("/api/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// ✅ Health check route
+// ✅ Health check routes
 app.get("/", (req, res) => {
   res.send("✅ Backend is running and CORS enabled!");
 });
@@ -219,7 +219,7 @@ app.get("/api", (req, res) => {
   res.json({ message: "Welcome to the API" });
 });
 
-// API Routes
+// API routes
 app.use("/api/users", userRouter);
 app.use("/api/form", formRouter);
 
@@ -232,7 +232,7 @@ app.use(
   }
 );
 
-// Error handling for CSRF
+// CSRF error handler
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).json({ message: "Invalid CSRF token" });
