@@ -126,7 +126,7 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Trust the proxy (important for Render)
+// Trust proxy (important for Render)
 app.set("trust proxy", 1);
 
 // Rate limiting
@@ -136,7 +136,20 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again later.",
 });
 
-// Security middleware
+// ✅ CORS Setup — this is the main fix
+app.use(
+  cors({
+    origin: [
+      "https://incentump.zetawa.com", // your frontend domain
+      "http://localhost:5173", // for local testing
+    ],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
+    credentials: true, // allow sending cookies/auth headers
+  })
+);
+
+// Security headers
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -147,25 +160,12 @@ app.use(
         imgSrc: ["'self'", "data:", "https:"],
         connectSrc: [
           "'self'",
-          "https://incentump.zetawa.com", // ✅ Allow your frontend domain
-          "http://localhost:5173", // For local testing
+          "https://incentump.zetawa.com",
+          "http://localhost:5173",
+          "https://mainincentum-backend.onrender.com",
         ],
       },
     },
-  })
-);
-
-// ✅ Fixed CORS setup
-app.use(
-  cors({
-    origin: [
-      "https://incentump.zetawa.com", // your Hostinger frontend
-      "http://localhost:5173",        // for local dev
-    ],
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
-    credentials: true,
-    exposedHeaders: ["Set-Cookie", "X-CSRF-Token"],
   })
 );
 
@@ -184,7 +184,7 @@ app.use(
   })
 );
 
-// Force HTTPS in production (important for Render)
+// Force HTTPS in production
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") {
@@ -210,9 +210,9 @@ app.get("/api/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// ✅ Test routes
+// ✅ Health check route
 app.get("/", (req, res) => {
-  res.send("✅ Backend is running!");
+  res.send("✅ Backend is running and CORS enabled!");
 });
 
 app.get("/api", (req, res) => {
@@ -232,7 +232,7 @@ app.use(
   }
 );
 
-// Error Handling for CSRF
+// Error handling for CSRF
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).json({ message: "Invalid CSRF token" });
@@ -241,10 +241,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-// Connect to Database
+// Connect to DB
 connectToDatabase(process.env.MONGO_URI);
 
-// Start the server
+// Start server
 app.listen(port, () => {
-  console.log(`🚀 Server is running on port ${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
