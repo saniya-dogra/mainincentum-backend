@@ -108,6 +108,7 @@ app.listen(port, () => {
 });*/
 
 
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -117,7 +118,6 @@ const csurf = require("csurf");
 require("dotenv").config();
 const { connectToDatabase } = require("./src/db/index.js");
 
-
 // Routers
 const userRouter = require("./src/routes/user.router");
 const formRouter = require("./src/routes/individualForm.router");
@@ -126,8 +126,8 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 const app = express();
 const port = process.env.PORT || 8080;
 
-//Trust the proxy (important on Render)
-app.set('trust proxy', 1);
+// Trust the proxy (important for Render)
+app.set("trust proxy", 1);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -136,7 +136,7 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again later.",
 });
 
-// Middleware
+// Security middleware
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -145,15 +145,23 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: ["'self'", process.env.VITE_API_URL || "http://localhost:5173"],
+        connectSrc: [
+          "'self'",
+          "https://incentump.zetawa.com", // ✅ Allow your frontend domain
+          "http://localhost:5173", // For local testing
+        ],
       },
     },
   })
 );
 
+// ✅ Fixed CORS setup
 app.use(
   cors({
-    origin: [process.env.VITE_API_URL || "http://localhost:5173"],
+    origin: [
+      "https://incentump.zetawa.com", // your Hostinger frontend
+      "http://localhost:5173",        // for local dev
+    ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "X-CSRF-Token"],
     credentials: true,
@@ -165,6 +173,8 @@ app.use(limiter);
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET || "default-secret"));
+
+// Serve uploaded files securely
 app.use(
   "/uploads",
   express.static("uploads", {
@@ -174,7 +184,7 @@ app.use(
   })
 );
 
-// Force HTTPS in production
+// Force HTTPS in production (important for Render)
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") {
@@ -200,9 +210,20 @@ app.get("/api/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-// Routes
+// ✅ Test routes
+app.get("/", (req, res) => {
+  res.send("✅ Backend is running!");
+});
+
+app.get("/api", (req, res) => {
+  res.json({ message: "Welcome to the API" });
+});
+
+// API Routes
 app.use("/api/users", userRouter);
 app.use("/api/form", formRouter);
+
+// Admin route (protected)
 app.use(
   process.env.ADMIN_ROUTE_SECRET || "/api/admin",
   verifyAdminJWT,
@@ -210,10 +231,6 @@ app.use(
     res.json({ message: "Welcome to the Admin Dashboard" });
   }
 );
-
-app.get("/api", (req, res) => {
-  res.json({ message: "Welcome to the API" });
-});
 
 // Error Handling for CSRF
 app.use((err, req, res, next) => {
@@ -227,7 +244,7 @@ app.use((err, req, res, next) => {
 // Connect to Database
 connectToDatabase(process.env.MONGO_URI);
 
-// Start server
+// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`🚀 Server is running on port ${port}`);
 });
