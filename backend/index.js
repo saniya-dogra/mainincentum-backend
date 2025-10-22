@@ -117,6 +117,7 @@ const csurf = require("csurf");
 require("dotenv").config();
 const { connectToDatabase } = require("./src/db/index.js");
 
+
 // Routers
 const userRouter = require("./src/routes/user.router");
 const formRouter = require("./src/routes/individualForm.router");
@@ -124,6 +125,9 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+//Trust the proxy (important on Render)
+app.set('trust proxy', 1);
 
 // Rate limiting
 const limiter = rateLimit({
