@@ -127,54 +127,42 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Trust Render proxy
+// ✅ Trust Render proxy
 app.set("trust proxy", 1);
 
-// Rate limiting
+// ✅ Rate limiting (good)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 1000,
   message: "Too many requests from this IP, please try again later.",
 });
+app.use(limiter);
 
-// ✅ CORS: Allow frontend on Hostinger and local dev
+// ✅ CORS setup (Hostinger + local dev)
 app.use(
   cors({
     origin: [
-      "https://incentump.zetawa.com", // frontend domain
-      "http://localhost:5173",         // local dev
+      "https://incentump.zetawa.com", // ✅ your live frontend
+      "http://localhost:5173",        // ✅ dev mode
     ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true, // important for cookies
+    credentials: true, // ✅ allows cookies (important for JWT)
   })
 );
 
-// Security headers
+// ✅ Security headers
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https:"],
-        connectSrc: [
-          "'self'",
-          "https://incentump.zetawa.com",
-          "http://localhost:5173",
-          `https://mainincentum-backend.onrender.com`,
-        ],
-      },
-    },
+    contentSecurityPolicy: false, // 🔥 Disable strict CSP temporarily to avoid blocking API requests
   })
 );
 
-app.use(limiter);
+// ✅ Body parsers
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET || "default-secret"));
 
-// Serve uploaded files
+// ✅ Serve uploaded files securely
 app.use(
   "/uploads",
   express.static("uploads", {
@@ -184,7 +172,7 @@ app.use(
   })
 );
 
-// Force HTTPS in production
+// ✅ Force HTTPS only on Render (production)
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") {
@@ -194,7 +182,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// Health check
+// ✅ Health check routes
 app.get("/", (req, res) => {
   res.send("✅ Backend is running and CORS enabled!");
 });
@@ -202,11 +190,11 @@ app.get("/api", (req, res) => {
   res.json({ message: "Welcome to the API" });
 });
 
-// API routes
+// ✅ Main API routes
 app.use("/api/users", userRouter);
 app.use("/api/form", formRouter);
 
-// Admin route
+// ✅ Admin route (optional)
 app.use(
   process.env.VITE_ADMIN_ROUTE_SECRET || "/api/admin",
   verifyAdminJWT,
@@ -215,7 +203,7 @@ app.use(
   }
 );
 
-// CSRF error handler (optional)
+// ✅ CSRF error handler
 app.use((err, req, res, next) => {
   if (err.code === "EBADCSRFTOKEN") {
     return res.status(403).json({ message: "Invalid CSRF token" });
@@ -224,12 +212,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error", error: err.message });
 });
 
-// Connect to MongoDB
+// ✅ Connect MongoDB
 connectToDatabase(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected!"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// Start server
+// ✅ Start server
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
