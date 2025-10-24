@@ -120,22 +120,17 @@ require("dotenv").config();
 const { connectToDatabase } = require("./src/db/index.js");
 
 // Routers
-const userRouter = require("./src/routes/user.router");
-const formRouter = require("./src/routes/individualForm.router");
+const userRouter = require("./src/routes/user.routes.js");
+const formRouter = require("./src/routes/individualForm.router.js");
 const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-// ✅ Async handler to catch errors in async routes
-const asyncHandler = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
-};
-
 // ✅ Trust Render proxy
 app.set("trust proxy", 1);
 
-// ✅ Rate limiting
+// ✅ Rate limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 1000,
@@ -143,22 +138,21 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ✅ CORS setup (Hostinger + local dev)
+// ✅ CORS setup
 app.use(
   cors({
     origin: [
-      "https://incentump.zetawa.com", // live frontend
-      "http://localhost:5173",         // dev
+      "https://incentump.zetawa.com", // frontend
+      "http://localhost:5173",
     ],
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true, // allows cookies (important for JWT)
+    credentials: true,
   })
 );
 
 // ✅ Security headers
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Disable strict CSP temporarily to avoid blocking API requests
+    contentSecurityPolicy: false,
   })
 );
 
@@ -167,17 +161,15 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser(process.env.COOKIE_SECRET || "default-secret"));
 
-// ✅ Serve uploaded files securely
+// ✅ Static files
 app.use(
   "/uploads",
   express.static("uploads", {
-    setHeaders: (res) => {
-      res.set("X-Content-Type-Options", "nosniff");
-    },
+    setHeaders: (res) => res.set("X-Content-Type-Options", "nosniff"),
   })
 );
 
-// ✅ Force HTTPS on Render (production)
+// ✅ HTTPS redirect in production
 if (process.env.NODE_ENV === "production") {
   app.use((req, res, next) => {
     if (req.header("x-forwarded-proto") !== "https") {
@@ -187,42 +179,33 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// ✅ Health check routes
+// ✅ Health check
 app.get("/", (req, res) => {
-  res.send("✅ Backend is running and CORS enabled!");
-});
-app.get("/api", (req, res) => {
-  res.json({ message: "Welcome to the API" });
+  res.send("✅ Backend is running and healthy!");
 });
 
-// ✅ Main API routes (wrapped with asyncHandler)
-app.use("/api/users", asyncHandler(userRouter));
-app.use("/api/form", asyncHandler(formRouter));
+// ✅ API routes
+app.use("/api/users", userRouter);
+app.use("/api/form", formRouter);
 
-// ✅ Admin route
+// ✅ Admin route (example)
 app.use(
   process.env.VITE_ADMIN_ROUTE_SECRET || "/api/admin",
   verifyAdminJWT,
-  asyncHandler(async (req, res) => {
-    res.json({ message: "Welcome to the Admin Dashboard" });
-  })
+  (req, res) => res.json({ message: "Welcome Admin" })
 );
 
 // ✅ Global error handler
 app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err.stack || err); // full stack trace
-
-  if (err.code === "EBADCSRFTOKEN") {
-    return res.status(403).json({ message: "Invalid CSRF token" });
-  }
-
-  res.status(err.status || 500).json({
+  console.error("🔥 Global Error Handler:", err.stack || err);
+  const status = err.statusCode || 500;
+  res.status(status).json({
+    success: false,
     message: err.message || "Internal Server Error",
-    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 });
 
-// ✅ Connect MongoDB
+// ✅ Connect to MongoDB
 connectToDatabase(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected!"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
