@@ -145,6 +145,7 @@ app.use(
       "https://incentump.zetawa.com", // frontend
       "http://localhost:5173",
     ],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
 );
