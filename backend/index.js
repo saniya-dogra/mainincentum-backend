@@ -120,7 +120,7 @@ require("dotenv").config();
 const { connectToDatabase } = require("./src/db/index.js");
 
 // Routers
-const userRouter = require("./src/routes/user.routes.js");
+const userRouter = require("./src/routes/user.router.js");
 const formRouter = require("./src/routes/individualForm.router.js");
 const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 
