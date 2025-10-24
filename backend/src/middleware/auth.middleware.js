@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/authentication/User.models"); // Mongoose model
-const ApiError = require("../utils/ApiError");
+// const ApiError = require("../utils/ApiError");
+const { ApiError } = require("../utils/ApiError");
+
 const { asyncHandler } = require("../utils/asyncHandler");
 
 const verifyJWT = asyncHandler(async (req, res, next) => {
