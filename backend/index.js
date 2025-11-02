@@ -142,9 +142,10 @@ app.use(limiter);
 app.use(
   cors({
     origin: [
-      "https://incentump.zetawa.com", // frontend
-      "http://localhost:5173",
-    ],
+  "https://incentump.zetawa.com",
+  "https://mainincentum-frontend.onrender.com",
+  "http://localhost:5173",
+],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
