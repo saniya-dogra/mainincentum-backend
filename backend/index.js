@@ -127,6 +127,11 @@ const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 const app = express();
 const port = process.env.PORT || 8080;
 
+// ✅ Log environment check
+console.log("🔍 Starting server...");
+console.log("📦 NODE_ENV:", process.env.NODE_ENV);
+console.log("🔗 MONGO_URI:", process.env.MONGO_URI ? "Loaded ✅" : "❌ Not found!");
+
 // ✅ Trust Render proxy
 app.set("trust proxy", 1);
 
@@ -142,10 +147,10 @@ app.use(limiter);
 app.use(
   cors({
     origin: [
-  "https://incentump.zetawa.com",
-  "https://mainincentum-frontend.onrender.com",
-  "http://localhost:5173",
-],
+      "https://incentump.zetawa.com",
+      "https://mainincentum-frontend.onrender.com",
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
   })
@@ -208,11 +213,21 @@ app.use((err, req, res, next) => {
 });
 
 // ✅ Connect to MongoDB
-connectToDatabase(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected!"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+(async () => {
+  try {
+    const mongoURI = process.env.MONGO_URI;
+    if (!mongoURI) {
+      throw new Error("Missing MONGO_URI environment variable!");
+    }
 
-// ✅ Start server
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
+    await connectToDatabase(mongoURI);
+    console.log("✅ MongoDB connected successfully!");
+  } catch (err) {
+    console.error("❌ Failed to connect to MongoDB:", err.message);
+  }
+
+  // ✅ Start server only once
+  app.listen(port, () => {
+    console.log(`🚀 Server running on port ${port}`);
+  });
+})();
