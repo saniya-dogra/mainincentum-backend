@@ -52,7 +52,8 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, formData, {
+      // ✅ CORRECTED: Added '/' between VITE_API_URL and 'api/users/login'
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/login`, formData, {
         withCredentials: true,
       });
       const { userId, ...userData } = response.data.data; // Destructure userId and rest of data
