@@ -10,7 +10,7 @@ export const createFormTwo = createAsyncThunk(
     async(data,{rejectWithValue})=>{
         try {
             console.log("Sending data:", data);
-            const response = await axios.post(`${API_URL}/form/form-two`, data);
+            const response = await axios.post(`${API_URL}api/form/form-two`, data);
             console.log("Response:", response.data);
             return response.data;
         } catch (error) {
