@@ -29,24 +29,16 @@ const {
   registerUser,
   loginUser,
   logoutUser,
-  profile,
-  logoutAdmin,
+  getUserProfile,
 } = require("../controllers/user.controller");
-const { verifyAdminJWT } = require("../middleware/adminAuth.middleware");
 const { verifyJWT } = require("../middleware/auth.middleware");
-const csurf = require("csurf");
 
 const router = Router();
-const csrfProtection = csurf({ cookie: true });
 
-// User routes
+// ✅ User routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", verifyJWT, logoutUser);
-router.get("/profile", verifyJWT, profile);
-
-// Admin route
-router.post("/admin-logout", verifyAdminJWT, csrfProtection, logoutAdmin);
+router.get("/profile", verifyJWT, getUserProfile);
 
 module.exports = router;
-

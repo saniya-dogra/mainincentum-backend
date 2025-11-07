@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -73,4 +73,36 @@ userSchema.methods.generateRefreshToken = function () {
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = { User };
+module.exports = { User };*/
+
+
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  phoneNumber: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+});
+
+// Hash password before save
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+// Compare passwords
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+// Generate token
+userSchema.methods.generateAccessToken = function () {
+  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h",
+  });
+};
+
+module.exports = mongoose.model("User", userSchema);

@@ -202,15 +202,24 @@ app.use(
   (req, res) => res.json({ message: "Welcome Admin" })
 );
 
-// ✅ Global error handler
+// robust global error handler — index.js
 app.use((err, req, res, next) => {
   console.error("🔥 Global Error Handler:", err.stack || err);
-  const status = err.statusCode || 500;
+
+  // ensure statusCode is a valid HTTP status number
+  const status =
+    typeof err.statusCode === "number" && err.statusCode >= 100 && err.statusCode < 600
+      ? err.statusCode
+      : 500;
+
   res.status(status).json({
     success: false,
     message: err.message || "Internal Server Error",
+    errors: err.errors || [],
+    ...(process.env.NODE_ENV !== "production" ? { stack: err.stack } : {}),
   });
 });
+
 
 // ✅ Connect to MongoDB
 (async () => {
