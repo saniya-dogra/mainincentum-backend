@@ -111,28 +111,41 @@ app.listen(port, () => {
 
 
 // index.js
+// index.js
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
-const { connectToDatabase } = require("./src/db/index.js");
 
-// Routers
+// If connectToDatabase is exported as named or default, we handle both
+let connectToDatabase;
+try {
+  const dbModule = require("./src/db/index.js");
+  connectToDatabase = dbModule.connectToDatabase || dbModule.default || dbModule;
+} catch (err) {
+  console.error("❌ Could not require ./src/db/index.js —", err.message);
+  // leave connectToDatabase undefined; we'll catch it later
+}
+
 const userRouter = require("./src/routes/user.router.js");
 const formRouter = require("./src/routes/individualForm.router.js");
 const { verifyAdminJWT } = require("./src/middleware/adminAuth.middleware");
 
 const app = express();
-const port = process.env.PORT || 8080;
+
+// Ensure NODE_ENV default for local dev
+process.env.NODE_ENV = process.env.NODE_ENV || "development";
+
+const port = Number(process.env.PORT) || 8080;
 
 // ✅ Log environment check
 console.log("🔍 Starting server...");
 console.log("📦 NODE_ENV:", process.env.NODE_ENV);
 console.log("🔗 MONGO_URI:", process.env.MONGO_URI ? "Loaded ✅" : "❌ Not found!");
 
-// ✅ Trust Render proxy
+// ✅ Trust proxy if behind one (Render)
 app.set("trust proxy", 1);
 
 // ✅ Rate limiter
@@ -143,25 +156,22 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// ✅ CORS setup
-app.use(
-  cors({
-    origin: [
-      "https://incentump.zetawa.com",
-      "https://mainincentum-frontend.onrender.com",
-      "http://localhost:5173",
-    ],
-    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// ✅ CORS setup - allow origins from env or fallback to sensible defaults
+const allowedOrigins = [
+  "https://incentump.zetawa.com",
+  "https://mainincentum-frontend.onrender.com",
+  "http://localhost:5173",
+];
+const corsOriginEnv = process.env.CORS_ORIGIN || process.env.VITE_FRONTEND_URL;
+const corsOptions = {
+  origin: corsOriginEnv ? [corsOriginEnv, ...allowedOrigins] : allowedOrigins,
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // ✅ Security headers
-app.use(
-  helmet({
-    contentSecurityPolicy: false,
-  })
-);
+app.use(helmet({ contentSecurityPolicy: false }));
 
 // ✅ Body parsers
 app.use(express.json({ limit: "10kb" }));
@@ -175,16 +185,6 @@ app.use(
     setHeaders: (res) => res.set("X-Content-Type-Options", "nosniff"),
   })
 );
-
-// ✅ HTTPS redirect in production
-if (process.env.NODE_ENV === "production") {
-  app.use((req, res, next) => {
-    if (req.header("x-forwarded-proto") !== "https") {
-      return res.redirect(301, `https://${req.header("host")}${req.url}`);
-    }
-    next();
-  });
-}
 
 // ✅ Health check
 app.get("/", (req, res) => {
@@ -202,11 +202,10 @@ app.use(
   (req, res) => res.json({ message: "Welcome Admin" })
 );
 
-// robust global error handler — index.js
+// Robust global error handler
 app.use((err, req, res, next) => {
   console.error("🔥 Global Error Handler:", err.stack || err);
 
-  // ensure statusCode is a valid HTTP status number
   const status =
     typeof err.statusCode === "number" && err.statusCode >= 100 && err.statusCode < 600
       ? err.statusCode
@@ -220,10 +219,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-
-// ✅ Connect to MongoDB
+// Start app AFTER database connection attempt (keeps logs clear)
 (async () => {
   try {
+    if (!connectToDatabase) {
+      throw new Error("connectToDatabase function not found - check src/db/index.js export");
+    }
+
     const mongoURI = process.env.MONGO_URI;
     if (!mongoURI) {
       throw new Error("Missing MONGO_URI environment variable!");
@@ -232,11 +234,21 @@ app.use((err, req, res, next) => {
     await connectToDatabase(mongoURI);
     console.log("✅ MongoDB connected successfully!");
   } catch (err) {
-    console.error("❌ Failed to connect to MongoDB:", err.message);
+    console.error("❌ Failed to connect to MongoDB:", err && err.message ? err.message : err);
+    // For safety we still start the server (so health check works), but warn in logs
+    console.warn("⚠️ Starting server despite DB connection failure — endpoints using DB will fail.");
   }
 
-  // ✅ Start server only once
   app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
   });
 })();
+
+// Useful crash handlers for production visibility
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
+});
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  // optionally process.exit(1); // keep running for now to see logs
+});
