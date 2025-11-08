@@ -24,26 +24,19 @@ module.exports = router;*/
 
 // Modified 
 
-const express = require("express");
-const router = express.Router();
-
-const {
+import express from "express";
+import {
   registerUser,
   loginUser,
   logoutUser,
-  profile,
-  logoutAdmin
-} = require("../controllers/user.controller");
+  getUserProfile,
+} from "../controllers/user.controller.js";
 
-// Public routes
+const router = express.Router();
+
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-
-// Protected routes
-router.get("/profile", profile);
-
-// Logout routes
 router.post("/logout", logoutUser);
-router.post("/admin/logout", logoutAdmin);
+router.get("/profile", getUserProfile);
 
-module.exports = router;
+export default router;
