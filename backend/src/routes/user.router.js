@@ -24,21 +24,26 @@ module.exports = router;*/
 
 // Modified 
 
-const { Router } = require("express");
+const express = require("express");
+const router = express.Router();
+
 const {
   registerUser,
   loginUser,
   logoutUser,
-  getUserProfile,
+  profile,
+  logoutAdmin
 } = require("../controllers/user.controller");
-const { verifyJWT } = require("../middleware/auth.middleware");
 
-const router = Router();
-
-// ✅ User routes
+// Public routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/logout", verifyJWT, logoutUser);
-router.get("/profile", verifyJWT, getUserProfile);
+
+// Protected routes
+router.get("/profile", profile);
+
+// Logout routes
+router.post("/logout", logoutUser);
+router.post("/admin/logout", logoutAdmin);
 
 module.exports = router;
